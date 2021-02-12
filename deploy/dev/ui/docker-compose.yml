@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  sa-ui-build:
+    build:
+      context: $SA_DIR
+      dockerfile: $PWD/../../../docker/ui/Dockerfile.sa
+    image: ${DOCKER_REGISTRY}/sa-ui-build:latest
+    entrypoint: gatsby
+    volumes:
+      - $SA_DIR/ui:/app
+      - $SA_DIR/constants:/constants
+      # cache node_modules in volume so these aren't recreated each time container is run
+      - /app/node_modules
+    network_mode: "host"
+
+  se-ui-build:
+    build:
+      context: $SE_DIR
+      dockerfile: $PWD/../../../docker/ui/Dockerfile.se
+    image: ${DOCKER_REGISTRY}/se-ui-build:latest
+    entrypoint: gatsby
+    volumes:
+      - $SE_DIR/ui:/app
+      - $SE_DIR/constants:/constants
+      # cache node_modules in volume so these aren't recreated each time container is run
+      - /app/node_modules
+    network_mode: "host"

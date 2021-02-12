@@ -1,23 +1,52 @@
 version: "3.6"
 services:
-  redis:
-    image: "redis:6.0.9-alpine"
+  caddy:
+    image: $CADDY
     restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_certs:/root/.caddy
+      - $SA_DIR/ui/public:/var/www
 
   mbtileserver:
-    image: consbio/mbtileserver:latest
+    image: consbio/$MBTILESERVER
     restart: on-failure:5
-    # command: "--tiles-only"
     volumes:
       - ../../tiles:/tilesets
 
+  redis:
+    image: $REDIS
+    restart: always
+
   renderer:
-    image: consbio/mbgl-renderer:latest
+    image: consbio/$MBGLRENDERER
     restart: on-failure:5
     volumes:
       - ../../tiles:/app/tiles
 
-  api:
+  sa-worker:
+    build:
+      context: ../..
+      dockerfile: docker/api/Dockerfile
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - renderer
+    env_file:
+      - .env
+    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    volumes:
+      - user_upload:/tmp/sa-reports
+      - $SA_DIR/data:/home/app/data
+      - $SA_DIR/api:/home/app/api # main API
+      - $SA_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SA_DIR/examples:/home/app/examples # DEBUG ONLY
+      - $SA_DIR/tests:/home/app/tests # DEBUG ONLY
+
+  sa-api:
     build:
       context: ../..
       dockerfile: docker/api/Dockerfile
@@ -42,46 +71,12 @@ services:
       ]
     volumes:
       - user_upload:/tmp/sa-reports
-      - ../../data:/home/app/data # TODO: this can originate from location in staging config
-      - ../../api:/home/app/api # main API
-      - ../../analysis:/home/app/analysis # needed for analysis utils
-      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SA_DIR/data:/home/app/data
+      - $SA_DIR/api:/home/app/api # main API
+      - $SA_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
     ports:
       - "5000:5000"
-
-  worker:
-    build:
-      context: ../..
-      dockerfile: docker/api/Dockerfile
-    restart: on-failure:5
-    depends_on:
-      - redis
-      - renderer
-    env_file:
-      - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
-    volumes:
-      - user_upload:/tmp/sa-reports
-      - ../../data:/home/app/data # TODO: this can originate from location in staging config
-      - ../../api:/home/app/api # main API
-      - ../../analysis:/home/app/analysis # needed for analysis utils
-      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
-      - ../../examples:/home/app/examples # DEBUG ONLY
-      - ../../tests:/home/app/tests # DEBUG ONLY
-
-  caddy:
-    image: caddy/caddy:2.2.1-alpine
-    depends_on:
-      - mbtileserver
-      # - api
-      # - worker
-    restart: always
-    ports:
-      - "8080:80"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_certs:/root/.caddy
-      - ../../ui/public:/var/www
 
 volumes:
   caddy_certs:
