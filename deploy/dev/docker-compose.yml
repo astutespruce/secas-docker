@@ -1,4 +1,5 @@
-version: "3.6"
+version: "3.7"
+
 services:
   caddy:
     image: $CADDY
@@ -8,8 +9,8 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/root/.caddy
-      - $SA_CODE_DIR/ui/public:/var/www/southatlantic
-      - $SE_CODE_DIR/ui/public:/var/www/southeast
+      - caddy_config:/config
+      - $STATIC_DIR:/var/www
 
   mbtileserver:
     image: consbio/$MBTILESERVER
@@ -121,4 +122,5 @@ services:
 
 volumes:
   caddy_certs:
+  caddy_config:
   user_upload:

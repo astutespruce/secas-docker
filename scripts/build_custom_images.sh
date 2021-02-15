@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# for VARIABLE in DEPLOY_ENV STATIC_DIR SA_CODE_DIR SE_CODE_DIR
-# do
-#     if [[ -z ${!VARIABLE} ]]; then
-#         echo "$VARIABLE must be set" 1>&2
-#         exit 1
-#     fi
-# done
+for VARIABLE in PYOGRIO_COMMIT_HASH
+do
+    if [[ -z ${!VARIABLE} ]]; then
+        echo "$VARIABLE must be set" 1>&2
+        exit 1
+    fi
+done
 
 ### UI Build
 
@@ -18,7 +18,7 @@ mkdir -p docker/ui/deps/southeast
 cp $SE_CODE_DIR/ui/package*.json docker/ui/deps/southeast
 
 # Build the images
-docker-compose -f docker/ui/docker-compose.yml build sa-ui-build se-ui-build
+docker-compose -f docker/ui/docker-compose.yml build sa-ui se-ui
 
 
 ### API / Worker

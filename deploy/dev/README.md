@@ -15,10 +15,10 @@ API_TOKEN=<token>
 API_SECRET=<secret>
 LOGGING_LEVEL=DEBUG
 REDIS_HOST=redis
-MBGL_SERVER_URL=http://renderer/render
+MBGLRENDER_HOST=renderer
 SENTRY_ENV="development"
-SA_SITE_URL=http://localhost:8080/southatlantic
-SE_SITE_URL=http://localhost:8080/southeast
+SA_SITE_URL=<host>/southatlantic
+SE_SITE_URL=<host>/southeast
 ```
 
 It may also include version overrides of the Docker image versions specified
