@@ -15,6 +15,14 @@ These include:
 ```
 DOCKER_REGISTRY=<registry_url>/blueprint
 KEY_ARN=<key used to sign images in ECR>
+PYOGRIO_COMMIT_HASH=<commit hash in pyogrio repository to use for building API>
+DEPLOY_ENV=<deploy environment; one of dev, staging, production>
+SA_CODE_DIR=<location of sa-blueprint-sv repo>
+SA_DATA_DIR=<location of data files for SA>
+SE_CODE_DIR=<location of secas-blueprint repo>
+SE_DATA_DIR=<location of data files for SE>
+STATIC_DIR=<location to which static UI assets are deployed>
+TILE_DIR=<location of tiles>
 ```
 
 Source this into your shell: `source .env`.
@@ -50,19 +58,7 @@ This is typically required for pushing or pulling images; the token is valid for
 ## Create a repository for each image (once)
 
 ```
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/caddy --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/redis --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/mbtileserver --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/mbgl-renderer --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/blueprint-api --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/sa-ui-build --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
-
-aws ecr create-repository --profile geoplatform-test --repository-name blueprint/se-ui-build --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
+scripts/create_repositories.sh
 ```
 
 After creating the repositories, copy and paste the permissions config to each
@@ -83,19 +79,14 @@ development versions not ready to be pushed!
 
 ## Build and push custom images
 
-Create the UI build image that is used to build the UI on the server.
-From within the `ui` folder of the applicable deploy folder:
+Build:
 
 ```bash
-docker-compose -f docker-compose.yml build
-docker push $DOCKER_REGISTRY/sa-ui-build
+scripts/build_custom_images.sh
 ```
 
-Create the API / background worker image from the base directory in this repo:
-Note: the `PYOGRIO_COMMIT_HASH` must be set to a specific commit hash on that repo.
+Push:
 
 ```bash
-docker build -f docker/api/Dockerfile -t blueprint-api:latest --build-arg PYOGRIO_COMMIT_HASH=<hash> .
-docker tag blueprint-api:latest $DOCKER_REGISTRY/blueprint-api:latest
-docker push $DOCKER_REGISTRY/blueprint-api:latest
+scripts/push_custom_images.sh
 ```

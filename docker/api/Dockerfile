@@ -1,3 +1,5 @@
+# Provides: Southeast and South Atlantic API and Background Worker image
+
 FROM osgeo/gdal:ubuntu-small-3.2.0
 
 RUN apt-get update && apt-get install -y \

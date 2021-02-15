@@ -8,13 +8,14 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/root/.caddy
-      - $SA_DIR/ui/public:/var/www
+      - $SA_CODE_DIR/ui/public:/var/www/southatlantic
+      - $SE_CODE_DIR/ui/public:/var/www/southeast
 
   mbtileserver:
     image: consbio/$MBTILESERVER
     restart: on-failure:5
     volumes:
-      - ../../tiles:/tilesets
+      - $TILE_DIR:/tilesets
 
   redis:
     image: $REDIS
@@ -24,12 +25,10 @@ services:
     image: consbio/$MBGLRENDERER
     restart: on-failure:5
     volumes:
-      - ../../tiles:/app/tiles
+      - $TILE_DIR:/app/tiles
 
   sa-worker:
-    build:
-      context: ../..
-      dockerfile: docker/api/Dockerfile
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: on-failure:5
     depends_on:
       - redis
@@ -39,17 +38,15 @@ services:
     command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
       - user_upload:/tmp/sa-reports
-      - $SA_DIR/data:/home/app/data
-      - $SA_DIR/api:/home/app/api # main API
-      - $SA_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-      - $SA_DIR/examples:/home/app/examples # DEBUG ONLY
-      - $SA_DIR/tests:/home/app/tests # DEBUG ONLY
+      - $SA_DATA_DIR:/home/app/data
+      - $SA_CODE_DIR/api:/home/app/api # main API
+      - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SA_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+      - $SA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
 
   sa-api:
-    build:
-      context: ../..
-      dockerfile: docker/api/Dockerfile
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: on-failure:5
     depends_on:
       - redis
@@ -71,12 +68,56 @@ services:
       ]
     volumes:
       - user_upload:/tmp/sa-reports
-      - $SA_DIR/data:/home/app/data
-      - $SA_DIR/api:/home/app/api # main API
-      - $SA_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-    ports:
-      - "5000:5000"
+      - $SA_DATA_DIR:/home/app/data
+      - $SA_CODE_DIR/api:/home/app/api # main API
+      - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+
+  se-worker:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - renderer
+    env_file:
+      - .env
+    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    volumes:
+      - user_upload:/tmp/se-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SE_CODE_DIR/api:/home/app/api # main API
+      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SE_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+      - $SE_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+
+  se-api:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: on-failure:5
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    command:
+      [
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "-b",
+        ":5000",
+        "--capture-output",
+        "--log-level",
+        "DEBUG",
+        "api.api:app",
+      ]
+    volumes:
+      - user_upload:/tmp/se-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SE_CODE_DIR/api:/home/app/api # main API
+      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
 
 volumes:
   caddy_certs:
