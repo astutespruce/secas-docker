@@ -11,10 +11,10 @@ done
 
 echo "Deploying UI to $STATIC_DIR/southeast"
 
-if docker-compose -f ./docker/ui/docker-compose.yml run --rm se-ui-build build --prefix-paths; then
+if docker-compose -f ./docker/ui/docker-compose.yml run --rm se-ui npm run deploy; then
     echo "====> UI build succeeded"
     rm -rf $STATIC_DIR/southeast/*
-    cp -r $SA_CODE_DIR/ui/public/* $STATIC_DIR/southeast
+    cp -r $SE_CODE_DIR/ui/public/* $STATIC_DIR/southeast
 else
     echo "====> ERROR: UI build failed"
 fi
