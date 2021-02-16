@@ -1,14 +1,7 @@
 version: "3.7"
 
 services:
-  # blueprint-ui:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   image: ${DOCKER_REGISTRY}/blueprint-ui:latest
-  #   network_mode: "host"
-
-  sa-ui:
+  sa-ui-build:
     build:
       context: .
       dockerfile: ./Dockerfile.sa
@@ -20,10 +13,10 @@ services:
       - $SA_CODE_DIR/constants:/constants
     network_mode: "host"
 
-  se-ui:
+  se-ui-build:
     build:
       context: .
-      dockerfile: ./Dockerfile.sa
+      dockerfile: ./Dockerfile.se
     image: ${DOCKER_REGISTRY}/se-ui-build:latest
     volumes:
       - node_modules:/app/node_modules
