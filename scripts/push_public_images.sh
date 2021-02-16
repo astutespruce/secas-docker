@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# NOTE: these versions must also be set in the .env
+# in the deploy environment
+CADDY=caddy:2.3.0-alpine
+REDIS=redis:6.0.10-alpine
+MBTILESERVER=mbtileserver:latest
+MBGLRENDERER=mbgl-renderer:latest
+
+
 docker pull $CADDY
 docker tag $CADDY $DOCKER_REGISTRY/$CADDY
 docker push $DOCKER_REGISTRY/$CADDY

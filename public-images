@@ -1,6 +1,0 @@
-# This file contains the latest image version used for public Docker images
-
-CADDY=caddy:2.3.0-alpine
-REDIS=redis:6.0.10-alpine
-MBTILESERVER=mbtileserver:latest
-MBGLRENDERER=mbgl-renderer:latest

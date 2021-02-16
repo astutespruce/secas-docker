@@ -21,13 +21,17 @@ SA_SITE_URL=<host>/southatlantic
 SE_SITE_URL=<host>/southeast
 ```
 
-It may also include version overrides of the Docker image versions specified
-in the root `public-images` file, for use in local testing before deployment.
-
 Source this file in your shell `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
+The API and UI Docker images are built using `scripts/build_custom_images.sh`.
+
+The UI static assets are built using `scripts/build_sa_ui.sh` and
+`scripts_build_se_ui.sh`.
+
+After those have been built, pull the other images and run:
+
 ```bash
 docker-compose pull
-docker-compose build sa-api sa-worker
+docker-compose up -d
 ```

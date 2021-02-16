@@ -20,6 +20,6 @@ of Interior GeoPlatform, which is hosted on Amazon Web Services and managed by
 [Zivaro](https://zivaro.com/). Docker images are built and pushed to the
 Elastic Container Registry in GeoPlatform.
 
-Please see [GeoPlatform operating instructions](GeoPlatform-ECR.md) for more
+Please see [GeoPlatform operating instructions](GeoPlatform.md) for more
 information about creating, tagging, pushing, and pulling Docker images in this
 environment.

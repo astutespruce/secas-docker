@@ -33,29 +33,54 @@ mkdir /data/sa
 mkdir /data/se
 mkdir /data/tiles
 cd ~
+git clone https://github.com/astutespruce/secas-docker.git
 git clone https://github.com/astutespruce/sa-blueprint-sv.git
 git clone https://github.com/astutespruce/secas-blueprint.git
 ```
 
 ### Environment setup
 
-In `/home/app/sa-blueprint-sv/deploy/gpstaging` create an `.env` file with:
+Set up a root `.env` file as described in the
+[GeoPlatform operating instructions](../../GeoPlatform.md).
 
 ```
-DOCKER_REGISTRY=<registry>
-COMPOSE_PROJECT_NAME=southatlantic
-TEMP_DIR=/tmp/sa-reports
-MAPBOX_ACCESS_TOKEN=<mapbox token>
-API_TOKEN=<api token>
-API_SECRET=<api secret>
+DOCKER_REGISTRY=971829237832.dkr.ecr.us-east-1.amazonaws.com/blueprint
+KEY_ARN=arn:aws:kms:us-east-1:971829237832:key/0814e3ec-d2b4-493f-a3c0-6e1ef8acb121
+SA_CODE_DIR=/home/app/sa-blueprint-sv
+SA_DATA_DIR=/data/southatlantic
+SE_CODE_DIR=/home/app/secas-blueprint
+SE_DATA_DIR=/data/southeast
+STATIC_DIR=/var/www
+TILE_DIR=/data/tiles
+```
+
+This file must be sourced to perform any Docker operaitons.
+
+Also create a `.env` file in this folder with the following:
+
+```
+COMPOSE_PROJECT_NAME=secas
+MAPBOX_ACCESS_TOKEN=<token>
+API_TOKEN=<token>
+API_SECRET=<secret>
 LOGGING_LEVEL=DEBUG
 REDIS_HOST=redis
-REDIS_PORT=6379
-MBGL_SERVER_URL=http://renderer/render
-ALLOWED_ORIGINS="<hostname>"
-SENTRY_DSN=<sentry DSN>
-MAP_RENDER_THREADS=1
-MAX_JOBS=1
+MBGLRENDER_HOST=renderer
+ALLOWED_ORIGINS=<hosts>
+SENTRY_DSN=<DSN>
+SENTRY_ENV=<env>
+ROOT_URL=<URL>
+
+CADDY=<caddy version>
+REDIS=<redis version>
+MBTILESERVER=<mbtileserver version>
+MBGLRENDERER=<renderer version>
+```
+
+Use `scripts/set_env.sh` to set these variables:
+
+```bash
+ENV=staging scripts/set_env.sh
 ```
 
 ### Pull images (to the EC2 instance)
@@ -69,7 +94,7 @@ export DOCKER_REGISTRY=<registry>
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
 ```
 
-Pull images, in `/home/app/deploy/gpstaging/` directory:
+Pull images in this folder:
 
 ```bash
 docker-compose pull

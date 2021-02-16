@@ -16,7 +16,6 @@ These include:
 DOCKER_REGISTRY=<registry_url>/blueprint
 KEY_ARN=<key used to sign images in ECR>
 PYOGRIO_COMMIT_HASH=<commit hash in pyogrio repository to use for building API>
-DEPLOY_ENV=<deploy environment; one of dev, staging, production>
 SA_CODE_DIR=<location of sa-blueprint-sv repo>
 SA_DATA_DIR=<location of data files for SA>
 SE_CODE_DIR=<location of secas-blueprint repo>
@@ -28,15 +27,10 @@ TILE_DIR=<location of tiles>
 Source this into your shell: `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
-Image versions are managed in the root `public-images` file. Source this into your
-shell: `source public-images`.
-(in Fish shell: `export (grep "^[^#]" public-images |xargs -L 1)`)
+Image versions are managed at the top of `scripts/push_public_images.sh`.
 
-These environment variables must be set to use any of the docker-compose files
-in this repo.
-
-Note: for local development, these may be overridden in the `deploy/dev/.env`
-file to test newer versions before pushing to GeoPlatform.
+These versions must also be set in the `.env` for the deploy
+environment.
 
 ## Initial setup
 
