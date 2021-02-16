@@ -83,6 +83,13 @@ Use `scripts/set_env.sh` to set these variables:
 ENV=staging scripts/set_env.sh
 ```
 
+If that doesn't work:
+
+```bash
+set -a
+source deploy/staging/.env
+```
+
 ### Pull images (to the EC2 instance)
 
 As `app` user:

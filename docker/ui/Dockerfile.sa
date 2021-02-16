@@ -10,3 +10,8 @@ RUN npm install -g npm@7.5 && \
     gatsby telemetry --disable
 
 WORKDIR /app
+
+COPY ./deps/southatlantic/package*.json ./
+RUN npm ci
+
+# Note: this needs to run as root because it writes files back to the host
