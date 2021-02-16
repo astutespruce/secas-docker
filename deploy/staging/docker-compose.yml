@@ -93,7 +93,7 @@ services:
       ]
     volumes:
       - user_upload:/tmp/sa-reports
-      - $SA_DATA_DIR::/home/app/data
+      - $SA_DATA_DIR:/home/app/data
       - $SA_CODE_DIR/api:/home/app/api # main API
       - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
       - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
@@ -115,7 +115,7 @@ services:
       - .env
     command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
-      - user_upload:/tmp/sa-reports
+      - user_upload:/tmp/se-reports
       - $SE_DATA_DIR:/home/app/data
       - $SE_CODE_DIR/api:/home/app/api # main API
       - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
@@ -149,8 +149,8 @@ services:
         "api.api:app",
       ]
     volumes:
-      - user_upload:/tmp/sa-reports
-      - $SE_DATA_DIR::/home/app/data
+      - user_upload:/tmp/se-reports
+      - $SE_DATA_DIR:/home/app/data
       - $SE_CODE_DIR/api:/home/app/api # main API
       - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
       - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators

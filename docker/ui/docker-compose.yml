@@ -8,7 +8,7 @@ services:
     image: ${DOCKER_REGISTRY}/sa-ui-build:latest
     volumes:
       # isolate node_modules within a volume to prevent modifying on host
-      - node_modules:/app/node_modules
+      - /app/node_modules
       - $SA_CODE_DIR/ui:/app
       - $SA_CODE_DIR/constants:/constants
     network_mode: "host"
@@ -19,10 +19,7 @@ services:
       dockerfile: ./Dockerfile.se
     image: ${DOCKER_REGISTRY}/se-ui-build:latest
     volumes:
-      - node_modules:/app/node_modules
+      - /app/node_modules
       - $SE_CODE_DIR/ui:/app
       - $SE_CODE_DIR/constants:/constants
     network_mode: "host"
-
-volumes:
-  node_modules:
