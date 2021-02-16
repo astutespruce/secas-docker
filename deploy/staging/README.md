@@ -107,17 +107,21 @@ Pull images in this folder:
 docker-compose pull
 ```
 
+Note: the UI dependencies are baked into each UI Builder image; if dependencies
+are updated, they will need to be rebuilt and pushed.
+
 ### Build the UI
 
-Create a `.env.production` file in `/home/app/ui` with the following:
+Create `~/sa-blueprint-sv/ui/.env.production` and
+`~/secas-blueprint/ui/.env.production` with the following:
 
 ```
 GATSBY_MAPBOX_API_TOKEN=<mb token>
 GATSBY_API_TOKEN=<api token>
 
 SITE_URL=<site root URL>
-SITE_ROOT_PATH=southatlantic
-GATSBY_API_HOST=<site root URL>/southatlantic
+SITE_ROOT_PATH=<southatlantic or southeast>
+GATSBY_API_HOST=<site root URL>/<southatlantic or southeast>
 GATSBY_TILE_HOST=<site root URL>
 GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
@@ -130,14 +134,15 @@ GATSBY_MS_FORM_AREANAME=<areaname>
 GATSBY_MS_FORM_FILENAME=<filename>
 ```
 
-Note: `--prefix-paths` is required for `gatsby build` to work; this is encapsulated in `build-ui.sh`.
-
-in `/home/app/deploy/gpstaging/ui` directory:
+Pull the images from the root of this repository:
 
 ```bash
-export DOCKER_REGISTRY=<registry url>
-chmod 777 build-ui.sh
-docker-compose pull
-docker-compose build
-./build-ui.sh
+docker-compose -f docker/ui/docker-compose.yml pull
+```
+
+Then build:
+
+```bash
+scripts/build_sa_ui.sh
+scripts/build_se_ui.sh
 ```

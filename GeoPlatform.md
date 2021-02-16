@@ -84,3 +84,9 @@ Push:
 ```bash
 scripts/push_custom_images.sh
 ```
+
+## Support
+
+All requests for assistance with the environment go to gishelpdesk @ zivaro.com
+
+Zivaro staff provide uptime monitoring, patching, and management of the AWS infrastructure.

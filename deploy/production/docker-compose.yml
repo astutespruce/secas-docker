@@ -1,47 +1,45 @@
-version: "3.6"
+version: "3.7"
+
 services:
   caddy:
-    image: ${DOCKER_REGISTRY}/caddy:2.2.1-alpine
-    depends_on:
-      - mbtileserver
+    image: ${DOCKER_REGISTRY}/$CADDY
     restart: always
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/data
       - caddy_config:/config
-      - /var/www:/var/www
+      - $STATIC_DIR:/var/www
     logging:
       driver: journald
     networks:
       - shared
 
   mbtileserver:
-    image: ${DOCKER_REGISTRY}/mbtileserver:latest
+    image: ${DOCKER_REGISTRY}/$MBTILESERVER
     restart: on-failure:5
     command: "--tiles-only"
     volumes:
-      - /data/tiles:/tilesets
+      - $TILE_DIR:/tilesets
     logging:
       driver: journald
     networks:
       - shared
 
   redis:
+    image: ${DOCKER_REGISTRY}/$REDIS
     restart: always
-    image: ${DOCKER_REGISTRY}/redis:6.0.9-alpine
     logging:
       driver: journald
     networks:
       - shared
 
   renderer:
-    image: ${DOCKER_REGISTRY}/mbgl-renderer:latest
+    image: ${DOCKER_REGISTRY}/$MBGLRENDERER
     restart: on-failure:5
     volumes:
-      - /data/tiles:/app/tiles
+      - $TILE_DIR:/app/tiles
     logging:
       driver: journald
     networks:
@@ -61,10 +59,10 @@ services:
     command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
       - user_upload:/tmp/sa-reports
-      - /data/sa:/home/app/data
-      - ../../api:/home/app/api # main API
-      - ../../analysis:/home/app/analysis # needed for analysis utils
-      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SA_DATA_DIR:/home/app/data
+      - $SA_CODE_DIR/api:/home/app/api # main API
+      - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
     logging:
       driver: journald
     networks:
@@ -80,24 +78,82 @@ services:
       - redis
     env_file:
       - .env
-    command: [
+    command:
+      [
         "/usr/local/bin/gunicorn",
         "-k",
         "uvicorn.workers.UvicornWorker",
         "--name",
         "uvicorn",
         "--workers",
-        "1", # TODO: make this higher on production
+        "1",
         "-b",
         ":5000",
         "api.api:app",
       ]
     volumes:
       - user_upload:/tmp/sa-reports
-      - /data/sa:/home/app/data
-      - ../../api:/home/app/api # main API
-      - ../../analysis:/home/app/analysis # needed for analysis utils
-      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $SA_DATA_DIR:/home/app/data
+      - $SA_CODE_DIR/api:/home/app/api # main API
+      - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  se-worker:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - renderer
+    external_links:
+      - redis
+      - renderer
+    env_file:
+      - .env
+    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    volumes:
+      - user_upload:/tmp/se-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SE_CODE_DIR/api:/home/app/api # main API
+      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  se-api:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - se-worker
+    external_links:
+      - redis
+    env_file:
+      - .env
+    command:
+      [
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "--workers",
+        "1",
+        "-b",
+        ":5000",
+        "api.api:app",
+      ]
+    volumes:
+      - user_upload:/tmp/se-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SE_CODE_DIR/api:/home/app/api # main API
+      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
     logging:
       driver: journald
     networks:
