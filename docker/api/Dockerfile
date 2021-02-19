@@ -36,8 +36,13 @@ ENV PYTHONUNBUFFERED 1
 
 # Setup Python dependencies used by API and background worker
 # NOTE: these are the same between South Atlantic and Southeast
-COPY ./requirements.txt /tmp/requirements.txt
-RUN pip3 install --no-warn-script-location -r /tmp/requirements.txt
+COPY ./*requirements.txt /tmp/
+
+# Uninstall existing numpy first so we can upgrade it and pin specific version
+RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
+    pip3 install --no-warn-script-location -r /tmp/install_requirements.txt && \
+    pip3 install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
+    pip3 install --no-warn-script-location -r /tmp/requirements.txt
 
 # Build & install pyogrio (note: update commit SHA1 as required in .env file)
 # PYOGRIO_COMMIT_HASH must be provided via --build-arg for docker build

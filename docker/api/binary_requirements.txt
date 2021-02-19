@@ -1,0 +1,7 @@
+# binary deps that use GDAL or GEOS (must be installed first)
+# last updated 2/17/2021
+
+Fiona==1.8.18
+rasterio==1.2.0
+Shapely==1.7.1
+pygeos==0.9
