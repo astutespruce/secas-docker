@@ -6,6 +6,8 @@
   # redirect site root to southatlantic
   redir / /southatlantic/
 
+  header Strict-Transport-Security "max-age=63072000; preload"
+
   # everything must be in a route to get proper matching order
   route {
     route /services* {

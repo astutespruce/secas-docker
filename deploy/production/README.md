@@ -9,7 +9,7 @@ with the production account.
 
 ## Docker images
 
-See `deploy/gpstaging/README.md` for information about creating and managing
+See `deploy/staging/README.md` for information about creating and managing
 docker images.
 
 ## Data
