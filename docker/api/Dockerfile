@@ -5,8 +5,6 @@ FROM osgeo/gdal:ubuntu-small-3.2.0
 RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
-    libgeos-3.8.0 \
-    libgeos-dev \
     libcairo2 \
     libcairo-gobject2 \
     libpango1.0
