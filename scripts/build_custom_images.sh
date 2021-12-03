@@ -26,3 +26,7 @@ docker-compose -f docker/ui/docker-compose.yml build sa-ui-build se-ui-build
 docker-compose -f docker/api/docker-compose.yml build \
     --build-arg PYOGRIO_COMMIT_HASH=$PYOGRIO_COMMIT_HASH \
     blueprint-api
+
+
+### mbgl-renderer
+docker-compose -f docker/renderer/docker-compose.yml build blueprint-renderer

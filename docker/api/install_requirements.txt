@@ -1,5 +1,5 @@
 # Python dependencies that must be installed to install other dependencies
 
-Cython==0.29.21
-numpy==1.19.5
-pygeos==0.10.2
+Cython==0.29.24
+numpy==1.21.4
+pygeos==0.11.1

@@ -23,7 +23,7 @@ services:
     restart: always
 
   renderer:
-    image: consbio/$MBGLRENDERER
+    image: ${DOCKER_REGISTRY}/blueprint-renderer:latest
     restart: on-failure:5
     volumes:
       - $TILE_DIR:/app/tiles

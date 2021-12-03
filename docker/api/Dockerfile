@@ -1,6 +1,6 @@
 # Provides: Southeast and South Atlantic API and Background Worker image
 
-FROM osgeo/gdal:ubuntu-small-3.2.0
+FROM osgeo/gdal:ubuntu-small-3.3.3
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -45,7 +45,7 @@ RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
 # Build & install pyogrio (note: update commit SHA1 as required in .env file)
 # PYOGRIO_COMMIT_HASH must be provided via --build-arg for docker build
 ARG PYOGRIO_COMMIT_HASH
-RUN git clone https://github.com/brendan-ward/pyogrio.git /home/app/src/pyogrio && \
+RUN git clone https://github.com/geopandas/pyogrio.git /home/app/src/pyogrio && \
     cd /home/app/src/pyogrio && \
     git checkout ${PYOGRIO_COMMIT_HASH} && \
     python setup.py build_ext && \
