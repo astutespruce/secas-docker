@@ -18,7 +18,7 @@ mkdir -p docker/ui/deps/southeast
 cp $SE_CODE_DIR/ui/package*.json docker/ui/deps/southeast
 
 # Build the images
-docker-compose -f docker/ui/docker-compose.yml build sa-ui-build se-ui-build
+docker-compose -f docker/ui/docker-compose.yml build ui-build-base sa-ui-build se-ui-build
 
 
 ### API / Worker

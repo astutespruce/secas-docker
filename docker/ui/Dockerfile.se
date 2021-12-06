@@ -1,15 +1,19 @@
-# Provides: User Interface Builder for South Atlantic and Southeast
+# Provides: User Interface Builder for Southeast
 
-FROM node:16-buster-slim
+# TODO: consolidate further
 
-# install required libGL.so.1 for cwebp
-RUN apt update && apt install -y libgl1-mesa-glx libxi6
+ARG DOCKER_REGISTRY
 
-RUN npm install -g gatsby-cli@4.3 && gatsby telemetry --disable
+FROM ${DOCKER_REGISTRY}/ui-build-base:latest
 
-WORKDIR /app
+ENV GATSBY_CLI_VERSION 4.3
 
 COPY ./deps/southeast/package*.json ./
-RUN npm ci
 
-# Note: this needs to run as root because it writes files back to the host
+USER app
+
+RUN npm ci && \
+    # install gatsby CLI in local environment
+    npm install gatsby-cli@$GATSBY_CLI_VERSION --no-save && \
+    gatsby telemetry --disable && \
+    rm -rf "/home/app/ui/.cache"

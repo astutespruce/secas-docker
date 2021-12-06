@@ -1,10 +1,21 @@
 version: "3.7"
 
 services:
+  ui-build-base:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: ${DOCKER_REGISTRY}/ui-build-base:latest
+
   sa-ui-build:
     build:
       context: .
       dockerfile: ./Dockerfile.sa
+      args:
+        DOCKER_REGISTRY: "${DOCKER_REGISTRY}"
+    env_file:
+      - ../../.env
+
     image: ${DOCKER_REGISTRY}/sa-ui-build:latest
     volumes:
       # isolate node_modules within a volume to prevent modifying on host when
@@ -18,6 +29,10 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.se
+      args:
+        DOCKER_REGISTRY: "${DOCKER_REGISTRY}"
+    env_file:
+      - ../../.env
     image: ${DOCKER_REGISTRY}/se-ui-build:latest
     volumes:
       - /app/node_modules

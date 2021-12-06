@@ -19,6 +19,8 @@ aws ecr create-repository --profile geoplatform-test --repository-name blueprint
 
 aws ecr create-repository --profile geoplatform-test --repository-name blueprint/blueprint-api --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
 
+aws ecr create-repository --profile geoplatform-test --repository-name blueprint/ui-build-base --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
+
 aws ecr create-repository --profile geoplatform-test --repository-name blueprint/sa-ui-build --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
 
 aws ecr create-repository --profile geoplatform-test --repository-name blueprint/se-ui-build --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=$KEY_ARN
