@@ -74,7 +74,6 @@ ROOT_URL=<URL>
 CADDY=<caddy version>
 REDIS=<redis version>
 MBTILESERVER=<mbtileserver version>
-MBGLRENDERER=<renderer version>
 ```
 
 Use `scripts/set_env.sh` to set these variables:

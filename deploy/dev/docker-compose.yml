@@ -27,6 +27,8 @@ services:
     restart: on-failure:5
     volumes:
       - $TILE_DIR:/app/tiles
+    ports:
+      - "8002:80"
 
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest

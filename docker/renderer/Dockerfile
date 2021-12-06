@@ -12,7 +12,6 @@ ENV NODE_VERSION 10.24.1
 # Note: this raises a deprecation warning for NodeJS 10
 RUN set -ex \
     && apt-get update && apt-get install -y ca-certificates curl dirmngr xz-utils --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
     && curl -fsSLO --compressed "https://nodejs.org/dist/latest-v10.x/node-v$NODE_VERSION-linux-x64.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && rm "node-v$NODE_VERSION-linux-x64.tar.xz" \
@@ -24,13 +23,18 @@ RUN set -ex \
     | cut -d: -f1 \
     | sort -u \
     | xargs -r apt-mark manual \
+    && apt-get remove -y dirmngr xz-utils \
     # smoke tests
     && node --version \
     && npm --version
 
+
+ENV MBGL_RENDERER_VERSION 0.7.3
+
 # Install dependecies required by mbgl-renderer
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    # note: curl added again here to prevent from autoremove
+    curl \
     libcairo2-dev \
     libgles2-mesa-dev \
     libgbm-dev \
@@ -39,12 +43,18 @@ RUN apt-get update && \
     libxxf86vm-dev \
     xvfb \
     x11-utils && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get autoremove -y && \
-    npm install mbgl-renderer --no-save && \
+    npm install mbgl-renderer@$MBGL_RENDERER_VERSION --no-save && \
     npm prune --production && \
+    npm uninstall node-gyp && \
     rm -rf "/app/node_modules/@mapbox/tiletype/test" && \
     rm -rf "/app/node_modules/restify/benchmark" && \
+    rm -rf "/app/node_modules/mbgl-renderer/tests" && \
+    rm -rf "/root/.npm" && \
+    rm -rf "/root/.cache" && \
+    # remove packages known not to be needed and cleanup apt cache
+    apt-get autoremove -y && \
+    apt-get remove -y libc6-dev && \
+    rm -rf "/var/lib/apt/lists/*" && \
     # create local directory for tiles to prevent startup errors
     # if this is not defined via a bind point to host
     mkdir /app/tiles
