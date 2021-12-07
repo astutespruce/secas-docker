@@ -1,6 +1,6 @@
 # Custom NodeJS image for project-specific UI build images
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ENV NODE_VERSION 16.13.1
 ENV NODE_ENV production
@@ -46,7 +46,7 @@ RUN set -ex && \
     | cut -d: -f1 \
     | sort -u \
     | xargs -r apt-mark manual && \
-    apt-get remove -y gnupg dirmngr xz-utils && \
+    apt-get remove -y gnupg dirmngr xz-utils curl && \
     rm -rf "/var/lib/apt/lists/*" && \
     chown -R app:app /home/app && \
     # smoke tests

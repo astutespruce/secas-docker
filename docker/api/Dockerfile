@@ -24,6 +24,10 @@ RUN mkdir /usr/share/fonts/google && \
     unzip -o /tmp/SourceSansPro.zip -d /usr/share/fonts/google && \
     fc-cache -fv
 
+# Cleanup
+RUN apt-get remove -y curl && \
+    rm -rf "/var/lib/apt/lists/*"
+
 RUN useradd --create-home app
 WORKDIR /home/app
 # Note: we are not able to use a user here because we have to mount a volume
