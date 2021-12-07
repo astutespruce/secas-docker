@@ -21,7 +21,7 @@ services:
     volumes:
       # isolate node_modules within a volume to prevent modifying on host when
       # building image
-      - /app/node_modules
+      - /app/ui/node_modules
       - ${SA_CODE_DIR}/ui:/home/app/ui
       - ${SA_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
@@ -37,7 +37,7 @@ services:
       - ../../.env
     image: ${DOCKER_REGISTRY}/se-ui-build:latest
     volumes:
-      - /app/node_modules
+      - /app/ui/node_modules
       - ${SE_CODE_DIR}/ui:/home/app/ui
       - ${SE_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
