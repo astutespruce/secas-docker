@@ -1,14 +1,13 @@
-# Provides: User Interface Builder for Southeast
-
-# TODO: consolidate further
-
+# Provides: User Interface Builder for South Atlantic
 ARG DOCKER_REGISTRY
 
 FROM ${DOCKER_REGISTRY}/ui-build-base:latest
 
 ENV GATSBY_CLI_VERSION 4.3
 
-COPY ./deps/southeast/package*.json ./
+ARG APP_NAME
+
+COPY ./deps/$APP_NAME/package*.json ./
 
 USER app
 

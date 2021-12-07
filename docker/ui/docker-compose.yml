@@ -4,15 +4,16 @@ services:
   ui-build-base:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.base
     image: ${DOCKER_REGISTRY}/ui-build-base:latest
 
   sa-ui-build:
     build:
       context: .
-      dockerfile: ./Dockerfile.sa
+      dockerfile: ./Dockerfile.build
       args:
-        DOCKER_REGISTRY: "${DOCKER_REGISTRY}"
+        APP_NAME: southatlantic
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
     env_file:
       - ../../.env
 
@@ -21,21 +22,22 @@ services:
       # isolate node_modules within a volume to prevent modifying on host when
       # building image
       - /app/node_modules
-      - $SA_CODE_DIR/ui:/home/app/ui
-      - $SA_CODE_DIR/constants:/home/app/constants
+      - ${SA_CODE_DIR}/ui:/home/app/ui
+      - ${SA_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
 
   se-ui-build:
     build:
       context: .
-      dockerfile: ./Dockerfile.se
+      dockerfile: ./Dockerfile.build
       args:
-        DOCKER_REGISTRY: "${DOCKER_REGISTRY}"
+        APP_NAME: southeast
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
     env_file:
       - ../../.env
     image: ${DOCKER_REGISTRY}/se-ui-build:latest
     volumes:
       - /app/node_modules
-      - $SE_CODE_DIR/ui:/home/app/ui
-      - $SE_CODE_DIR/constants:/home/app/constants
+      - ${SE_CODE_DIR}/ui:/home/app/ui
+      - ${SE_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
