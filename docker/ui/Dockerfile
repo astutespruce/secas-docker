@@ -54,3 +54,5 @@ RUN set -ex && \
     npm --version && \
     # create a link for gatsby even though it isn't installed yet
     ln -s /home/app/ui/node_modules/.bin/gatsby /usr/local/bin/gatsby
+
+USER app

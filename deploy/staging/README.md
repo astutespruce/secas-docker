@@ -133,10 +133,10 @@ GATSBY_MS_FORM_AREANAME=<areaname>
 GATSBY_MS_FORM_FILENAME=<filename>
 ```
 
-Pull the images from the root of this repository (build base image intentionally omitted):
+Pull the build image from the root of this repository:
 
 ```bash
-docker-compose -f docker/ui/docker-compose.yml pull sa-ui-build se-ui-build
+docker-compose -f docker/ui/docker-compose.yml pull
 ```
 
 Then build:

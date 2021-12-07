@@ -4,40 +4,21 @@ services:
   ui-build-base:
     build:
       context: .
-      dockerfile: ./Dockerfile.base
+      dockerfile: ./Dockerfile
     image: ${DOCKER_REGISTRY}/ui-build-base:latest
 
   sa-ui-build:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.build
-      args:
-        APP_NAME: southatlantic
-        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
-    env_file:
-      - ../../.env
-
-    image: ${DOCKER_REGISTRY}/sa-ui-build:latest
+    image: ${DOCKER_REGISTRY}/ui-build-base:latest
     volumes:
-      # isolate node_modules within a volume to prevent modifying on host when
-      # building image
-      - /app/ui/node_modules
+      # NOTE: node_modules are written to the host directory, but are replaced on each build
       - ${SA_CODE_DIR}/ui:/home/app/ui
       - ${SA_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
 
   se-ui-build:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.build
-      args:
-        APP_NAME: southeast
-        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
-    env_file:
-      - ../../.env
-    image: ${DOCKER_REGISTRY}/se-ui-build:latest
+    image: ${DOCKER_REGISTRY}/ui-build-base:latest
     volumes:
-      - /app/ui/node_modules
+      # NOTE: node_modules are written to the host directory, but are replaced on each build
       - ${SE_CODE_DIR}/ui:/home/app/ui
       - ${SE_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
