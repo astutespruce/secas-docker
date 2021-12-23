@@ -4,7 +4,7 @@
 # in the deploy environment
 CADDY=caddy:2.4.6-alpine
 REDIS=redis:6.2.6-alpine
-MBTILESERVER=mbtileserver:latest
+MBTILESERVER=mbtileserver:0.8.0
 
 
 docker pull $CADDY
