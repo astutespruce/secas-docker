@@ -14,7 +14,7 @@ services:
 
   mbtileserver:
     image: consbio/$MBTILESERVER
-    restart: on-failure:5
+    restart: always
     volumes:
       - $TILE_DIR:/tilesets
 
@@ -24,7 +24,7 @@ services:
 
   renderer:
     image: ${DOCKER_REGISTRY}/blueprint-renderer:latest
-    restart: on-failure:5
+    restart: always
     volumes:
       - $TILE_DIR:/app/tiles
     ports:
@@ -32,7 +32,7 @@ services:
 
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: on-failure:5
+    restart: always
     depends_on:
       - redis
       - renderer
@@ -50,7 +50,7 @@ services:
 
   sa-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: on-failure:5
+    restart: always
     depends_on:
       - redis
     env_file:
@@ -78,7 +78,7 @@ services:
 
   se-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: on-failure:5
+    restart: always
     depends_on:
       - redis
       - renderer
@@ -96,7 +96,7 @@ services:
 
   se-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: on-failure:5
+    restart: always
     depends_on:
       - redis
     env_file:

@@ -12,7 +12,7 @@
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *"
+    header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *; child-src 'self' blob:;"
     header X-Content-Type-Options nosniff
 
     route /services* {
