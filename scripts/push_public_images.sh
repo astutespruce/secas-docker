@@ -2,9 +2,9 @@
 
 # NOTE: these versions must also be set in the .env
 # in the deploy environment
-CADDY=caddy:2.4.6-alpine
-REDIS=redis:6.2.6-alpine
-MBTILESERVER=mbtileserver:0.8.0
+CADDY=caddy:2.5.1-alpine
+REDIS=redis:7.0.0-alpine
+MBTILESERVER=mbtileserver:0.8.2
 
 
 docker pull $CADDY

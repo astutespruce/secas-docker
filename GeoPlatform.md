@@ -16,6 +16,7 @@ These include:
 DOCKER_REGISTRY=<registry_url>/blueprint
 KEY_ARN=<key used to sign images in ECR>
 PYOGRIO_COMMIT_HASH=<commit hash in pyogrio repository to use for building API>
+PYMGL_VERSION=<latest version of pymgl>
 SA_CODE_DIR=<location of sa-blueprint-sv repo>
 SA_DATA_DIR=<location of data files for SA>
 SE_CODE_DIR=<location of secas-blueprint repo>

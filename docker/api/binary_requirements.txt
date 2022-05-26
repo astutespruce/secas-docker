@@ -1,5 +1,6 @@
 # binary deps that use GDAL
-# last updated 11/30/2021
+# last updated 5/24/2022
 
-Fiona==1.8.20
-rasterio==1.2.0
+Fiona==1.8.21
+pyogrio==0.4.0a1
+rasterio==1.2.10

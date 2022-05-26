@@ -16,29 +16,24 @@ services:
     image: consbio/$MBTILESERVER
     restart: always
     volumes:
-      - $TILE_DIR:/tilesets
+      - $HOST_TILE_DIR:/tilesets  # use $TILE_DIR for staging / production
 
   redis:
     image: $REDIS
     restart: always
-
-  renderer:
-    image: ${DOCKER_REGISTRY}/blueprint-renderer:latest
-    restart: always
-    volumes:
-      - $TILE_DIR:/app/tiles
-    ports:
-      - "8002:80"
 
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: always
     depends_on:
       - redis
-      - renderer
     env_file:
       - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    entrypoint: "/home/app/run_xvfb.sh"
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
     volumes:
       - user_upload:/tmp/sa-reports
       - $SA_DATA_DIR:/home/app/data
@@ -47,6 +42,7 @@ services:
       - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
       - $SA_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
       - $SA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+      - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
   sa-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
@@ -81,10 +77,13 @@ services:
     restart: always
     depends_on:
       - redis
-      - renderer
     env_file:
       - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    entrypoint: "/home/app/run_xvfb.sh"
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
     volumes:
       - user_upload:/tmp/se-reports
       - $SE_DATA_DIR:/home/app/data
@@ -93,6 +92,7 @@ services:
       - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
       - $SE_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
       - $SE_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+      - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
   se-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
