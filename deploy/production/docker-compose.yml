@@ -55,6 +55,7 @@ services:
       - $SA_CODE_DIR/api:/home/app/api # main API
       - $SA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
       - $SA_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $TILE_DIR:/tilesets
     logging:
       driver: journald
     networks:
@@ -114,6 +115,7 @@ services:
       - $SE_CODE_DIR/api:/home/app/api # main API
       - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
       - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+      - $TILE_DIR:/tilesets
     logging:
       driver: journald
     networks:
