@@ -35,28 +35,20 @@ services:
     networks:
       - shared
 
-  renderer:
-    image: ${DOCKER_REGISTRY}/blueprint-renderer:latest
-    restart: always
-    volumes:
-      - $TILE_DIR:/app/tiles
-    logging:
-      driver: journald
-    networks:
-      - shared
-
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: always
     depends_on:
       - redis
-      - renderer
     external_links:
       - redis
-      - renderer
     env_file:
       - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    entrypoint: "/home/app/run_xvfb.sh"
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
     volumes:
       - user_upload:/tmp/sa-reports
       - $SA_DATA_DIR:/home/app/data
@@ -107,13 +99,15 @@ services:
     restart: always
     depends_on:
       - redis
-      - renderer
     external_links:
       - redis
-      - renderer
     env_file:
       - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    entrypoint: "/home/app/run_xvfb.sh"
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
     volumes:
       - user_upload:/tmp/se-reports
       - $SE_DATA_DIR:/home/app/data

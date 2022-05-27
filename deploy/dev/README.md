@@ -15,7 +15,6 @@ API_TOKEN=<token>
 API_SECRET=<secret>
 LOGGING_LEVEL=DEBUG
 REDIS_HOST=redis
-MBGLRENDER_HOST=renderer
 SENTRY_ENV="development"
 SA_SITE_URL=<host>/southatlantic
 SE_SITE_URL=<host>/southeast

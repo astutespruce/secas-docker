@@ -1,13 +1,25 @@
 # Provides: Southeast and South Atlantic API and Background Worker image
 
-FROM osgeo/gdal:ubuntu-small-3.3.3
+FROM osgeo/gdal:ubuntu-small-3.4.3
 
 RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
+    # dependencies for Weasyprint
     libcairo2 \
     libcairo-gobject2 \
-    libpango1.0
+    libpango1.0 \
+    # dependencies for pymgl
+    libicu66 \
+    libjpeg-turbo8 \
+    libpng16-16 \
+    libprotobuf17 \
+    libuv1 \
+    libx11-6 \
+    libegl1 \
+    libopengl0 \
+    xvfb \
+    x11-utils
 
 # Install fonts for both South Atlantic and Southeast apps
 # South Atlantic: Montserrat & Lora
@@ -35,6 +47,11 @@ WORKDIR /home/app
 
 ENV PYTHONPATH="${PYTHONPATH}:/home/app"
 ENV PYTHONUNBUFFERED 1
+ENV DISPLAY :99
+
+COPY ./run_xvfb.sh /home/app/
+RUN chmod a+x /home/app/run_xvfb.sh
+
 
 # Setup Python dependencies used by API and background worker
 # NOTE: these are the same between South Atlantic and Southeast
@@ -44,14 +61,8 @@ COPY ./*requirements.txt /tmp/
 RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
     pip3 install --no-warn-script-location -r /tmp/install_requirements.txt && \
     pip3 install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
-    pip3 install --no-warn-script-location -r /tmp/requirements.txt
+    pip3 install --no-warn-script-location -r /tmp/requirements.txt && \
+    # pymgl is only available for Ubuntu, not manylinux, so we need to specify URL
+    pip3 install --no-warn-script-location https://github.com/brendan-ward/pymgl/releases/download/v0.2.1/pymgl-0.2.1-cp38-cp38-linux_x86_64.whl
 
-# Build & install pyogrio (note: update commit SHA1 as required in .env file)
-# PYOGRIO_COMMIT_HASH must be provided via --build-arg for docker build
-ARG PYOGRIO_COMMIT_HASH
-RUN git clone https://github.com/geopandas/pyogrio.git /home/app/src/pyogrio && \
-    cd /home/app/src/pyogrio && \
-    git checkout ${PYOGRIO_COMMIT_HASH} && \
-    python setup.py build_ext && \
-    python setup.py install && \
-    cd /home/app
+
