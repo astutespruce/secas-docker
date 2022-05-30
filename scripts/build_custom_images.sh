@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for VARIABLE in PYOGRIO_COMMIT_HASH PYMGL_VERSION
+for VARIABLE in PYMGL_VERSION
 do
     if [[ -z ${!VARIABLE} ]]; then
         echo "$VARIABLE must be set" 1>&2

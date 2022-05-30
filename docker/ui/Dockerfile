@@ -2,7 +2,7 @@
 
 FROM debian:bookworm-slim
 
-ENV NODE_VERSION 16.13.1
+ENV NODE_VERSION 16.15.0
 ENV NODE_ENV production
 
 # 1001 corresponds to uid for app user on staging / production
@@ -13,8 +13,12 @@ WORKDIR /home/app/ui
 
 RUN set -ex && \
     apt-get update && \
-    # install required libGL.so.1 (via libgl and libxi) for cwebp; all others are for node
-    apt-get install -y --no-install-recommends ca-certificates curl dirmngr gnupg xz-utils libgl1-mesa-glx libxi6 && \
+    # install libs required for node
+    apt-get install -y --no-install-recommends ca-certificates curl dirmngr gnupg xz-utils \
+    # install build essentials and python3 required for node-gyp when native binaries not available
+    build-essential python3 \
+    # install required libGL.so.1 (via libgl and libxi) for cwebp
+    libgl1-mesa-glx libxi6 && \
     # import keys for NodeJS
     for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \

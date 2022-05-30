@@ -9,9 +9,10 @@ reverse proxy service as static files.
 Because each application may use slightly different Javascript dependencies,
 each application has a separate Dockerfile.
 
-The images are built using `scripts/build_custom_images.sh`. These copy
-package.json files from the source repositories to `deps/*` here to create
-the Docker images.
+The images are built using `scripts/build_custom_images.sh`.
 
 The UI build steps are run using the `build-sa-ui.sh` and `build-se-ui.sh`
 scripts in the `ui` folder of the applicable environment.
+
+The UI build automatically fetches the dependencies defined in the package.lock
+files for each application using `npm ci` including `gatsby-cli`.
