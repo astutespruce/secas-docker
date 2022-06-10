@@ -47,13 +47,14 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/ /pixelfilter/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
     file_server /southatlantic*
     file_server /southeast*
+    file_server /pixelfilter*
 
     # redirect everything else to a 404 page
     handle {

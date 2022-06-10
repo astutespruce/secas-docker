@@ -27,6 +27,5 @@ services:
     image: ${DOCKER_REGISTRY}/ui-build-base:latest
     volumes:
       # NOTE: node_modules are written to the host directory, but are replaced on each build
-      - ${PIXELFILTER_CODE_DIR}/ui:/home/app/ui
-      - ${PIXELFILTER_CODE_DIR}/constants:/home/app/constants
+      - ${PIXELFILTER_CODE_DIR}:/home/app
     network_mode: "host"
