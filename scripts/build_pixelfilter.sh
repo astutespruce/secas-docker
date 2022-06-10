@@ -9,7 +9,7 @@ do
     fi
 done
 
-echo "Deploying UI to $STATIC_DIR/southeast"
+echo "Deploying UI to $STATIC_DIR/pixelfilter"
 
 if docker-compose -f ./docker/ui/docker-compose.yml run --rm --user app pixelfilter-demo-build npm run deploy; then
     echo "====> UI build succeeded"
