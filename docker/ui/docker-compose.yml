@@ -22,3 +22,11 @@ services:
       - ${SE_CODE_DIR}/ui:/home/app/ui
       - ${SE_CODE_DIR}/constants:/home/app/constants
     network_mode: "host"
+
+  pixelfilter-demo-build:
+    image: ${DOCKER_REGISTRY}/ui-build-base:latest
+    volumes:
+      # NOTE: node_modules are written to the host directory, but are replaced on each build
+      - ${PIXELFILTER_CODE_DIR}/ui:/home/app/ui
+      - ${PIXELFILTER_CODE_DIR}/constants:/home/app/constants
+    network_mode: "host"
