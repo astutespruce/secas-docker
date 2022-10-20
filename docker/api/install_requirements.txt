@@ -4,6 +4,8 @@ Cython==0.29.30
 numpy==1.23.1
 
 # use wheels for shapely / pygeos because GEOS on ubuntu 20.04 is old
+# NOTE: these use a different version of GEOS than each other, which
+# produces warnings about conversions being slow
 pygeos==0.13.0
 shapely==1.8.5
 
