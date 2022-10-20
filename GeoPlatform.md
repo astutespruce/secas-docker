@@ -15,11 +15,11 @@ These include:
 ```
 DOCKER_REGISTRY=<registry_url>/blueprint
 KEY_ARN=<key used to sign images in ECR>
-PYMGL_VERSION=<latest version of pymgl>
 SA_CODE_DIR=<location of sa-blueprint-sv repo>
 SA_DATA_DIR=<location of data files for SA>
 SE_CODE_DIR=<location of secas-blueprint repo>
 SE_DATA_DIR=<location of data files for SE>
+SSA_CODE_DIR=<location of secas-ssa repo>
 STATIC_DIR=<location to which static UI assets are deployed>
 TILE_DIR=<location of tiles>
 ```

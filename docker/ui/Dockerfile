@@ -1,8 +1,8 @@
 # Custom NodeJS image for project-specific UI build images
 
-FROM debian:bookworm-slim
+FROM debian:bullseye-slim
 
-ENV NODE_VERSION 16.15.0
+ENV NODE_VERSION 16.16.0
 ENV NODE_ENV production
 
 # 1001 corresponds to uid for app user on staging / production

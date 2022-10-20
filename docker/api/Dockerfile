@@ -1,6 +1,7 @@
-# Provides: Southeast and South Atlantic API and Background Worker image
+# Provides: Southeast and SSA API and Background Worker image
 
-FROM osgeo/gdal:ubuntu-small-3.4.3
+# WARNING: this image uses Python 3.8; but using 3.10 for local dev
+FROM osgeo/gdal:ubuntu-small-3.5.2
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -21,14 +22,8 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     x11-utils
 
-# Install fonts for both South Atlantic and Southeast apps
-# South Atlantic: Montserrat & Lora
-# Southeast: Raleway & Source Sans Pro
+# Install fonts for both Southeast apps Raleway & Source Sans Pro
 RUN mkdir /usr/share/fonts/google && \
-    curl https://fonts.google.com/download?family=Montserrat --output /tmp/Montserrat.zip && \
-    unzip -o /tmp/Montserrat.zip -d /usr/share/fonts/google && \
-    curl https://fonts.google.com/download?family=Lora --output /tmp/Lora.zip && \
-    unzip -o /tmp/Lora.zip -d /usr/share/fonts/google && \
     curl https://fonts.google.com/download?family=Raleway --output /tmp/Raleway.zip && \
     unzip -o /tmp/Raleway.zip -d /usr/share/fonts/google && \
     mv /usr/share/fonts/google/static/* /usr/share/fonts/google/ && \
@@ -54,15 +49,16 @@ RUN chmod a+x /home/app/run_xvfb.sh
 
 
 # Setup Python dependencies used by API and background worker
-# NOTE: these are the same between South Atlantic and Southeast
 COPY ./*requirements.txt /tmp/
 
 # Uninstall existing numpy first so we can upgrade it and pin specific version
 RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
     pip3 install --no-warn-script-location -r /tmp/install_requirements.txt && \
     pip3 install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
+    # install geopandas without dependencies to prevent installing Fiona
+    pip3 install --no-warn-script-location geopandas==0.11.1 --no-deps && \
     pip3 install --no-warn-script-location -r /tmp/requirements.txt && \
-    # pymgl is only available for Ubuntu, not manylinux, so we need to specify URL
-    pip3 install --no-warn-script-location https://github.com/brendan-ward/pymgl/releases/download/v0.2.1/pymgl-0.2.1-cp38-cp38-linux_x86_64.whl
+    # pymgl is only available for Ubuntu, not manylinux, so we need to specify URL with version
+    pip3 install --no-warn-script-location https://github.com/brendan-ward/pymgl/releases/download/v0.2.2/pymgl-0.2.2-cp38-cp38-linux_x86_64.whl
 
 
