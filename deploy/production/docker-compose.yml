@@ -164,7 +164,6 @@ services:
       - redis
     env_file:
       - .env
-    entrypoint: "/home/app/run_xvfb.sh"
     command: [
       "/usr/local/bin/arq",
       "api.worker.WorkerSettings"

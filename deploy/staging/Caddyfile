@@ -37,6 +37,11 @@
       reverse_proxy se-api:5000
     }
 
+    route /ssa/api/* {
+      uri strip_prefix /ssa
+      reverse_proxy ssa-api:5000
+    }
+
     # most files can be cached indefinitely, they are rebuilt with new names each time
     @cached_files {
       path *.jpg *.jpeg *.png *.gif *.ico *.webp *.svg *.css *.js */static/*
