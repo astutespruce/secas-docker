@@ -3,8 +3,8 @@
     level ERROR
   }
 
-  # redirect site root to southatlantic
-  redir / /southatlantic/
+  # redirect site root to southeast
+  redir / /southeast/
 
   # everything must be in a route to get proper matching order
   route {
@@ -12,6 +12,12 @@
     header X-Frame-Options "DENY"
     header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' * blob:; child-src 'self' blob:;"
     header X-Content-Type-Options nosniff
+    header Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Set CORS: allow all origins for testing
+    header Access-Control-Allow-Origin *
+    header Access-Control-Request-Method *
+    header Access-Control-Request-Headers *
 
     route /services* {
         header Cache-Control "public, max-age=3600, must-revalidate"
@@ -30,6 +36,11 @@
       reverse_proxy se-api:5000
     }
 
+    route /ssa/api/* {
+      uri strip_prefix /ssa
+      reverse_proxy ssa-api:5000
+    }
+
     # most files can be cached indefinitely, they are rebuilt with new names each time
     @cached_files {
       path *.jpg *.jpeg *.png *.gif *.ico *.webp *.svg *.css *.js */static/*
@@ -45,27 +56,28 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ /ssa/ */custom_report/ */report/ */datasets/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
     file_server /southatlantic*
     file_server /southeast*
+    file_server /ssa*
 
     # redirect everything else to a 404 page
     handle {
-      redir * /southatlantic/404.html
+      redir * /southeast/404.html
     }
   }
 
-  # send any errors to South Atlantic 404 page
+  # send any errors to Southeast 404 page
   # note this is redir instead of rewrite, because gatsby doesn't properly handle
   # URLs rewritten to its error page
   handle_errors {
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * /southatlantic/404.html
+      redir * /southeast/404.html
   }
 }

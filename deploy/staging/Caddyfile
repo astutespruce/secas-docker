@@ -3,17 +3,22 @@
     level ERROR
   }
 
-  # redirect site root to southatlantic
-  redir / /southatlantic/
-
-  header Strict-Transport-Security "max-age=63072000; preload"
+  # redirect site root to southeast
+  redir / /southeast/
 
   # everything must be in a route to get proper matching order
   route {
     # common headers
+    header Strict-Transport-Security "max-age=63072000; preload"
     header X-Frame-Options "DENY"
     header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *; child-src 'self' blob:;"
     header X-Content-Type-Options nosniff
+    header Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Set CORS
+    header Access-Control-Allow-Origin "https://blueprint-test.geoplatform.gov"
+    header Access-Control-Request-Method *
+    header Access-Control-Request-Headers *
 
     route /services* {
         header Cache-Control "public, max-age=3600, must-revalidate"
@@ -54,21 +59,22 @@
     root * /var/www
     file_server /southatlantic*
     file_server /southeast*
+    file_server /ssa*
     file_server /pixelfilter*
 
     # redirect everything else to a 404 page
     handle {
-      redir * /southatlantic/404.html
+      redir * /southeast/404.html
     }
   }
 
-  # send any errors to South Atlantic 404 page
+  # send any errors to Southeast 404 page
   # note this is redir instead of rewrite, because gatsby doesn't properly handle
   # URLs rewritten to its error page
   handle_errors {
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * /southatlantic/404.html
+      redir * /southeast/404.html
   }
 }

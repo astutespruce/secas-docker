@@ -122,6 +122,55 @@ services:
       - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
       - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
 
+  ssa-worker:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    # entrypoint: "/home/app/run_xvfb.sh"
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
+    volumes:
+      - user_upload:/tmp/ssa-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SSA_CODE_DIR/api:/home/app/api # main API
+      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+      - $SSA_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+      - $SSA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+
+  ssa-api:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    command:
+      [
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "-b",
+        ":5000",
+        "--capture-output",
+        "--log-level",
+        "DEBUG",
+        "api.api:app",
+      ]
+    volumes:
+      - user_upload:/tmp/ssa-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SSA_CODE_DIR/api:/home/app/api # main API
+      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+
 volumes:
   caddy_certs:
   caddy_config:

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # NOTE: these versions must also be set in the .env
-# in the deploy environment
-CADDY=caddy:2.6.1-alpine
-REDIS=redis:7.0.5-alpine
-MBTILESERVER=mbtileserver:0.9.0
+# in the deploy environment and sourced before running here
+# CADDY=caddy:2.6.1-alpine
+# REDIS=redis:7.0.5-alpine
+# MBTILESERVER=mbtileserver:0.9.0
 
 
 # NOTE: pull only the linux/amd images for use on Geoplatform
