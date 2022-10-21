@@ -67,6 +67,16 @@
     file_server /ssa*
     file_server /pixelfilter*
 
+    # redirect favicon.ico to southeast
+    handle {
+      redir /favicon.ico /southeast/favicon.ico
+    }
+
+    # redirect robots.txt to southeast
+    handle {
+      redir /robots.txt /southeast/robots.txt
+    }
+
     # redirect everything else to a 404 page
     handle {
       redir * /southeast/404.html
