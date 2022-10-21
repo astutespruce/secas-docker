@@ -9,29 +9,6 @@ for a given environment in GeoPlatform, please see the associated documentation:
 
 Docker images are managed using AWS ECR service within GeoPlatform.
 
-Run-time environment variables are added to the `.env` file in the root of this folder.
-These include:
-
-```
-DOCKER_REGISTRY=<registry_url>/blueprint
-KEY_ARN=<key used to sign images in ECR>
-SA_CODE_DIR=<location of sa-blueprint-sv repo>
-SA_DATA_DIR=<location of data files for SA>
-SE_CODE_DIR=<location of secas-blueprint repo>
-SE_DATA_DIR=<location of data files for SE>
-SSA_CODE_DIR=<location of secas-ssa repo>
-STATIC_DIR=<location to which static UI assets are deployed>
-TILE_DIR=<location of tiles>
-```
-
-Source this into your shell: `source .env`.
-(in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
-
-Image versions are managed at the top of `scripts/push_public_images.sh`.
-
-These versions must also be set in the `.env` for the deploy
-environment.
-
 ## Initial setup
 
 Setup the AWS CLI v2. Add a profile called `geoplatform-test` to the
