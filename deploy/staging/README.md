@@ -44,8 +44,8 @@ Set up a root `.env` file as described in the
 [GeoPlatform operating instructions](../../GeoPlatform.md).
 
 ```
-DOCKER_REGISTRY=971829237832.dkr.ecr.us-east-1.amazonaws.com/blueprint
-KEY_ARN=arn:aws:kms:us-east-1:971829237832:key/0814e3ec-d2b4-493f-a3c0-6e1ef8acb121
+DOCKER_REGISTRY=<registry>
+KEY_ARN=<key ARN>
 SA_CODE_DIR=/home/app/sa-blueprint-sv
 SA_DATA_DIR=/data/southatlantic
 SE_CODE_DIR=/home/app/secas-blueprint
@@ -60,15 +60,27 @@ Also create a `.env` file in this folder with the following:
 
 ```
 COMPOSE_PROJECT_NAME=secas
+DOCKER_REGISTRY=<registry>
+KEY_ARN=<key ARN>
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
 API_SECRET=<secret>
-LOGGING_LEVEL=DEBUG
+LOGGING_LEVEL=<DEBUG or INFO>
 REDIS_HOST=redis
-ALLOWED_ORIGINS=<hosts>
 SENTRY_DSN=<DSN>
 SENTRY_ENV=<env>
 ROOT_URL=<URL>
+TILE_DIR=<tile directory on host>
+MAP_RENDER_THREADS=<1 or 4>
+MAX_JOBS=<1 or 4>
+CUSTOM_REPORT_MAX_ACRES=10000000
+
+SA_CODE_DIR=<directory containing sa-blueprint-sv repository>
+SA_DATA_DIR=<directory containing South Atlantic data>
+SE_CODE_DIR=<directory containing secas-blueprint repository>
+SSA_CODE_DIR=<directory containing secas-ssa repository>
+SE_DATA_DIR=<directory containing Southeast data>
+
 
 CADDY=<caddy version>
 REDIS=<redis version>
@@ -86,6 +98,12 @@ If that doesn't work:
 ```bash
 set -a
 source deploy/staging/.env
+```
+
+For local development in in Fish shell:
+
+```
+export (grep "^[^#]" .env |xargs -L 1)`
 ```
 
 ### Pull images (to the EC2 instance)
@@ -119,17 +137,10 @@ GATSBY_API_TOKEN=<api token>
 
 SITE_URL=<site root URL>
 SITE_ROOT_PATH=<southatlantic or southeast>
-GATSBY_API_HOST=<site root URL>/<southatlantic or southeast>
+GATSBY_API_HOST=<site root URL>
 GATSBY_TILE_HOST=<site root URL>
 GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
-
-GATSBY_MS_FORM_EMAIL=<email>
-GATSBY_MS_FORM_NAME=<name>
-GATSBY_MS_FORM_ORG=<org>
-GATSBY_MS_FORM_USE=<use>
-GATSBY_MS_FORM_AREANAME=<areaname>
-GATSBY_MS_FORM_FILENAME=<filename>
 ```
 
 Pull the build image from the root of this repository:
@@ -143,4 +154,5 @@ Then build:
 ```bash
 scripts/build_sa_ui.sh
 scripts/build_se_ui.sh
+scripts/build_ssa_ui.sh
 ```

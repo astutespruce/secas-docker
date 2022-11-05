@@ -1,20 +1,22 @@
 #!/bin/bash
 
 # NOTE: these versions must also be set in the .env
-# in the deploy environment
-CADDY=caddy:2.5.1-alpine
-REDIS=redis:7.0.0-alpine
-MBTILESERVER=mbtileserver:0.8.2
+# in the deploy environment and sourced before running here
+# CADDY=caddy:2.6.1-alpine
+# REDIS=redis:7.0.5-alpine
+# MBTILESERVER=mbtileserver:0.9.0
 
 
-docker pull $CADDY
+# NOTE: pull only the linux/amd images for use on Geoplatform
+
+docker pull $CADDY --platform linux/amd64
 docker tag $CADDY $DOCKER_REGISTRY/$CADDY
 docker push $DOCKER_REGISTRY/$CADDY
 
-docker pull $REDIS
+docker pull $REDIS --platform linux/amd64
 docker tag $REDIS $DOCKER_REGISTRY/$REDIS
 docker push $DOCKER_REGISTRY/$REDIS
 
-docker pull consbio/$MBTILESERVER
+docker pull consbio/$MBTILESERVER --platform linux/amd64
 docker tag consbio/$MBTILESERVER $DOCKER_REGISTRY/$MBTILESERVER
 docker push $DOCKER_REGISTRY/$MBTILESERVER

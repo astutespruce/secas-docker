@@ -155,6 +155,64 @@ services:
     networks:
       - shared
 
+  ssa-worker:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    depends_on:
+      - redis
+    external_links:
+      - redis
+    env_file:
+      - .env
+    command: [
+      "/usr/local/bin/arq",
+      "api.worker.WorkerSettings"
+    ]
+    volumes:
+      - user_upload:/tmp/ssa-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SSA_CODE_DIR/api:/home/app/api # main API
+      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  ssa-api:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    depends_on:
+      - redis
+      - ssa-worker
+    external_links:
+      - redis
+    env_file:
+      - .env
+    command:
+      [
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "--workers",
+        "1",
+        "-b",
+        ":5000",
+        "api.api:app",
+      ]
+    volumes:
+      - user_upload:/tmp/ssa-reports
+      - $SE_DATA_DIR:/home/app/data
+      - $SSA_CODE_DIR/api:/home/app/api # main API
+      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+    logging:
+      driver: journald
+    networks:
+      - shared
+
 networks:
   shared:
     driver: bridge

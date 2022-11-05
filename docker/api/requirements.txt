@@ -1,23 +1,32 @@
-# last updated 5/24/2022
+# last updated 10/19/2022
+
+### Shared dependencies
 affine==2.3.1
 aiofiles==0.8.0
-arq==0.23a1
-fastapi==0.78.0
-geopandas==0.10.2
+arq==0.24.0
+fastapi==0.79.0
+# geopandas==0.11.1  # installed separately, without dependencies
 gunicorn==20.1.0
 h11==0.12 # required to meet other dependency requirements
-jinja2==3.1.2
-pandas==1.4.2
-Pillow==9.1.1
+pandas==1.4.3
 progress==1.6
 pyarrow==8.0.0
-# pymgl: installed manually due to lack of manylinux wheels
 python-dotenv==0.20.0
 python-multipart==0.0.5
-sentry-sdk==1.5.12
-uvicorn[standard]==0.17.6
-WeasyPrint==55.0
+sentry-sdk==1.9.0
+uvicorn[standard]==0.18.2
 
-# use wheels for shapely / pygeos because GEOS on ubuntu 20.04 is old
-shapely==1.8.2
-pygeos==0.12.0
+
+### Dependencies for geopandas, since we install it without them to avoid Fiona
+pyproj==3.4.0
+
+
+
+### Dependencies for Southeast Blueprint Explorer
+jinja2==3.1.2
+Pillow==9.2.0
+# pymgl: installed manually due to lack of manylinux wheels
+WeasyPrint==57.0
+
+### Dependencies for Southeast Species Status Landscape Assessment Tool
+openpyxl==3.0.10

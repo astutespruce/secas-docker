@@ -1,13 +1,14 @@
 # USFWS SECAS Southeast Conservation Blueprint Explorer & South Atlantic Conservation Blueprint Simple Viewer Deployment
 
 This repository includes deployment configuration and instructions for deploying
-the Southeast Conservation Blueprint Explorer and South Atlantic Conservation
-Blueprint Simple Viewer.
+the Southeast Conservation Blueprint Explorer, South Atlantic Conservation
+Blueprint Simple Viewer, and Southeast Species Status Landscape Assessment Tool.
 
 The code for those viewers are managed in separate repositories:
 
 -   [Southeast Conservation Blueprint Explorer](https://github.com/astutespruce/secas-blueprint)
 -   [South Atlantic Conservation Blueprint Simple Viewer](https://github.com/astutespruce/sa-blueprint-sv)
+-   [Southeast Species Status Landscape Assessment Tool](https://github.com/astutespruce/secas-ssa)
 
 These projects are deployed using Docker into different environments:
 

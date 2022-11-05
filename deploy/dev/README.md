@@ -10,14 +10,14 @@ An `.env` file in this folder contains the following variables:
 COMPOSE_PROJECT_NAME=secas
 SA_DIR=<location of sa-blueprint-sv repo>
 SE_DIR=<location of secas-blueprint repo>
+SSA_DIR=<location of secas-ssa repo>
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
 API_SECRET=<secret>
 LOGGING_LEVEL=DEBUG
 REDIS_HOST=redis
 SENTRY_ENV="development"
-SA_SITE_URL=<host>/southatlantic
-SE_SITE_URL=<host>/southeast
+ROOT_URL=<host URL>
 ```
 
 Source this file in your shell `source .env`.
