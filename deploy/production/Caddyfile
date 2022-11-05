@@ -27,11 +27,6 @@
 
     encode zstd gzip
 
-    route /southatlantic/api/* {
-      uri strip_prefix /southatlantic
-      reverse_proxy sa-api:5000
-    }
-
     route /southeast/api/* {
       uri strip_prefix /southeast
       reverse_proxy se-api:5000
@@ -57,12 +52,11 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+      path *.html *.webmanifest */page-data/* /southeast/ */custom_report/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
-    file_server /southatlantic*
     file_server /southeast*
     file_server /ssa*
 
