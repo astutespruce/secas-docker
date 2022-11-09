@@ -6,6 +6,9 @@
   # redirect site root to southeast
   redir / /southeast/
 
+  # redirect south atlantic to southeast
+  redir /southatlantic/ /southeast/
+
   # everything must be in a route to get proper matching order
   route {
     # common headers
