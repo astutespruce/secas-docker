@@ -24,7 +24,7 @@ pyproj==3.4.0
 
 ### Dependencies for Southeast Blueprint Explorer
 jinja2==3.1.2
-Pillow==9.2.0
+Pillow==9.3.0
 # pymgl: installed manually due to lack of manylinux wheels
 WeasyPrint==57.0
 
