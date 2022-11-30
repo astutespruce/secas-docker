@@ -73,7 +73,7 @@ ROOT_URL=<URL>
 TILE_DIR=<tile directory on host>
 MAP_RENDER_THREADS=<1 or 4>
 MAX_JOBS=<1 or 4>
-CUSTOM_REPORT_MAX_ACRES=10000000
+CUSTOM_REPORT_MAX_ACRES=15000000
 
 SA_CODE_DIR=<directory containing sa-blueprint-sv repository>
 SA_DATA_DIR=<directory containing South Atlantic data>
