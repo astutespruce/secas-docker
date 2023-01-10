@@ -1,7 +1,6 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-# WARNING: this image uses Python 3.8; but using 3.10 for local dev
-FROM osgeo/gdal:ubuntu-small-3.5.2
+FROM osgeo/gdal:ubuntu-small-3.6.2
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -11,10 +10,10 @@ RUN apt-get update && apt-get install -y \
     libcairo-gobject2 \
     libpango1.0 \
     # dependencies for pymgl
-    libicu66 \
+    libicu70 \
     libjpeg-turbo8 \
     libpng16-16 \
-    libprotobuf17 \
+    libprotobuf23 \
     libuv1 \
     libx11-6 \
     libegl1 \
@@ -30,10 +29,6 @@ RUN mkdir /usr/share/fonts/google && \
     curl https://fonts.google.com/download?family=Source+Sans+Pro --output /tmp/SourceSansPro.zip && \
     unzip -o /tmp/SourceSansPro.zip -d /usr/share/fonts/google && \
     fc-cache -fv
-
-# Cleanup
-RUN apt-get remove -y curl && \
-    rm -rf "/var/lib/apt/lists/*"
 
 RUN useradd --create-home app
 WORKDIR /home/app
@@ -53,12 +48,15 @@ COPY ./*requirements.txt /tmp/
 
 # Uninstall existing numpy first so we can upgrade it and pin specific version
 RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
-    pip3 install --no-warn-script-location -r /tmp/install_requirements.txt && \
-    pip3 install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
+    pip install --no-warn-script-location -r /tmp/install_requirements.txt && \
+    pip install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
     # install geopandas without dependencies to prevent installing Fiona
-    pip3 install --no-warn-script-location geopandas==0.11.1 --no-deps && \
-    pip3 install --no-warn-script-location -r /tmp/requirements.txt && \
+    pip install --no-warn-script-location geopandas==0.12.2 --no-deps && \
+    pip install --no-warn-script-location -r /tmp/requirements.txt && \
     # pymgl is only available for Ubuntu, not manylinux, so we need to specify URL with version
-    pip3 install --no-warn-script-location https://github.com/brendan-ward/pymgl/releases/download/v0.2.2/pymgl-0.2.2-cp38-cp38-linux_x86_64.whl
+    curl -L https://github.com/brendan-ward/pymgl/releases/download/v0.3.1/pymgl-0.3.1-cp310-cp310-linux_x86_64.whl.ubuntu-22.04 --output /tmp/pymgl-0.3.1-cp310-cp310-linux_x86_64.whl && \
+    pip install --no-warn-script-location /tmp/pymgl-0.3.1-cp310-cp310-linux_x86_64.whl
 
-
+# Cleanup
+RUN apt-get remove -y curl && \
+    rm -rf "/var/lib/apt/lists/*"

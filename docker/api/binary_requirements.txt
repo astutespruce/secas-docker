@@ -1,5 +1,5 @@
 # binary deps that use GDAL
-# last updated 10/19/2022
+# last updated 1/10/2023
 
 # Fiona==1.8.21  # no longer used; specifically excluded from geopandas
 pyogrio==0.4.2
