@@ -8,5 +8,5 @@ shapely==2.0.0
 # following are needed for building rasterio in this env
 flit_core==3.7.1
 packaging==21.3
-setuptools==58.1.0
+setuptools==65.5.1
 wheel==0.37.1
