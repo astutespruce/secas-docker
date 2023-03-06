@@ -6,6 +6,9 @@
   # redirect site root to southeast
   redir / /southeast/
 
+# redirect south atlantic to southeast
+  redir /southatlantic/ /southeast/
+
   # everything must be in a route to get proper matching order
   route {
     # common headers
@@ -26,11 +29,6 @@
     }
 
     encode zstd gzip
-
-    route /southatlantic/api/* {
-      uri strip_prefix /southatlantic
-      reverse_proxy sa-api:5000
-    }
 
     route /southeast/api/* {
       uri strip_prefix /southeast
@@ -57,15 +55,13 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/ /pixelfilter/
+      path *.html *.webmanifest */page-data/* /southeast/ /ssa/ */custom_report/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
-    file_server /southatlantic*
     file_server /southeast*
     file_server /ssa*
-    file_server /pixelfilter*
 
     # redirect favicon.ico to southeast
     handle {
