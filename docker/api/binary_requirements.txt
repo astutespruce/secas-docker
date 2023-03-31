@@ -1,8 +1,8 @@
 # binary deps that use GDAL
-# last updated 1/10/2023
+# last updated 3/30/2023
 
 # Fiona==1.8.21  # no longer used; specifically excluded from geopandas
-pyogrio==0.4.2
-rasterio==1.3.0
+pyogrio==0.5.1
+rasterio==1.3.6
 
 # pymgl==0.2.2  # must be installed in Dockerfile directly from wheel in Dockerfile
