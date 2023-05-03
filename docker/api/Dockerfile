@@ -1,6 +1,7 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.6.3
+# WARNING: major performance regression in 3.6.3-3.6.4 for warping small areas
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.6.2
 
 RUN apt-get update && apt-get install -y \
     git \

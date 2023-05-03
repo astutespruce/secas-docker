@@ -1,7 +1,7 @@
 # Python dependencies that must be installed to install other dependencies
 
-Cython==0.29.30
-numpy==1.24.1
+Cython==0.29.34
+numpy==1.24.3
 versioneer[toml]==0.28
 
 shapely==2.0.1
@@ -11,3 +11,8 @@ flit_core==3.7.1
 packaging==21.3
 setuptools==65.5.1
 wheel==0.38.1
+attrs==23.1.0
+
+# needed for attrs
+hatch==1.7.0
+hatchling==1.14.1
