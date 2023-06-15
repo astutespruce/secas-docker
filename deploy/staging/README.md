@@ -1,13 +1,24 @@
-# South Atlantic Simple Viewer Deployment - DOI GeoPlatform - Staging
+# Deployment to staging environment
+
+IMPORTANT: unless otherwise noted, everything is run as `app` user, make sure to
+run the following each time you SSH into this instance (after setting up the
+user account below).
+
+```bash
+sudo su app
+```
 
 ## Instance setup
+
+The base instance is provided by Zivaro according to specifications defined
+separately. This guide covers setup of the services used by the application.
 
 Upgrade `docker-compose`:
 
 1. uninstall installation via `apt-get`: `sudo apt-get remove docker-compose`
 2. Install using `curl` using link on docker-compose website.
 
-Everything is run as `app` user. Create user and transfer ownership of main directories:
+### Create user and transfer ownership of main directories:
 
 ```bash
 sudo useradd --create-home app
@@ -27,67 +38,52 @@ As `app` user:
 
 ```bash
 rm -rf /var/www/html
-mkdir /var/www/southatlantic
 mkdir /var/www/southeast
-mkdir /data/sa
+mkdir /var/www/ssa
 mkdir /data/se
 mkdir /data/tiles
 cd ~
 git clone https://github.com/astutespruce/secas-docker.git
-git clone https://github.com/astutespruce/sa-blueprint-sv.git
 git clone https://github.com/astutespruce/secas-blueprint.git
+git clone https://github.com/astutespruce/secas-ssa.git
 ```
 
 ### Environment setup
 
-Set up a root `.env` file as described in the
-[GeoPlatform operating instructions](../../GeoPlatform.md).
+#### Setup Docker environment variables
 
-```
-DOCKER_REGISTRY=<registry>
-KEY_ARN=<key ARN>
-SA_CODE_DIR=/home/app/sa-blueprint-sv
-SA_DATA_DIR=/data/southatlantic
-SE_CODE_DIR=/home/app/secas-blueprint
-SE_DATA_DIR=/data/southeast
-STATIC_DIR=/var/www
-TILE_DIR=/data/tiles
-```
-
-This file must be sourced to perform any Docker operaitons.
-
-Also create a `.env` file in this folder with the following:
+Set up an environment file at `~/secas-docker/deploy/staging/.env`:
 
 ```
 COMPOSE_PROJECT_NAME=secas
 DOCKER_REGISTRY=<registry>
-KEY_ARN=<key ARN>
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
 API_SECRET=<secret>
-LOGGING_LEVEL=<DEBUG or INFO>
+LOGGING_LEVEL=INFO
 REDIS_HOST=redis
 SENTRY_DSN=<DSN>
-SENTRY_ENV=<env>
-ROOT_URL=<URL>
-TILE_DIR=<tile directory on host>
-MAP_RENDER_THREADS=<1 or 4>
-MAX_JOBS=<1 or 4>
+SENTRY_ENV=blueprint-test.geoplatform.gov
+ROOT_URL=https://blueprint-test.geoplatform.gov
+ALLOWED_ORIGINS=https://blueprint-test.geoplatform.gov
+MAP_RENDER_THREADS=4
+MAX_JOBS=4
 CUSTOM_REPORT_MAX_ACRES=15000000
 
-SA_CODE_DIR=<directory containing sa-blueprint-sv repository>
-SA_DATA_DIR=<directory containing South Atlantic data>
-SE_CODE_DIR=<directory containing secas-blueprint repository>
-SSA_CODE_DIR=<directory containing secas-ssa repository>
-SE_DATA_DIR=<directory containing Southeast data>
-
+TILE_DIR=/data/tiles
+SE_CODE_DIR=/home/app/secas-blueprint
+SSA_CODE_DIR=/home/app/secas-ssa
+SE_DATA_DIR=/data/se
+STATIC_DIR=/var/www
 
 CADDY=<caddy version>
 REDIS=<redis version>
 MBTILESERVER=<mbtileserver version>
 ```
 
-Use `scripts/set_env.sh` to set these variables:
+IMPORTANT: This file must be sourced to perform any Docker operations.
+
+You can use `scripts/set_env.sh` to set these variables:
 
 ```bash
 ENV=staging scripts/set_env.sh
@@ -97,62 +93,184 @@ If that doesn't work:
 
 ```bash
 set -a
-source deploy/staging/.env
+source ~/secas-docker/deploy/staging/.env
 ```
 
-For local development in in Fish shell:
+#### Setup user interface environment variables
 
-```
-export (grep "^[^#]" .env |xargs -L 1)`
-```
-
-### Pull images (to the EC2 instance)
-
-As `app` user:
-
-Create Docker token:
+Create `~/secas-blueprint/ui/.env.production` with the following:
 
 ```bash
-export DOCKER_REGISTRY=<registry>
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-```
-
-Pull images in this folder:
-
-```bash
-docker-compose pull
-```
-
-Note: the UI dependencies are baked into each UI Builder image; if dependencies
-are updated, they will need to be rebuilt and pushed.
-
-### Build the UI
-
-Create `~/sa-blueprint-sv/ui/.env.production` and
-`~/secas-blueprint/ui/.env.production` with the following:
-
-```
-GATSBY_MAPBOX_API_TOKEN=<mb token>
+GATSBY_MAPBOX_API_TOKEN=<mapbox token>
 GATSBY_API_TOKEN=<api token>
 
-SITE_URL=<site root URL>
-SITE_ROOT_PATH=<southatlantic or southeast>
-GATSBY_API_HOST=<site root URL>
-GATSBY_TILE_HOST=<site root URL>
+SITE_ROOT_PATH=southeast
+SITE_URL=https://blueprint-test.geoplatform.gov/southeast
+GATSBY_API_HOST=https://blueprint-test.geoplatform.gov/southeast
+GATSBY_TILE_HOST=https://blueprint-test.geoplatform.gov
+
 GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 ```
 
-Pull the build image from the root of this repository:
+Create `~/secas-ssa/ui/.env.production` with the following:
 
 ```bash
+GATSBY_MAPBOX_API_TOKEN=<mapbox token>
+GATSBY_API_TOKEN=<api token>
+
+SITE_ROOT_PATH=ssa
+SITE_URL=https://blueprint-test.geoplatform.gov/ssa
+GATSBY_API_HOST=https://blueprint-test.geoplatform.gov/ssa
+
+GATSBY_SENTRY_DSN=<dsn>
+GATSBY_GOOGLE_ANALYTICS_ID=<id>
+```
+
+## Upload data
+
+Use rsync or your tool of choice to upload data from the Southeast Blueprint
+Explorer or Southeast Species Landscape Status Assessment tool data folders
+(which files to upload are specific to each of those projects). These are
+loaded to `/data/se` on the server.
+
+Note: `/data` is an EFS volume and is slower to write to and more likely to
+encounter network errors while uploading. If you have issues, you can upload
+smaller files (not many GB) to `/tmp` first and then transfer on the server
+to `/data`.
+
+After upload, change permissions using the default user when you SSH to the
+server (not the `app` user):
+
+```
+sudo chown -R app:app /data
+```
+
+## Update Docker images on the server
+
+Create Docker token:
+
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+```
+
+NOTE: this is a slight variant of the procedure in `GeoPlatform.md` for locally
+setting this token since it behaves differently on the instance due to using
+SSH.
+
+Pull images in this folder:
+
+```bash
+cd ~/secas-docker/deploy/staging
+docker-compose pull
+```
+
+Then bring the services up:
+
+```bash
+docker-compose up -d
+```
+
+Make sure that each service started and is healthy.
+
+```bash
+docker-compose ps
+```
+
+should show that `State` is `Up` for each of the Docker containers.
+
+If there are problems, you can use
+
+```bash
+docker-compose logs --tail 100 <service>
+```
+
+## Update API / backend code
+
+### Southeast Blueprint Explorer
+
+To update API / backend code for the Southeast Blueprint Explorer:
+
+```bash
+cd ~/secas-blueprint
+git pull origin
+cd ~/secas-docker/deploy/staging
+set -a
+source .env
+docker-compose restart se-worker se-api
+```
+
+Then verify the services came up properly:
+
+```bash
+docker-compose logs --tail se-worker
+docker-compose logs --tail se-api
+```
+
+### Species Landscape Status Assessment Tool
+
+To update API / backend code for the Species Landscape Status Assessment Tool:
+
+```bash
+cd ~/secas-ssa
+git pull origin
+cd ~/secas-docker/deploy/staging
+set -a
+source .env
+docker-compose restart ssa-worker ssa-api
+```
+
+Then verify the services came up properly:
+
+```bash
+docker-compose logs --tail ssa-worker
+docker-compose logs --tail ssa-api
+```
+
+## Update user interface code and build it
+
+The UI needs to be rebuilt anytime there is an update to the user interface
+code for either of the applications. The build step automatically updates the
+environment to use the Javascript package versions specified in the
+`package-lock.json` files in each app's `ui` folder.
+
+If needed, pull the latest UI build image from the root of this repository:
+
+```bash
+cd ~/secas-docker
 docker-compose -f docker/ui/docker-compose.yml pull
 ```
 
-Then build:
+### Southeast Blueprint Explorer
+
+To rebuild the frontend for the Southeast Blueprint Explorer:
 
 ```bash
-scripts/build_sa_ui.sh
+cd ~/secas-blueprint
+git pull origin
+cd ~/secas-docker
+set -a
+source ~/secas-docker/deploy/staging/.env
 scripts/build_se_ui.sh
+```
+
+### Species Landscape Status Assessment Tool
+
+To rebuild the frontend for the Species Landscape Status Assessment Tool:
+
+```bash
+cd ~/secas-ssa
+git pull origin
+cd ~/secas-docker
+set -a
+source ~/secas-docker/deploy/staging/.env
 scripts/build_ssa_ui.sh
 ```
+
+## Verify applications are operating properly
+
+Go to the following URLs and verify that they are online and functioning
+properly:
+
+-   https://blueprint.geoplatform.gov/southeast/
+-   https://blueprint.geoplatform.gov/ssa/
