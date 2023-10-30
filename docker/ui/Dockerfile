@@ -2,7 +2,7 @@
 
 FROM debian:bullseye-slim
 
-ENV NODE_VERSION 18.12.0
+ENV NODE_VERSION 20.9.0
 ENV NODE_ENV production
 
 # 1001 corresponds to uid for app user on staging / production

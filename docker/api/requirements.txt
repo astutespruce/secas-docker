@@ -1,29 +1,29 @@
-# last updated 5/1/2023
+# last updated 10/20/2023
 
 ### Shared dependencies
 affine==2.4.0
-aiofiles==23.1.0
+aiofiles==23.2.0
 arq==0.25.0
-fastapi==0.95.1
+fastapi==0.95.2
 # geopandas==0.12.2  # installed separately, without dependencies
-gunicorn==20.1.0
+gunicorn==21.2.0
 h11==0.12 # required to meet other dependency requirements
-pandas==1.5.3
+pandas==2.1.1
 progress==1.6
-pyarrow==11.0.0
+pyarrow==13.0.0
 python-dotenv==1.0.0
 python-multipart==0.0.6
-sentry-sdk==1.21.1
-uvicorn[standard]==0.22.0
+sentry-sdk==1.31.0
+uvicorn[standard]==0.23.2
 
 ### Dependencies for geopandas, since we install it without them to avoid Fiona
-pyproj==3.4.0
+pyproj==3.6.1
 
 ### Dependencies for Southeast Blueprint Explorer
 jinja2==3.1.2
-Pillow==9.4.0
+Pillow==10.0.1
 # pymgl: installed manually due to lack of manylinux wheels
-WeasyPrint==58.1
+WeasyPrint==60.0
 
 ### Dependencies for Southeast Species Status Landscape Assessment Tool
 openpyxl==3.1.2
