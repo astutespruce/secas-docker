@@ -7,7 +7,7 @@ arq==0.25.0
 fastapi==0.95.2
 # geopandas==0.12.2  # installed separately, without dependencies
 gunicorn==21.2.0
-h11==0.12 # required to meet other dependency requirements
+h11==0.14 # required to meet other dependency requirements
 pandas==2.1.1
 progress==1.6
 pyarrow==13.0.0
