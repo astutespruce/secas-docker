@@ -1,7 +1,7 @@
 #!/bin/bash
 # Create AWS ECR repositories
 
-
+# KEY_ARN is currently only required variable
 for VARIABLE in KEY_ARN
 do
     if [[ -z ${!VARIABLE} ]]; then
