@@ -1,10 +1,10 @@
 # Python dependencies that must be installed to install other dependencies
 
-Cython==3.0.2
-numpy==1.26.0
+Cython==3.0.6
+numpy==1.26.2
 versioneer[toml]==0.28
 
-shapely==2.0.1
+shapely==2.0.2
 
 # following are needed for building rasterio in this env
 flit_core==3.7.1

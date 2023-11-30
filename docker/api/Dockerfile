@@ -1,6 +1,6 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.7.2
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.8.1
 
 RUN apt-get update && apt-get install -y \
     git \
