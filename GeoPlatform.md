@@ -83,10 +83,28 @@ In fish shell:
 export (grep "^[^#]" .env |xargs -L 1)`
 ```
 
-Fetch AWS token to use ECR:
+Retrieve short-term credentials:
+Use the PIV-based login workflow to login to the AWS account, then under the
+test account, click `Command line or programmatic access`.
+
+Copy the contents of Option 2 into your `~/.aws/config` file, which will look
+like:
 
 ```bash
-aws ecr get-login-password --region us-east-1 --profile geoplatform-test | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+[account_ID]
+aws_access_key_id = <key>
+aws_secret_access_key = <key>
+aws_session_token = <token>
+```
+
+prefix the `[account_ID]` with `profile` so it looks like `[profile account_ID]`.
+
+IMPORTANT: these credentials are only valid for a short period.
+
+Fetch AWS token to use ECR using the `account_ID` from above:
+
+```bash
+aws ecr get-login-password --region us-east-1 --profile <account_ID> | docker login --username AWS --password-stdin $DOCKER_REGISTRY
 ```
 
 NOTE token is valid for a limited time; you will need to run the above if it

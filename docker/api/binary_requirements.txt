@@ -1,5 +1,5 @@
 # binary deps that use GDAL
-# last updated 11/30/2023
+# last updated 02/29/2024
 
 pyogrio==0.7.2
 rasterio==1.3.9

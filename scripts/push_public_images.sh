@@ -2,8 +2,8 @@
 
 # NOTE: these versions must also be set in the .env
 # in the deploy environment and sourced before running here
-# CADDY=caddy:2.7.5-alpine
-# REDIS=redis:7.2.2-alpine
+# CADDY=caddy:2.7.6-alpine
+# REDIS=redis:7.2.4-alpine
 # MBTILESERVER=mbtileserver:0.10.0
 
 
