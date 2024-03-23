@@ -48,14 +48,18 @@ COPY ./*requirements.txt /tmp/
 
 # Uninstall existing numpy first so we can upgrade it and pin specific version
 RUN rm -rf /usr/lib/python3/dist-packages/numpy* && \
-    pip install --no-warn-script-location -r /tmp/install_requirements.txt && \
-    pip install --no-warn-script-location --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
+    # use uv for much faster pip installs
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    # source the file to make uv available
+    . $HOME/.cargo/env && \
+    uv pip install --system -r /tmp/install_requirements.txt && \
+    uv pip install --system --no-binary  ":all:" --no-build-isolation -r /tmp/binary_requirements.txt && \
     # install geopandas without dependencies to prevent installing Fiona
-    pip install --no-warn-script-location geopandas==0.14.0 --no-deps && \
-    pip install --no-warn-script-location -r /tmp/requirements.txt && \
+    uv pip install --system geopandas==0.14.0 --no-deps && \
+    uv pip install --system -r /tmp/requirements.txt && \
     # pymgl is only available for Ubuntu, not manylinux, so we need to specify URL with version
-    curl -L https://github.com/brendan-ward/pymgl/releases/download/v0.4.0/pymgl-0.4.0-cp310-cp310-linux_x86_64.whl.ubuntu-22.04 --output /tmp/pymgl-0.4.0-cp310-cp310-linux_x86_64.whl && \
-    pip install --no-warn-script-location /tmp/pymgl-0.4.0-cp310-cp310-linux_x86_64.whl
+    curl -L https://github.com/brendan-ward/pymgl/releases/download/v0.4.0/pymgl-0.4.0-cp310-cp310-linux_aarch64.whl.ubuntu-22.04 --output /tmp/pymgl-0.4.0-cp310-cp310-linux_aarch64.whl && \
+    uv pip install --system /tmp/pymgl-0.4.0-cp310-cp310-linux_aarch64.whl
 
 # Cleanup
 RUN apt-get remove -y curl && \

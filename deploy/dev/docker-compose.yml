@@ -1,134 +1,132 @@
 version: "3.7"
 
 services:
-  caddy:
-    image: $CADDY
-    platform: linux/amd64
-    restart: always
-    ports:
-      - "8080:80"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_certs:/root/.caddy
-      - caddy_config:/config
-      - $STATIC_DIR:/var/www
+    caddy:
+        image: ${DOCKER_REGISTRY}/$CADDY
+        platform: linux/arm64
+        restart: always
+        ports:
+            - "8080:80"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - caddy_certs:/root/.caddy
+            - caddy_config:/config
+            - $STATIC_DIR:/var/www
 
-  mbtileserver:
-    image: consbio/$MBTILESERVER
-    platform: linux/amd64
-    restart: always
-    volumes:
-      - $HOST_TILE_DIR:/tilesets  # use $TILE_DIR for staging / production
+    mbtileserver:
+        image: ${DOCKER_REGISTRY}/$MBTILESERVER
+        platform: linux/arm64
+        restart: always
+        volumes:
+            - $HOST_TILE_DIR:/tilesets # use $TILE_DIR for staging / production
+        ports:
+            - "8001:8000"
 
-  redis:
-    image: $REDIS
-    platform: linux/amd64
-    restart: always
+    redis:
+        image: ${DOCKER_REGISTRY}/$REDIS
+        platform: linux/arm64
+        restart: always
 
-  se-worker:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    platform: linux/amd64
-    cap_add:
-      - SYS_PTRACE
-    restart: always
-    depends_on:
-      - redis
-    env_file:
-      - .env
-    entrypoint: "/home/app/run_xvfb.sh"
-    command: [
-      "/usr/local/bin/arq",
-      "api.worker.WorkerSettings"
-    ]
-    volumes:
-      - user_upload:/tmp/se-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SE_CODE_DIR/api:/home/app/api # main API
-      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-      - $SE_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
-      - $SE_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
-      - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
+    se-worker:
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        platform: linux/arm64
+        cap_add:
+            - SYS_PTRACE
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        entrypoint: "/home/app/run_xvfb.sh"
+        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        volumes:
+            - user_upload:/tmp/se-reports
+            - $SE_DATA_DIR:/home/app/data
+            - $SE_CODE_DIR/api:/home/app/api # main API
+            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $SE_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+            - $SE_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+            - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
-  se-api:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    platform: linux/amd64
-    restart: always
-    depends_on:
-      - redis
-    env_file:
-      - .env
-    command:
-      [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "-b",
-        ":5000",
-        "--capture-output",
-        "--log-level",
-        "DEBUG",
-        "api.api:app",
-      ]
-    volumes:
-      - user_upload:/tmp/se-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SE_CODE_DIR/api:/home/app/api # main API
-      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+    se-api:
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/usr/local/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "-b",
+                ":5000",
+                "--capture-output",
+                "--log-level",
+                "DEBUG",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/se-reports
+            - $SE_DATA_DIR:/home/app/data
+            - $SE_CODE_DIR/api:/home/app/api # main API
+            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+        ports:
+            - "5000:5000"
 
-  ssa-worker:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-    env_file:
-      - .env
-    # entrypoint: "/home/app/run_xvfb.sh"
-    command: [
-      "/usr/local/bin/arq",
-      "api.worker.WorkerSettings"
-    ]
-    volumes:
-      - user_upload:/tmp/ssa-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SSA_CODE_DIR/api:/home/app/api # main API
-      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
-      - $SSA_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
-      - $SSA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+    ssa-worker:
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        # entrypoint: "/home/app/run_xvfb.sh"
+        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        volumes:
+            - user_upload:/tmp/ssa-reports
+            - $SE_DATA_DIR:/home/app/data
+            - $SSA_CODE_DIR/api:/home/app/api # main API
+            - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+            - $SSA_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+            - $SSA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
 
-  ssa-api:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-    env_file:
-      - .env
-    command:
-      [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "-b",
-        ":5000",
-        "--capture-output",
-        "--log-level",
-        "DEBUG",
-        "api.api:app",
-      ]
-    volumes:
-      - user_upload:/tmp/ssa-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SSA_CODE_DIR/api:/home/app/api # main API
-      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+    ssa-api:
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/usr/local/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "-b",
+                ":5000",
+                "--capture-output",
+                "--log-level",
+                "DEBUG",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/ssa-reports
+            - $SE_DATA_DIR:/home/app/data
+            - $SSA_CODE_DIR/api:/home/app/api # main API
+            - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
 
 volumes:
-  caddy_certs:
-  caddy_config:
-  user_upload:
+    caddy_certs:
+    caddy_config:
+    user_upload:

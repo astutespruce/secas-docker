@@ -1,9 +1,9 @@
 version: "3.7"
 
 services:
-  blueprint-api:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    platform: linux/amd64
+    blueprint-api:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        platform: linux/arm64

@@ -80,7 +80,7 @@ source .env
 In fish shell:
 
 ```fish
-export (grep "^[^#]" .env |xargs -L 1)`
+export (grep "^[^#]" .env |xargs -L 1)
 ```
 
 Retrieve short-term credentials:
@@ -101,10 +101,10 @@ prefix the `[account_ID]` with `profile` so it looks like `[profile account_ID]`
 
 IMPORTANT: these credentials are only valid for a short period.
 
-Fetch AWS token to use ECR using the `account_ID` from above:
+Fetch AWS token to use ECR using the `account_ID` from above (exported as `AWS_ACCOUNT_ID` env var):
 
 ```bash
-aws ecr get-login-password --region us-east-1 --profile <account_ID> | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+aws ecr get-login-password --region us-east-1 --profile $AWS_ACCOUNT_ID | docker login --username AWS --password-stdin $DOCKER_REGISTRY
 ```
 
 NOTE token is valid for a limited time; you will need to run the above if it
