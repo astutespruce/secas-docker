@@ -13,19 +13,23 @@ sudo su app
 The base instance is provided by Zivaro according to specifications defined
 separately. This guide covers setup of the services used by the application.
 
-Upgrade `docker-compose`:
+### Install docker compose
 
-1. uninstall installation via `apt-get`: `sudo apt-get remove docker-compose`
-2. Install using `curl` using link on docker-compose website.
+```bash
+sudo apt-get update
+sudo apt-get install docker-compose
+```
 
 ### Create user and transfer ownership of main directories:
 
 ```bash
-sudo useradd --create-home app
+sudo groupadd --gid 1010 app
+sudo useradd --uid 1010 --gid app --shell /bin/bash --create-home app
 sudo usermod -aG docker app
+sudo mkdir /var/www
 sudo chown app:app /var/www
 sudo chown app:app /data
-usermod --shell /bin/bash app
+sudo usermod --shell /bin/bash app
 ```
 
 Add current domain user to `app` group:
@@ -34,10 +38,9 @@ Add current domain user to `app` group:
 sudo usermod -a -G app <domain user>
 ```
 
-As `app` user:
+as `app` user:
 
 ```bash
-rm -rf /var/www/html
 mkdir /var/www/southeast
 mkdir /var/www/ssa
 mkdir /data/se
@@ -47,6 +50,8 @@ git clone https://github.com/astutespruce/secas-docker.git
 git clone https://github.com/astutespruce/secas-blueprint.git
 git clone https://github.com/astutespruce/secas-ssa.git
 ```
+
+NOTE: only create `data/*` folders if they don't already exist on the attached EFS data volume.
 
 ### Environment setup
 
@@ -68,7 +73,7 @@ ROOT_URL=https://blueprint-test.geoplatform.gov
 ALLOWED_ORIGINS=https://blueprint-test.geoplatform.gov
 MAP_RENDER_THREADS=4
 MAX_JOBS=4
-CUSTOM_REPORT_MAX_ACRES=15000000
+CUSTOM_REPORT_MAX_ACRES=50000000
 
 TILE_DIR=/data/tiles
 SE_CODE_DIR=/home/app/secas-blueprint
@@ -102,29 +107,27 @@ Create `~/secas-blueprint/ui/.env.production` with the following:
 
 ```bash
 GATSBY_MAPBOX_API_TOKEN=<mapbox token>
+GATSBY_SENTRY_DSN=<dsn>
+GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
 SITE_ROOT_PATH=southeast
+# specific to domain where this is deployed
 SITE_URL=https://blueprint-test.geoplatform.gov/southeast
 GATSBY_API_HOST=https://blueprint-test.geoplatform.gov/southeast
 GATSBY_TILE_HOST=https://blueprint-test.geoplatform.gov
-
-GATSBY_SENTRY_DSN=<dsn>
-GATSBY_GOOGLE_ANALYTICS_ID=<id>
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
 
 ```bash
-GATSBY_MAPBOX_API_TOKEN=<mapbox token>
+GATSBY_SENTRY_DSN=<dsn>
+GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
 SITE_ROOT_PATH=ssa
 SITE_URL=https://blueprint-test.geoplatform.gov/ssa
 GATSBY_API_HOST=https://blueprint-test.geoplatform.gov/ssa
-
-GATSBY_SENTRY_DSN=<dsn>
-GATSBY_GOOGLE_ANALYTICS_ID=<id>
 ```
 
 ## Upload data
@@ -272,5 +275,5 @@ scripts/build_ssa_ui.sh
 Go to the following URLs and verify that they are online and functioning
 properly:
 
--   https://blueprint.geoplatform.gov/southeast/
--   https://blueprint.geoplatform.gov/ssa/
+-   https://blueprint-test.geoplatform.gov/southeast/
+-   https://blueprint-test.geoplatform.gov/ssa/

@@ -1,27 +1,27 @@
 version: "3.7"
 
 services:
-  ui-build-base:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: ${DOCKER_REGISTRY}/ui-build-base:latest
-    platform: linux/amd64
+    ui-build-base:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        platform: linux/arm64
 
-  se-ui-build:
-    image: ${DOCKER_REGISTRY}/ui-build-base:latest
-    platform: linux/amd64
-    volumes:
-      # NOTE: node_modules are written to the host directory, but are replaced on each build
-      - ${SE_CODE_DIR}/ui:/home/app/ui
-      - ${SE_CODE_DIR}/constants:/home/app/constants
-    network_mode: "host"
+    se-ui-build:
+        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        platform: linux/arm64
+        volumes:
+            # NOTE: node_modules are written to the host directory, but are replaced on each build
+            - ${SE_CODE_DIR}/ui:/home/app/ui
+            - ${SE_CODE_DIR}/constants:/home/app/constants
+        network_mode: "host"
 
-  ssa-ui-build:
-    image: ${DOCKER_REGISTRY}/ui-build-base:latest
-    platform: linux/amd64
-    volumes:
-      # NOTE: node_modules are written to the host directory, but are replaced on each build
-      - ${SSA_CODE_DIR}/ui:/home/app/ui
-      - ${SSA_CODE_DIR}/constants:/home/app/constants
-    network_mode: "host"
+    ssa-ui-build:
+        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        platform: linux/arm64
+        volumes:
+            # NOTE: node_modules are written to the host directory, but are replaced on each build
+            - ${SSA_CODE_DIR}/ui:/home/app/ui
+            - ${SSA_CODE_DIR}/constants:/home/app/constants
+        network_mode: "host"

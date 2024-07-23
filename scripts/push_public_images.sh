@@ -7,16 +7,16 @@
 # MBTILESERVER=mbtileserver:0.10.0
 
 
-# NOTE: pull only the linux/amd images for use on Geoplatform
+# NOTE: pull only the linux/arm64 images for use on Geoplatform
 
-docker pull $CADDY --platform linux/amd64
+docker pull $CADDY --platform linux/arm64
 docker tag $CADDY $DOCKER_REGISTRY/$CADDY
 docker push $DOCKER_REGISTRY/$CADDY
 
-docker pull $REDIS --platform linux/amd64
+docker pull $REDIS --platform linux/arm64
 docker tag $REDIS $DOCKER_REGISTRY/$REDIS
 docker push $DOCKER_REGISTRY/$REDIS
 
-docker pull ghcr.io/consbio/$MBTILESERVER --platform linux/amd64
+docker pull ghcr.io/consbio/$MBTILESERVER --platform linux/arm64
 docker tag ghcr.io/consbio/$MBTILESERVER $DOCKER_REGISTRY/$MBTILESERVER
 docker push $DOCKER_REGISTRY/$MBTILESERVER
