@@ -5,9 +5,9 @@ FROM debian:bookworm-slim
 ENV NODE_VERSION 20.11.1
 ENV NODE_ENV production
 
-# 1001 corresponds to uid for app user on staging / production
-RUN groupadd --gid 1001 app \
-    && useradd --uid 1001 --gid app --shell /bin/bash --create-home app
+# 1010 corresponds to uid for app user on staging / production
+RUN groupadd --gid 1010 app \
+    && useradd --uid 1010 --gid app --shell /bin/bash --create-home app
 
 WORKDIR /home/app/ui
 

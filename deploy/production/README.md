@@ -20,8 +20,12 @@ Upgrade `docker-compose`:
 
 ### Create user and transfer ownership of main directories:
 
+NOTE: user / group must be set to 1010 for permissions to work properly with UI build container
+
 ```bash
-sudo useradd --create-home app
+sudo groupadd --gid 1010 app
+sudo useradd --uid 1010 --gid app --shell /bin/bash --create-home app
+
 sudo usermod -aG docker app
 sudo chown app:app /var/www
 sudo chown app:app /data
@@ -68,7 +72,7 @@ ROOT_URL=https://blueprint.geoplatform.gov
 ALLOWED_ORIGINS=https://blueprint.geoplatform.gov
 MAP_RENDER_THREADS=4
 MAX_JOBS=4
-CUSTOM_REPORT_MAX_ACRES=15000000
+CUSTOM_REPORT_MAX_ACRES=50000000
 
 TILE_DIR=/data/tiles
 SE_CODE_DIR=/home/app/secas-blueprint
