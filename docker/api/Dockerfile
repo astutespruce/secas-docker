@@ -1,11 +1,12 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.8.4
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.8.5
 
 RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
     # dependencies for Weasyprint
+    fontconfig \
     libcairo2 \
     libcairo-gobject2 \
     libpango1.0 \
@@ -21,15 +22,6 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     x11-utils
 
-# Install fonts for both Southeast apps Raleway & Source Sans Pro
-RUN mkdir /usr/share/fonts/google && \
-    curl https://fonts.google.com/download?family=Raleway --output /tmp/Raleway.zip && \
-    unzip -o /tmp/Raleway.zip -d /usr/share/fonts/google && \
-    mv /usr/share/fonts/google/static/* /usr/share/fonts/google/ && \
-    curl https://fonts.google.com/download?family=Source+Sans+3 --output /tmp/SourceSans3.zip && \
-    unzip -o /tmp/SourceSans3.zip -d /usr/share/fonts/google && \
-    fc-cache -fv
-
 RUN useradd --create-home app
 WORKDIR /home/app
 # Note: we are not able to use a user here because we have to mount a volume
@@ -38,6 +30,10 @@ WORKDIR /home/app
 ENV PYTHONPATH="${PYTHONPATH}:/home/app"
 ENV PYTHONUNBUFFERED 1
 ENV DISPLAY :99
+
+# install fonts used in report
+COPY ./fonts/* /usr/share/fonts/google
+RUN  fc-cache -fv
 
 COPY ./run_xvfb.sh /home/app/
 RUN chmod a+x /home/app/run_xvfb.sh
