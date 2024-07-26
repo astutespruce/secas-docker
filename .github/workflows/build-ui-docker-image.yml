@@ -37,6 +37,8 @@ jobs:
         id: buildx
         with:
           install: true
+          context: ./docker/ui
+          file: ./docker/ui/Dockerfile
 
       - name: Docker meta
         id: meta
