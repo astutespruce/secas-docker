@@ -41,8 +41,6 @@ jobs:
         id: buildx
         with:
           install: true
-          context: ./docker/api
-          file: ./docker/api/Dockerfile
 
       - name: Docker meta
         id: meta
@@ -65,7 +63,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./docker/api
+          file: ./docker/api/Dockerfile
           platforms: linux/arm64
           provenance: false
           push: ${{ github.event_name != 'pull_request' }}
