@@ -17,7 +17,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: blueprint-api
+  IMAGE_NAME: ${{ github.repository }}/blueprint-api
 
 jobs:
   buildx:
@@ -50,7 +50,7 @@ jobs:
           # add "type=ref,event=pr" if needed to test a PR
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=semver,pattern={{version}},type=ref,event=pr
+            type=semver,pattern={{version}}
 
       - name: Login to Github Container Registry
         if: github.event_name != 'pull_request'

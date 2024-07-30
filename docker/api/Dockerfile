@@ -2,6 +2,8 @@
 
 FROM ghcr.io/osgeo/gdal:ubuntu-small-3.8.5
 
+LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
+
 RUN apt-get update && apt-get install -y \
     git \
     python3-pip \

@@ -2,6 +2,8 @@
 
 FROM debian:bookworm-slim
 
+LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
+
 ENV NODE_VERSION 20.11.1
 ENV NODE_ENV production
 
