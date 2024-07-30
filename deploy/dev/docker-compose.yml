@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
     caddy:
-        image: ${DOCKER_REGISTRY}/$CADDY
+        image: caddy:2.7.6-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -14,7 +14,7 @@ services:
             - $STATIC_DIR:/var/www
 
     mbtileserver:
-        image: ${DOCKER_REGISTRY}/$MBTILESERVER
+        image: ghcr.io/consbio/mbtileserver:0.10.0
         platform: linux/arm64
         restart: always
         volumes:
@@ -23,12 +23,12 @@ services:
             - "8001:8000"
 
     redis:
-        image: ${DOCKER_REGISTRY}/$REDIS
+        image: redis:7.2.4-alpine
         platform: linux/arm64
         restart: always
 
     se-worker:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
         platform: linux/arm64
         cap_add:
             - SYS_PTRACE
@@ -50,7 +50,7 @@ services:
             - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
     se-api:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
         platform: linux/arm64
         restart: always
         depends_on:
@@ -81,7 +81,7 @@ services:
             - "5000:5000"
 
     ssa-worker:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
         restart: always
         depends_on:
             - redis
@@ -99,7 +99,7 @@ services:
             - $SSA_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
 
     ssa-api:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
         restart: always
         depends_on:
             - redis

@@ -5,11 +5,11 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        image: ghcr.io/astutespruce/secas-docker/ui-build-base:latest
         platform: linux/arm64
 
     se-ui-build:
-        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        image: ghcr.io/astutespruce/secas-docker/ui-build-base:latest
         platform: linux/arm64
         volumes:
             # NOTE: node_modules are written to the host directory, but are replaced on each build
@@ -18,7 +18,7 @@ services:
         network_mode: "host"
 
     ssa-ui-build:
-        image: ${DOCKER_REGISTRY}/ui-build-base:latest
+        image: ghcr.io/astutespruce/secas-docker/ui-build-base:latest
         platform: linux/arm64
         volumes:
             # NOTE: node_modules are written to the host directory, but are replaced on each build

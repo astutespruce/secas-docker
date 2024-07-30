@@ -12,14 +12,16 @@
   # everything must be in a route to get proper matching order
   route {
     # common headers
-    header Strict-Transport-Security "max-age=63072000; preload"
+    # FIXME: re-enable
+    # header Strict-Transport-Security "max-age=63072000; preload"
     header X-Frame-Options "DENY"
     header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *; child-src 'self' blob:;"
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin-when-cross-origin"
 
     # Set CORS
-    header Access-Control-Allow-Origin "https://blueprint-test.geoplatform.gov"
+    # FIXME: re-enable for correct URL
+    # header Access-Control-Allow-Origin "https://blueprint-test.geoplatform.gov"
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 

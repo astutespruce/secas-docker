@@ -10,14 +10,58 @@ sudo su app
 
 ## Instance setup
 
-The base instance is provided by Zivaro according to specifications defined
-separately. This guide covers setup of the services used by the application.
+The base instance is provided on the USFWS Azure environment by USFWS IRTM staff
+according to specifications defined separately. This guide covers setup of the
+services used by the application.
+
+### Install basic tools
+
+```bash
+sudo dnf --refresh update
+sudo dnf install -y git vim
+```
+
+### Create swap space
+
+```bash
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+Add this to `/etc/fstab`: `/swapfile none swap sw 0 0`
+
+### Initialize data volume
+
+The instance has a 128 GB volume provided by IRTM staff during setup. This needs
+to be initialized and mounted:
+
+se `lsblk` to list volumes; it may be listed as `sdb`
+
+```bash
+sudo mkfs -t ext4 /dev/sdb
+sudo mkdir /data
+sudo mount /dev/sdb /data
+```
+
+Add this to `/etc/fstab`: `/dev/sdb /data ext4 defaults,nofail`
 
 ### Install docker compose
 
 ```bash
-sudo apt-get update
-sudo apt-get install docker-compose
+
+sudo dnf install yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+Verify docker daemon is now running:
+
+```bash
+sudo systemctl status docker
 ```
 
 ### Create user and transfer ownership of main directories:
@@ -29,16 +73,21 @@ sudo usermod -aG docker app
 sudo mkdir /var/www
 sudo chown app:app /var/www
 sudo chown app:app /data
-sudo usermod --shell /bin/bash app
+# sudo usermod --shell /bin/bash app
 ```
 
 Add current domain user to `app` group:
 
 ```bash
-sudo usermod -a -G app <domain user>
+sudo usermod -aG app <domain user>
 ```
 
 as `app` user:
+
+create an alias for docker-compose by adding `alias docker-compose="docker compose"`
+to `~/.bashrc`.
+
+Setup directories and pull repositories:
 
 ```bash
 mkdir /var/www/southeast
@@ -61,7 +110,6 @@ Set up an environment file at `~/secas-docker/deploy/staging/.env`:
 
 ```
 COMPOSE_PROJECT_NAME=secas
-DOCKER_REGISTRY=<registry>
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
 API_SECRET=<secret>
@@ -69,8 +117,8 @@ LOGGING_LEVEL=INFO
 REDIS_HOST=redis
 SENTRY_DSN=<DSN>
 SENTRY_ENV=blueprint-test.geoplatform.gov
-ROOT_URL=https://blueprint-test.geoplatform.gov
-ALLOWED_ORIGINS=https://blueprint-test.geoplatform.gov
+ROOT_URL=<root URL>
+ALLOWED_ORIGINS=<root URL>
 MAP_RENDER_THREADS=4
 MAX_JOBS=4
 CUSTOM_REPORT_MAX_ACRES=50000000
@@ -80,10 +128,6 @@ SE_CODE_DIR=/home/app/secas-blueprint
 SSA_CODE_DIR=/home/app/secas-ssa
 SE_DATA_DIR=/data/se
 STATIC_DIR=/var/www
-
-CADDY=<caddy version>
-REDIS=<redis version>
-MBTILESERVER=<mbtileserver version>
 ```
 
 IMPORTANT: This file must be sourced to perform any Docker operations.
