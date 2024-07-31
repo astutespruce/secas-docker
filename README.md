@@ -12,8 +12,8 @@ The code for those viewers are managed in separate repositories:
 These projects are deployed using Docker into different environments:
 
 -   [local development](deploy/dev/README.md)
--   [staging (GeoPlatform)](deploy/staging/README.md)
--   [production (GeoPlatform)](deploy/production/README.md)
+-   [staging](deploy/staging/README.md)
+-   [production](deploy/production/README.md)
 
 These projects are deployed for testing and public use on the U.S. Department
 of Interior GeoPlatform, which is hosted on Amazon Web Services and managed by

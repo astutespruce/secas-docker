@@ -11,7 +11,7 @@ done
 
 echo "Deploying UI to $STATIC_DIR/ssa"
 
-if docker-compose -f ./docker/ui/docker-compose.yml run --rm --user app ssa-ui-build npm run deploy; then
+if docker compose -f ./docker/ui/docker-compose.yml run --rm --user app ssa-ui-build npm run deploy; then
     echo "====> UI build succeeded"
     rm -rf $STATIC_DIR/ssa/*
     cp -r $SSA_CODE_DIR/ui/public/* $STATIC_DIR/ssa
