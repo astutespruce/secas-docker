@@ -1,5 +1,10 @@
 # Deployment to staging environment
 
+The Azure instance is only accessible within the DOI network. Login to VDI
+CloudDesktop Privileged Access Workstation and then open PowerShell.
+
+Use `ssh <hostname> -l <username without domain>`
+
 IMPORTANT: unless otherwise noted, everything is run as `app` user, make sure to
 run the following each time you SSH into this instance (after setting up the
 user account below).
@@ -217,6 +222,85 @@ server (not the `app` user):
 ```
 sudo chown -R app:app /data
 ```
+
+## Setup internal TLS certificates
+
+Each instance must be issued an internal TLS certificate used for the route from
+the WAF to the instance; these are deployed within Caddy.
+
+See general DOI certificate request instructions [here](https://doimspp.sharepoint.com/sites/ocio-ecm-csr).
+
+On the instance as the `app` user, create the certificate signing request and key:
+
+```bash
+cd ~/secas-docker/deploy/staging
+mkdir certificates
+openssl req -nodes -newkey rsa:2048 -keyout internal-tls.key -out internal-tls.csr
+```
+
+Then fill out as follows:
+
+-   Country Name: US
+-   State or Province Name: North Carolina
+-   Organization Name: Department of Interior
+-   Organizational Unit Name: Fish and Wildlife Service
+-   Common Name: <full hostname>
+-   Email address: <user's FWS email address>
+
+Then copy the contents of the CSR (select and right click):
+
+```bash
+cat internal-tls.csr
+```
+
+In CloudDesktop, follow the [instructions](https://doimspp.sharepoint.com/sites/ocio-ecm-csr)
+to open the DOI certificate request page in Internet Explorer mode (first load
+the page, then use the ... menu in upper right and reload in Internet Explorer mode).
+
+Then choose to submit a request using a base-64-encded CMC, and paste in the contents
+of the CSR copied above.
+
+Add the following to additional attributes
+
+```
+san:dns="<full hostname>"
+&dns=<full hostname>
+```
+
+Once the certificate has been granted (typically a few minutes), in Internet Explorer
+follow the link to the status of a pending certificate request. Choose Base64
+encoding and download the file.
+
+Open a new PowerShell window on CloudDesktop and copy the contents of that
+certificate:
+
+```bash
+cat certnew.cer | clip
+```
+
+In the SSH window (as `app`) on the instance, create a file and paste the contents
+of the certificate into `internal-tls.pem`.
+
+Update permissions
+
+```bash
+chmod 600 internal-tls.key
+chomd 600 internal-tls.pem
+```
+
+To verify the certificate, in Internet Explorer follow the link to download the
+CA certificate, choose Base 64, and download CA certificate chain. Copy the
+contents of that file and save it to `/tmp/ca.p7b` on the instance.
+
+Then convert the CA certificate chain and verify the issued certificate:
+
+```bash
+openssl pkcs7 -print_certs -n /tmp/ca.p7b /tmp/ca.pem
+openssl verify -verbose -CAfile /tmp/ca.pem internal-tls.pem
+```
+
+That should print out `OK` on success. These will be automatically used once
+the Caddy Docker service starts below.
 
 ## Update Docker images on the server
 

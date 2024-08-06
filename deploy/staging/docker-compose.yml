@@ -4,11 +4,11 @@ services:
         platform: linux/arm64
         restart: always
         ports:
-            - "80:80"
+            - "443:443"
         volumes:
-            - ./Caddyfile:/etc/caddy/Caddyfile
-            - caddy_certs:/data
             - caddy_config:/config
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./certificates:/certificates
             - $STATIC_DIR:/var/www
         logging:
             driver: journald

@@ -34,7 +34,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DISPLAY :99
 
 # install fonts used in report
-COPY ./fonts/*.ttf /usr/share/fonts/google
+COPY ./fonts/*.ttf /usr/share/fonts/google/
 RUN  fc-cache -fv
 
 COPY ./run_xvfb.sh /home/app/

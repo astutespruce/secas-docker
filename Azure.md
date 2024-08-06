@@ -15,3 +15,10 @@ the data files used by the application.
 
 Base Docker images are either public (e.g., Redis) or created automatically by
 Github actions in this repository.
+
+## TLS Certificates
+
+Each instance must be issued an internal TLS certificate used for the route from
+the WAF to the reverse proxy.
+
+Certificate request instructions [here](https://doimspp.sharepoint.com/sites/ocio-ecm-csr).

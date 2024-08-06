@@ -1,12 +1,14 @@
-:80 {
+ifwaz-sebp-test.fws.doi.net {
   log {
     level ERROR
   }
 
+  tls /certificates/internal-tls.pem /certificates/internal-tls.key
+
   # redirect site root to southeast
   redir / /southeast/
 
-# redirect south atlantic to southeast
+# redirect south atlantic to southeast (legacy)
   redir /southatlantic/ /southeast/
 
   # everything must be in a route to get proper matching order
@@ -20,8 +22,7 @@
     header Referrer-Policy "strict-origin-when-cross-origin"
 
     # Set CORS
-    # FIXME: re-enable for correct URL
-    # header Access-Control-Allow-Origin "https://blueprint-test.geoplatform.gov"
+    header Access-Control-Allow-Origin "https://ifwaz-sebp-test.fws.doi.net"
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
