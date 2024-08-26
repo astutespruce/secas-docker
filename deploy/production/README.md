@@ -42,8 +42,8 @@ As `app` user:
 
 ```bash
 rm -rf /var/www/html
-mkdir /var/www/southeast
-mkdir /var/www/ssa
+mkdir /var/www/southeastblueprint
+mkdir /var/www/southeastssa
 mkdir /data/se
 mkdir /data/tiles
 cd ~
@@ -75,10 +75,11 @@ MAX_JOBS=4
 CUSTOM_REPORT_MAX_ACRES=50000000
 
 TILE_DIR=/data/tiles
-SE_CODE_DIR=/home/app/secas-blueprint
+BLUEPRINT_CODE_DIR=/home/app/secas-blueprint
 SSA_CODE_DIR=/home/app/secas-ssa
-SE_DATA_DIR=/data/se
-STATIC_DIR=/var/www
+BLUEPRINT_DATA_DIR=/data/se
+BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
+SSA_STATIC_DIR=/var/www/southeastssa
 
 CADDY=<caddy version>
 REDIS=<redis version>

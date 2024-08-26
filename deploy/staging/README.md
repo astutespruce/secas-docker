@@ -94,11 +94,11 @@ create an alias for docker-compose by adding `alias docker-compose="docker compo
 to `~/.bash_profile`.
 (NOTE: this is only needed for muscle-memory; everything can use `docker compose` instead)
 
-Setup directories and pull repositories:
+Setup directories and pull repositories (note the `-test` suffix for `/var/www` folders are just for staging):
 
 ```bash
-mkdir /var/www/southeast
-mkdir /var/www/ssa
+mkdir /var/www/southeastblueprint-test
+mkdir /var/www/southeastssa-test
 mkdir /data/se
 mkdir /data/tiles
 cd ~
@@ -131,10 +131,11 @@ MAX_JOBS=4
 CUSTOM_REPORT_MAX_ACRES=50000000
 
 TILE_DIR=/data/tiles
-SE_CODE_DIR=/home/app/secas-blueprint
+BLUEPRINT_CODE_DIR=/home/app/secas-blueprint
+BLUEPRINT_DATA_DIR=/data/se
+BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
 SSA_CODE_DIR=/home/app/secas-ssa
-SE_DATA_DIR=/data/se
-STATIC_DIR=/var/www
+SSA_STATIC_DIR=/var/www/southeastssa
 ```
 
 IMPORTANT: This file must be sourced to perform any Docker operations.
@@ -162,10 +163,10 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=southeast
+SITE_ROOT_PATH=southeastblueprint
 # specific to domain where this is deployed
-SITE_URL=<root URL>/southeast
-GATSBY_API_HOST=<root URL>/southeast
+SITE_URL=<root URL>/southeastblueprint
+GATSBY_API_HOST=<root URL>/southeastblueprint
 GATSBY_TILE_HOST=<root URL>
 ```
 
@@ -176,9 +177,9 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=ssa
-SITE_URL=<root URL>/ssa
-GATSBY_API_HOST=<root URL>/ssa
+SITE_ROOT_PATH=southeastssa
+SITE_URL=<root URL>/southeastssa
+GATSBY_API_HOST=<root URL>/southeastssa
 ```
 
 ## Upload data

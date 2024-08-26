@@ -50,10 +50,10 @@ services:
         command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/se-reports
-            - $SE_DATA_DIR:/home/app/data
-            - $SE_CODE_DIR/api:/home/app/api # main API
-            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
             - $TILE_DIR:/data/tiles
         logging:
             driver: journald
@@ -86,10 +86,10 @@ services:
             ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $SE_DATA_DIR:/home/app/data
-            - $SE_CODE_DIR/api:/home/app/api # main API
-            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         logging:
             driver: journald
         networks:
@@ -108,7 +108,7 @@ services:
         command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SE_DATA_DIR:/home/app/data
+            - $BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
@@ -143,7 +143,7 @@ services:
             ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SE_DATA_DIR:/home/app/data
+            - $BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file

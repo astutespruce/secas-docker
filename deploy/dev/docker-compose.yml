@@ -9,7 +9,8 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy_certs:/root/.caddy
             - caddy_config:/config
-            - $STATIC_DIR:/var/www
+            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
+            - $SSA_STATIC_DIR:/var/www/southeastssa
 
     mbtileserver:
         image: ghcr.io/consbio/mbtileserver:0.10.0
@@ -39,12 +40,12 @@ services:
         command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/se-reports
-            - $SE_DATA_DIR:/home/app/data
-            - $SE_CODE_DIR/api:/home/app/api # main API
-            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $SE_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
-            - $SE_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+            - $BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
             - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
     se-api:
@@ -71,10 +72,10 @@ services:
             ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $SE_DATA_DIR:/home/app/data
-            - $SE_CODE_DIR/api:/home/app/api # main API
-            - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         ports:
             - "5000:5000"
 
@@ -89,7 +90,7 @@ services:
         command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SE_DATA_DIR:/home/app/data
+            - $BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
@@ -119,7 +120,7 @@ services:
             ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SE_DATA_DIR:/home/app/data
+            - $BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
