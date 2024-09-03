@@ -236,6 +236,7 @@ On the instance as the `app` user, create the certificate signing request and ke
 ```bash
 cd ~/secas-docker/deploy/staging
 mkdir certificates
+cd certificates
 openssl req -nodes -newkey rsa:2048 -keyout internal-tls.key -out internal-tls.csr
 ```
 
@@ -280,24 +281,36 @@ cat certnew.cer | clip
 ```
 
 In the SSH window (as `app`) on the instance, create a file and paste the contents
-of the certificate into `internal-tls.pem`.
+of the certificate into `internal-tls-leaf.pem` (in the `deploy/staging/certificates` folder).
+
+Then in Internet Explorer follow the link to download the
+CA certificate, choose Base 64, and download CA certificate chain. Copy the
+contents of that file and save it to `ca.p7b` on the instance in the `certificates`
+folder.
+
+Then convert the CA certificate chain:
+
+```bash
+openssl pkcs7 -print_certs -in ca.p7b -out ca.pem
+```
+
+And merge together to create certificate chain:
+
+```bash
+cat internal-tls-leaf.pem ca.pem > internal-tls.pem
+```
 
 Update permissions
 
 ```bash
 chmod 600 internal-tls.key
-chomd 600 internal-tls.pem
+chmod 600 internal-tls.pem
 ```
 
-To verify the certificate, in Internet Explorer follow the link to download the
-CA certificate, choose Base 64, and download CA certificate chain. Copy the
-contents of that file and save it to `/tmp/ca.p7b` on the instance.
-
-Then convert the CA certificate chain and verify the issued certificate:
+Verify the issued certificate
 
 ```bash
-openssl pkcs7 -print_certs -n /tmp/ca.p7b /tmp/ca.pem
-openssl verify -verbose -CAfile /tmp/ca.pem internal-tls.pem
+openssl verify -verbose -CAfile ca.pem internal-tls.pem
 ```
 
 That should print out `OK` on success. These will be automatically used once
