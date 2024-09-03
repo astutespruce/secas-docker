@@ -24,8 +24,8 @@
 
     redir /ssa https://apps.fws.gov/southeastssa-test/
     redir /ssa/ https://apps.fws.gov/southeastssa-test/
-    redir /ssa/custom_report https://apps.fws.gov/southeastssa-test/report/
-    redir /ssa/custom_report/ https://apps.fws.gov/southeastssa-test/report/
+    redir /ssa/report https://apps.fws.gov/southeastssa-test/report/
+    redir /ssa/report/ https://apps.fws.gov/southeastssa-test/report/
 
     # redirect everything else to a 404 page
     handle {
