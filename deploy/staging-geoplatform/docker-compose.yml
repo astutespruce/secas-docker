@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.7.6-alpine
+        image: ${DOCKER_REGISTRY}/$CADDY
         platform: linux/arm64
         restart: always
         ports:
