@@ -9,8 +9,8 @@ services:
             - caddy_config:/config
             - ./Caddyfile:/etc/caddy/Caddyfile
             - ./certificates:/certificates
-            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint-test
-            - $SSA_STATIC_DIR:/var/www/southeastssa-test
+            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
+            - $SSA_STATIC_DIR:/var/www/southeastssa
         logging:
             driver: journald
         networks:

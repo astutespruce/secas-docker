@@ -339,6 +339,46 @@ If there are problems, you can use
 docker compose logs --tail 100 <service>
 ```
 
+## Update user interface code and build it
+
+The UI needs to be rebuilt anytime there is an update to the user interface
+code for either of the applications. The build step automatically updates the
+environment to use the Javascript package versions specified in the
+`package-lock.json` files in each app's `ui` folder.
+
+If needed, pull the latest UI build image from the root of this repository:
+
+```bash
+cd ~/secas-docker
+docker compose -f docker/ui/docker-compose.yml pull
+```
+
+### Southeast Blueprint Explorer
+
+To rebuild the frontend for the Southeast Blueprint Explorer:
+
+```bash
+cd ~/secas-blueprint
+git pull origin
+cd ~/secas-docker
+set -a
+source ~/secas-docker/deploy/staging/.env
+scripts/build_se_ui.sh
+```
+
+### Species Landscape Status Assessment Tool
+
+To rebuild the frontend for the Species Landscape Status Assessment Tool:
+
+```bash
+cd ~/secas-ssa
+git pull origin
+cd ~/secas-docker
+set -a
+source ~/secas-docker/deploy/staging/.env
+scripts/build_ssa_ui.sh
+```
+
 ## Update API / backend code
 
 ### Southeast Blueprint Explorer
@@ -381,44 +421,13 @@ docker compose logs --tail ssa-worker
 docker compose logs --tail ssa-api
 ```
 
-## Update user interface code and build it
+## Verify apps are now reachable internally
 
-The UI needs to be rebuilt anytime there is an update to the user interface
-code for either of the applications. The build step automatically updates the
-environment to use the Javascript package versions specified in the
-`package-lock.json` files in each app's `ui` folder.
-
-If needed, pull the latest UI build image from the root of this repository:
+On the instance:
 
 ```bash
-cd ~/secas-docker
-docker compose -f docker/ui/docker-compose.yml pull
-```
-
-### Southeast Blueprint Explorer
-
-To rebuild the frontend for the Southeast Blueprint Explorer:
-
-```bash
-cd ~/secas-blueprint
-git pull origin
-cd ~/secas-docker
-set -a
-source ~/secas-docker/deploy/staging/.env
-scripts/build_se_ui.sh
-```
-
-### Species Landscape Status Assessment Tool
-
-To rebuild the frontend for the Species Landscape Status Assessment Tool:
-
-```bash
-cd ~/secas-ssa
-git pull origin
-cd ~/secas-docker
-set -a
-source ~/secas-docker/deploy/staging/.env
-scripts/build_ssa_ui.sh
+curl -k -v https://ifwaz-sebp-test.fws.doi.net/southeastblueprint-test
+curl -k -b https://ifwaz-sebp-test.fws.doi.net/southeastblueprint-test
 ```
 
 ## Notify IRTM to setup Azure App Gateway
