@@ -1,6 +1,6 @@
 # Deployment to staging environment
 
-The Azure instance is only accessible within the DOI network. Login to VDI
+The Azure instance can only be accessed via SSH within the DOI network. Login to VDI
 CloudDesktop Privileged Access Workstation and then open PowerShell.
 
 Use `ssh <hostname> -l <username without domain>`
@@ -79,7 +79,6 @@ sudo usermod -aG docker app
 sudo mkdir /var/www
 sudo chown app:app /var/www
 sudo chown app:app /data
-# sudo usermod --shell /bin/bash app
 ```
 
 Add current domain user to `app` group:
@@ -107,7 +106,7 @@ git clone https://github.com/astutespruce/secas-blueprint.git
 git clone https://github.com/astutespruce/secas-ssa.git
 ```
 
-NOTE: only create `data/*` folders if they don't already exist on the attached EFS data volume.
+NOTE: only create `/data/*` folders if they don't already exist on the attached EFS data volume.
 
 ### Environment setup
 
@@ -123,9 +122,9 @@ API_SECRET=<secret>
 LOGGING_LEVEL=INFO
 REDIS_HOST=redis
 SENTRY_DSN=<DSN>
-SENTRY_ENV=blueprint-test.geoplatform.gov
-ROOT_URL=<root URL>
-ALLOWED_ORIGINS=<root URL>
+SENTRY_ENV=azure-staging
+ROOT_URL=https://apps.fws.gov/southeastblueprint-test
+ALLOWED_ORIGINS=https://apps.fws.gov
 MAP_RENDER_THREADS=4
 MAX_JOBS=4
 CUSTOM_REPORT_MAX_ACRES=50000000
@@ -139,14 +138,6 @@ SSA_STATIC_DIR=/var/www/southeastssa
 ```
 
 IMPORTANT: This file must be sourced to perform any Docker operations.
-
-You can use `scripts/set_env.sh` to set these variables:
-
-```bash
-ENV=staging scripts/set_env.sh
-```
-
-If that doesn't work:
 
 ```bash
 set -a
@@ -163,11 +154,11 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=southeastblueprint
+SITE_ROOT_PATH=southeastblueprint-test
 # specific to domain where this is deployed
-SITE_URL=<root URL>/southeastblueprint
-GATSBY_API_HOST=<root URL>/southeastblueprint
-GATSBY_TILE_HOST=<root URL>
+SITE_URL=<root URL>/southeastblueprint-test
+GATSBY_API_HOST=<root URL>/southeastblueprint-test
+GATSBY_TILE_HOST=<root URL>/southeastblueprint-test
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
@@ -177,9 +168,9 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=southeastssa
-SITE_URL=<root URL>/southeastssa
-GATSBY_API_HOST=<root URL>/southeastssa
+SITE_ROOT_PATH=southeastssa-test
+SITE_URL=<root URL>/southeastssa-test
+GATSBY_API_HOST=<root URL>/southeastssa-test
 ```
 
 ## Upload data
@@ -244,9 +235,10 @@ Then fill out as follows:
 
 -   Country Name: US
 -   State or Province Name: North Carolina
+-   Locality name: Raleigh
 -   Organization Name: Department of Interior
 -   Organizational Unit Name: Fish and Wildlife Service
--   Common Name: <full hostname>
+-   Common Name: <full hostname> (e.g., <host>.fws.doi.net)
 -   Email address: <user's FWS email address>
 
 Then copy the contents of the CSR (select and right click):
@@ -322,6 +314,8 @@ Pull images in this folder:
 
 ```bash
 cd ~/secas-docker/deploy/staging
+set -a
+source .env
 docker compose pull
 ```
 
@@ -427,10 +421,10 @@ source ~/secas-docker/deploy/staging/.env
 scripts/build_ssa_ui.sh
 ```
 
-## Verify applications are operating properly
+## Notify IRTM to setup Azure App Gateway
 
-Go to the following URLs and verify that they are online and functioning
-properly:
+Azure staff create an App Gateway that points to this server based on a domain
+name / URL they provide. Once that is setup, the applications are available at:
 
--   https://blueprint-test.geoplatform.gov/southeast/
--   https://blueprint-test.geoplatform.gov/ssa/
+-   https://apps.fws.gov/southeastblueprint-test
+-   https://apps.fws.gov/southeastssa-test

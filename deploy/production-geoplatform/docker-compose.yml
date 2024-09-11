@@ -1,24 +1,24 @@
+version: "3.7"
+
 services:
     caddy:
-        image: caddy:2.8.4-alpine
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/$CADDY
         restart: always
         ports:
-            - "443:443"
+            - "80:80"
         volumes:
-            - caddy_config:/config
             - ./Caddyfile:/etc/caddy/Caddyfile
-            - ./certificates:/certificates
-            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint-test
-            - $SSA_STATIC_DIR:/var/www/southeastssa-test
+            - caddy_certs:/data
+            - caddy_config:/config
+            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
+            - $SSA_STATIC_DIR:/var/www/southeastssa
         logging:
             driver: journald
         networks:
             - shared
 
     mbtileserver:
-        image: ghcr.io/consbio/mbtileserver:0.10.0
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/$MBTILESERVER
         restart: always
         command: "--tiles-only"
         volumes:
@@ -29,8 +29,7 @@ services:
             - shared
 
     redis:
-        image: redis:7.4.0-alpine
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/$REDIS
         restart: always
         logging:
             driver: journald
@@ -38,8 +37,7 @@ services:
             - shared
 
     se-worker:
-        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
         restart: always
         depends_on:
             - redis
@@ -62,8 +60,7 @@ services:
             - shared
 
     se-api:
-        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
         restart: always
         depends_on:
             - redis
@@ -80,7 +77,7 @@ services:
                 "--name",
                 "uvicorn",
                 "--workers",
-                "1",
+                "2",
                 "-b",
                 ":5000",
                 "api.api:app",
@@ -97,8 +94,7 @@ services:
             - shared
 
     ssa-worker:
-        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
         restart: always
         depends_on:
             - redis
@@ -119,8 +115,7 @@ services:
             - shared
 
     ssa-api:
-        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
-        platform: linux/arm64
+        image: ${DOCKER_REGISTRY}/blueprint-api:latest
         restart: always
         depends_on:
             - redis

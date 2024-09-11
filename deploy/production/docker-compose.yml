@@ -1,24 +1,24 @@
-version: "3.7"
-
 services:
     caddy:
-        image: ${DOCKER_REGISTRY}/$CADDY
+        image: caddy:2.8.4-alpine
+        platform: linux/arm64
         restart: always
         ports:
-            - "80:80"
+            - "443:443"
         volumes:
-            - ./Caddyfile:/etc/caddy/Caddyfile
-            - caddy_certs:/data
             - caddy_config:/config
-            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
-            - $SSA_STATIC_DIR:/var/www/southeastssa
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./certificates:/certificates
+            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint-test
+            - $SSA_STATIC_DIR:/var/www/southeastssa-test
         logging:
             driver: journald
         networks:
             - shared
 
     mbtileserver:
-        image: ${DOCKER_REGISTRY}/$MBTILESERVER
+        image: ghcr.io/consbio/mbtileserver:0.10.0
+        platform: linux/arm64
         restart: always
         command: "--tiles-only"
         volumes:
@@ -29,7 +29,8 @@ services:
             - shared
 
     redis:
-        image: ${DOCKER_REGISTRY}/$REDIS
+        image: redis:7.4.0-alpine
+        platform: linux/arm64
         restart: always
         logging:
             driver: journald
@@ -37,7 +38,8 @@ services:
             - shared
 
     se-worker:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
         restart: always
         depends_on:
             - redis
@@ -60,7 +62,8 @@ services:
             - shared
 
     se-api:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
         restart: always
         depends_on:
             - redis
@@ -94,7 +97,8 @@ services:
             - shared
 
     ssa-worker:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
         restart: always
         depends_on:
             - redis
@@ -115,7 +119,8 @@ services:
             - shared
 
     ssa-api:
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
         restart: always
         depends_on:
             - redis
