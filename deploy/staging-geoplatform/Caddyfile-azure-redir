@@ -4,7 +4,7 @@
   }
 
   # redirect site root to Blueprint Explorer on new staging server
-  redir / https://apps.fws.gov/southeastblueprint-test/
+  redir / https://apps.fws.gov/test-southeastblueprint/
 
   # everything must be in a route to get proper matching order
   route {
@@ -15,23 +15,23 @@
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin-when-cross-origin"
 
-    redir /southeast https://apps.fws.gov/southeastblueprint-test/
-    redir /southeast/ https://apps.fws.gov/southeastblueprint-test/
-    redir /southeast/custom_report https://apps.fws.gov/southeastblueprint-test/custom_report/
-    redir /southeast/custom_report/ https://apps.fws.gov/southeastblueprint-test/custom_report/
-    redir /southeast/help https://apps.fws.gov/southeastblueprint-test/help/
-    redir /southeast/help/ https://apps.fws.gov/southeastblueprint-test/help/
+    redir /southeast https://apps.fws.gov/test-southeastblueprint/
+    redir /southeast/ https://apps.fws.gov/test-southeastblueprint/
+    redir /southeast/custom_report https://apps.fws.gov/test-southeastblueprint/custom_report/
+    redir /southeast/custom_report/ https://apps.fws.gov/test-southeastblueprint/custom_report/
+    redir /southeast/help https://apps.fws.gov/test-southeastblueprint/help/
+    redir /southeast/help/ https://apps.fws.gov/test-southeastblueprint/help/
 
-    redir /ssa https://apps.fws.gov/southeastssa-test/
-    redir /ssa/ https://apps.fws.gov/southeastssa-test/
-    redir /ssa/report https://apps.fws.gov/southeastssa-test/report/
-    redir /ssa/report/ https://apps.fws.gov/southeastssa-test/report/
-    redir /ssa/datasets https://apps.fws.gov/southeastssa-test/datasets/
-    redir /ssa/datasets/ https://apps.fws.gov/southeastssa-test/datasets/
+    redir /ssa https://apps.fws.gov/test-southeastssa/
+    redir /ssa/ https://apps.fws.gov/test-southeastssa/
+    redir /ssa/report https://apps.fws.gov/test-southeastssa/report/
+    redir /ssa/report/ https://apps.fws.gov/test-southeastssa/report/
+    redir /ssa/datasets https://apps.fws.gov/test-southeastssa/datasets/
+    redir /ssa/datasets/ https://apps.fws.gov/test-southeastssa/datasets/
 
     # redirect everything else to a 404 page
     handle {
-      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+      redir * https://apps.fws.gov/test-southeastblueprint/404.html
     }
   }
 
@@ -42,6 +42,6 @@
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+      redir * https://apps.fws.gov/test-southeastblueprint/404.html
   }
 }

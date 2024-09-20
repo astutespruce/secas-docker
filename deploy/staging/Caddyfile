@@ -6,7 +6,7 @@ ifwaz-sebp-test.fws.doi.net {
   tls /certificates/internal-tls.pem /certificates/internal-tls.key
 
   # redirect site root to Blueprint Explorer
-  redir / /southeastblueprint-test/
+  redir / /test-southeastblueprint/
 
   # everything must be in a route to get proper matching order
   route {
@@ -22,21 +22,21 @@ ifwaz-sebp-test.fws.doi.net {
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /southeastblueprint-test/services* {
-      uri strip_prefix /southeastblueprint-test
+    route /test-southeastblueprint/services* {
+      uri strip_prefix /test-southeastblueprint
       header Cache-Control "public, max-age=3600, must-revalidate"
       reverse_proxy mbtileserver:8000
     }
 
     encode zstd gzip
 
-    route /southeastblueprint-test/api/* {
-      uri strip_prefix /southeastblueprint-test
+    route /test-southeastblueprint/api/* {
+      uri strip_prefix /test-southeastblueprint
       reverse_proxy se-api:5000
     }
 
-    route /southeastssa-test/api/* {
-      uri strip_prefix /southeastssa-test
+    route /test-southeastssa/api/* {
+      uri strip_prefix /test-southeastssa
       reverse_proxy ssa-api:5000
     }
 
@@ -55,27 +55,27 @@ ifwaz-sebp-test.fws.doi.net {
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southeastblueprint-test/ /southeastssa-test/ */custom_report/ */report/ */datasets/
+      path *.html *.webmanifest */page-data/* /test-southeastblueprint/ /test-southeastssa/ */custom_report/ */report/ */datasets/ */help/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
-    file_server /southeastblueprint-test*
-    file_server /southeastssa-test*
+    file_server /test-southeastblueprint*
+    file_server /test-southeastssa*
 
     # redirect favicon.ico to Blueprint Explorer
     handle {
-      redir /favicon.ico /southeastblueprint-test/favicon.ico
+      redir /favicon.ico /test-southeastblueprint/favicon.ico
     }
 
     # redirect robots.txt to Blueprint Explorer
     handle {
-      redir /robots.txt /southeastblueprint-test/robots.txt
+      redir /robots.txt /test-southeastblueprint/robots.txt
     }
 
     # redirect everything else to a 404 page
     handle {
-      redir * /southeastblueprint-test/404.html
+      redir * /test-southeastblueprint/404.html
     }
   }
 
@@ -86,6 +86,6 @@ ifwaz-sebp-test.fws.doi.net {
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * /southeastblueprint-test/404.html
+      redir * /test-southeastblueprint/404.html
   }
 }

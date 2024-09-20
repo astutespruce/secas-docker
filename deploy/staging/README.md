@@ -96,8 +96,8 @@ to `~/.bash_profile`.
 Setup directories and pull repositories (note the `-test` suffix for `/var/www` folders are just for staging):
 
 ```bash
-mkdir /var/www/southeastblueprint-test
-mkdir /var/www/southeastssa-test
+mkdir /var/www/test-southeastblueprint
+mkdir /var/www/test-southeastssa
 mkdir /data/se
 mkdir /data/tiles
 cd ~
@@ -123,7 +123,7 @@ LOGGING_LEVEL=INFO
 REDIS_HOST=redis
 SENTRY_DSN=<DSN>
 SENTRY_ENV=azure-staging
-ROOT_URL=https://apps.fws.gov/southeastblueprint-test
+ROOT_URL=https://apps.fws.gov/test-southeastblueprint
 ALLOWED_ORIGINS=https://apps.fws.gov
 MAP_RENDER_THREADS=4
 MAX_JOBS=4
@@ -154,11 +154,11 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=southeastblueprint-test
+SITE_ROOT_PATH=test-southeastblueprint
 # specific to domain where this is deployed
-SITE_URL=<root URL>/southeastblueprint-test
-GATSBY_API_HOST=<root URL>/southeastblueprint-test
-GATSBY_TILE_HOST=<root URL>/southeastblueprint-test
+SITE_URL=<root URL>/test-southeastblueprint
+GATSBY_API_HOST=<root URL>/test-southeastblueprint
+GATSBY_TILE_HOST=<root URL>/test-southeastblueprint
 
 # show warning in UI when on staging server
 GATSBY_ENV="staging
@@ -171,9 +171,9 @@ GATSBY_SENTRY_DSN=<dsn>
 GATSBY_GOOGLE_ANALYTICS_ID=<id>
 GATSBY_API_TOKEN=<api token>
 
-SITE_ROOT_PATH=southeastssa-test
-SITE_URL=<root URL>/southeastssa-test
-GATSBY_API_HOST=<root URL>/southeastssa-test
+SITE_ROOT_PATH=test-southeastssa
+SITE_URL=<root URL>/test-southeastssa
+GATSBY_API_HOST=<root URL>/test-southeastssa
 
 # show warning in UI when on staging server
 GATSBY_ENV="staging
@@ -432,8 +432,8 @@ docker compose logs --tail ssa-api
 On the instance:
 
 ```bash
-curl -k -v https://ifwaz-sebp-test.fws.doi.net/southeastblueprint-test
-curl -k -b https://ifwaz-sebp-test.fws.doi.net/southeastblueprint-test
+curl -k -v https://ifwaz-sebp-test.fws.doi.net/test-southeastblueprint
+curl -k -b https://ifwaz-sebp-test.fws.doi.net/test-southeastblueprint
 ```
 
 ## Notify IRTM to setup Azure App Gateway
@@ -441,5 +441,5 @@ curl -k -b https://ifwaz-sebp-test.fws.doi.net/southeastblueprint-test
 Azure staff create an App Gateway that points to this server based on a domain
 name / URL they provide. Once that is setup, the applications are available at:
 
--   https://apps.fws.gov/southeastblueprint-test
--   https://apps.fws.gov/southeastssa-test
+-   https://apps.fws.gov/test-southeastblueprint
+-   https://apps.fws.gov/test-southeastssa
