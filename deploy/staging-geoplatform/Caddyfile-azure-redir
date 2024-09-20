@@ -1,0 +1,47 @@
+:80 {
+  log {
+    level ERROR
+  }
+
+  # redirect site root to Blueprint Explorer on new staging server
+  redir / https://apps.fws.gov/southeastblueprint-test/
+
+  # everything must be in a route to get proper matching order
+  route {
+    # common headers
+    header Strict-Transport-Security "max-age=63072000; preload"
+    header X-Frame-Options "DENY"
+    header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *; child-src 'self' blob:;"
+    header X-Content-Type-Options nosniff
+    header Referrer-Policy "strict-origin-when-cross-origin"
+
+    redir /southeast https://apps.fws.gov/southeastblueprint-test/
+    redir /southeast/ https://apps.fws.gov/southeastblueprint-test/
+    redir /southeast/custom_report https://apps.fws.gov/southeastblueprint-test/custom_report/
+    redir /southeast/custom_report/ https://apps.fws.gov/southeastblueprint-test/custom_report/
+    redir /southeast/help https://apps.fws.gov/southeastblueprint-test/help/
+    redir /southeast/help/ https://apps.fws.gov/southeastblueprint-test/help/
+
+    redir /ssa https://apps.fws.gov/southeastssa-test/
+    redir /ssa/ https://apps.fws.gov/southeastssa-test/
+    redir /ssa/report https://apps.fws.gov/southeastssa-test/report/
+    redir /ssa/report/ https://apps.fws.gov/southeastssa-test/report/
+    redir /ssa/datasets https://apps.fws.gov/southeastssa-test/datasets/
+    redir /ssa/datasets/ https://apps.fws.gov/southeastssa-test/datasets/
+
+    # redirect everything else to a 404 page
+    handle {
+      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+    }
+  }
+
+  # send any errors to Southeast 404 page
+  # note this is redir instead of rewrite, because gatsby doesn't properly handle
+  # URLs rewritten to its error page
+  handle_errors {
+      @404 {
+          expression {http.error.status_code} == 404
+      }
+      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+  }
+}

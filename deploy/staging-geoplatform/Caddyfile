@@ -3,8 +3,8 @@
     level ERROR
   }
 
-  # redirect site root to Blueprint Explorer on new staging server
-  redir / https://apps.fws.gov/southeastblueprint-test/
+  # redirect site root to southeast
+  redir / /southeast/
 
   # everything must be in a route to get proper matching order
   route {
@@ -15,21 +15,65 @@
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin-when-cross-origin"
 
-    redir /southeast https://apps.fws.gov/southeastblueprint-test/
-    redir /southeast/ https://apps.fws.gov/southeastblueprint-test/
-    redir /southeast/custom_report https://apps.fws.gov/southeastblueprint-test/custom_report/
-    redir /southeast/custom_report/ https://apps.fws.gov/southeastblueprint-test/custom_report/
-    redir /southeast/help https://apps.fws.gov/southeastblueprint-test/help/
-    redir /southeast/help/ https://apps.fws.gov/southeastblueprint-test/help/
+    # Set CORS
+    header Access-Control-Allow-Origin "https://blueprint-test.geoplatform.gov"
+    header Access-Control-Request-Method *
+    header Access-Control-Request-Headers *
 
-    redir /ssa https://apps.fws.gov/southeastssa-test/
-    redir /ssa/ https://apps.fws.gov/southeastssa-test/
-    redir /ssa/report https://apps.fws.gov/southeastssa-test/report/
-    redir /ssa/report/ https://apps.fws.gov/southeastssa-test/report/
+    route /southeast/services* {
+      uri strip_prefix /southeast
+      header Cache-Control "public, max-age=3600, must-revalidate"
+      reverse_proxy mbtileserver:8000
+    }
+
+    encode zstd gzip
+
+    route /southeast/api/* {
+      uri strip_prefix /southeast
+      reverse_proxy se-api:5000
+    }
+
+    route /ssa/api/* {
+      uri strip_prefix /ssa
+      reverse_proxy ssa-api:5000
+    }
+
+    # most files can be cached indefinitely, they are rebuilt with new names each time
+    @cached_files {
+      path *.jpg *.jpeg *.png *.gif *.ico *.webp *.svg *.css *.js *.woff *.woff2 */static/*
+      not path /favicon*
+    }
+    header @cached_files Cache-Control "public, max-age=31536000, immutable"
+
+    # make sure favicons are not cached too long
+    @short_cached_files {
+      path /favicon*
+    }
+    header @short_cached_files Cache-Control "public, max-age=3600"
+
+    # page-data must be fetched each time
+    @no_cache {
+      path *.html *.webmanifest */page-data/* /southeast/ /ssa/ */custom_report/ */report/ */datasets/
+    }
+    header @no_cache Cache-Control "public, max-age:0, must-revalidate"
+
+    root * /var/www
+    file_server /southeast*
+    file_server /ssa*
+
+    # redirect favicon.ico to southeast
+    handle {
+      redir /favicon.ico /southeast/favicon.ico
+    }
+
+    # redirect robots.txt to southeast
+    handle {
+      redir /robots.txt /southeast/robots.txt
+    }
 
     # redirect everything else to a 404 page
     handle {
-      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+      redir * /southeast/404.html
     }
   }
 
@@ -40,6 +84,6 @@
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * https://apps.fws.gov/southeastblueprint-test/404.html
+      redir * /southeast/404.html
   }
 }

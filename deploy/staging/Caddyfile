@@ -5,7 +5,7 @@ ifwaz-sebp-test.fws.doi.net {
 
   tls /certificates/internal-tls.pem /certificates/internal-tls.key
 
-  # redirect site root to southeast
+  # redirect site root to Blueprint Explorer
   redir / /southeastblueprint-test/
 
   # everything must be in a route to get proper matching order
@@ -18,7 +18,7 @@ ifwaz-sebp-test.fws.doi.net {
     header Referrer-Policy "strict-origin-when-cross-origin"
 
     # Set CORS
-    header Access-Control-Allow-Origin *
+    header Access-Control-Allow-Origin "https://apps.fws.gov"
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
@@ -55,7 +55,7 @@ ifwaz-sebp-test.fws.doi.net {
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southeastblueprint-test/ /southeastssa-test/ */custom_report/
+      path *.html *.webmanifest */page-data/* /southeastblueprint-test/ /southeastssa-test/ */custom_report/ */report/ */datasets/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
@@ -63,12 +63,12 @@ ifwaz-sebp-test.fws.doi.net {
     file_server /southeastblueprint-test*
     file_server /southeastssa-test*
 
-    # redirect favicon.ico to southeast
+    # redirect favicon.ico to Blueprint Explorer
     handle {
       redir /favicon.ico /southeastblueprint-test/favicon.ico
     }
 
-    # redirect robots.txt to southeast
+    # redirect robots.txt to Blueprint Explorer
     handle {
       redir /robots.txt /southeastblueprint-test/robots.txt
     }
@@ -79,7 +79,7 @@ ifwaz-sebp-test.fws.doi.net {
     }
   }
 
-  # send any errors to Southeast 404 page
+  # send any errors to Blueprint Explorer 404 page
   # note this is redir instead of rewrite, because gatsby doesn't properly handle
   # URLs rewritten to its error page
   handle_errors {

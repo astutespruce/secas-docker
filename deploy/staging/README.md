@@ -159,6 +159,9 @@ SITE_ROOT_PATH=southeastblueprint-test
 SITE_URL=<root URL>/southeastblueprint-test
 GATSBY_API_HOST=<root URL>/southeastblueprint-test
 GATSBY_TILE_HOST=<root URL>/southeastblueprint-test
+
+# show warning in UI when on staging server
+GATSBY_ENV="staging
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
@@ -171,6 +174,9 @@ GATSBY_API_TOKEN=<api token>
 SITE_ROOT_PATH=southeastssa-test
 SITE_URL=<root URL>/southeastssa-test
 GATSBY_API_HOST=<root URL>/southeastssa-test
+
+# show warning in UI when on staging server
+GATSBY_ENV="staging
 ```
 
 ## Upload data
