@@ -1,12 +1,13 @@
 # API and Background Worker Dockerfile
 
-This Dockerfile provides the runtime environment for both the Southeast and
-South Atlantic API and Background Worker services:
+This Dockerfile provides the runtime environment for both the Southeast
+Blueprint Explorer and Southeast Species Status Landscape Assessment Tool
+API and Background Worker services:
 
 -   `se-api`
 -   `se-worker`
--   `sa-api`
--   `sa-worker`
+-   `ssa-api`
+-   `ssa-worker`
 
 All share the same Python dependencies.
 

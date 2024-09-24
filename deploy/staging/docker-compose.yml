@@ -1,164 +1,164 @@
-version: "3.7"
-
 services:
-  caddy:
-    image: ${DOCKER_REGISTRY}/$CADDY
-    restart: always
-    ports:
-      - "80:80"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_certs:/data
-      - caddy_config:/config
-      - $STATIC_DIR:/var/www
-    logging:
-      driver: journald
-    networks:
-      - shared
+    caddy:
+        image: caddy:2.8.4-alpine
+        platform: linux/arm64
+        restart: always
+        ports:
+            - "443:443"
+        volumes:
+            - caddy_config:/config
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./certificates:/certificates
+            - $BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
+            - $SSA_STATIC_DIR:/var/www/test-southeastssa
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  mbtileserver:
-    image: ${DOCKER_REGISTRY}/$MBTILESERVER
-    restart: always
-    command: "--tiles-only"
-    volumes:
-      - $TILE_DIR:/tilesets
-    logging:
-      driver: journald
-    networks:
-      - shared
+    mbtileserver:
+        image: ghcr.io/consbio/mbtileserver:0.10.0
+        platform: linux/arm64
+        restart: always
+        command: "--tiles-only"
+        volumes:
+            - $TILE_DIR:/tilesets
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  redis:
-    image: ${DOCKER_REGISTRY}/$REDIS
-    restart: always
-    logging:
-      driver: journald
-    networks:
-      - shared
+    redis:
+        image: redis:7.4.0-alpine
+        platform: linux/arm64
+        restart: always
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  se-worker:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-    external_links:
-      - redis
-    env_file:
-      - .env
-    entrypoint: "/home/app/run_xvfb.sh"
-    command: [
-      "/usr/local/bin/arq",
-      "api.worker.WorkerSettings"
-    ]
-    volumes:
-      - user_upload:/tmp/se-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SE_CODE_DIR/api:/home/app/api # main API
-      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-      - $TILE_DIR:/data/tiles
-    logging:
-      driver: journald
-    networks:
-      - shared
+    se-worker:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+        external_links:
+            - redis
+        env_file:
+            - .env
+        entrypoint: "/home/app/run_xvfb.sh"
+        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        volumes:
+            - user_upload:/tmp/se-reports
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $TILE_DIR:/data/tiles
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  se-api:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-      - se-worker
-    external_links:
-      - redis
-    env_file:
-      - .env
-    command:
-      [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "--workers",
-        "1",
-        "-b",
-        ":5000",
-        "api.api:app",
-      ]
-    volumes:
-      - user_upload:/tmp/se-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SE_CODE_DIR/api:/home/app/api # main API
-      - $SE_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SE_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-    logging:
-      driver: journald
-    networks:
-      - shared
+    se-api:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+            - se-worker
+        external_links:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/usr/local/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "--workers",
+                "1",
+                "-b",
+                ":5000",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/se-reports
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  ssa-worker:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-    external_links:
-      - redis
-    env_file:
-      - .env
-    command: [
-      "/usr/local/bin/arq",
-      "api.worker.WorkerSettings"
-    ]
-    volumes:
-      - user_upload:/tmp/ssa-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SSA_CODE_DIR/api:/home/app/api # main API
-      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
-    logging:
-      driver: journald
-    networks:
-      - shared
+    ssa-worker:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+        external_links:
+            - redis
+        env_file:
+            - .env
+        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        volumes:
+            - user_upload:/tmp/ssa-reports
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SSA_CODE_DIR/api:/home/app/api # main API
+            - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+        logging:
+            driver: journald
+        networks:
+            - shared
 
-  ssa-api:
-    image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
-    depends_on:
-      - redis
-      - ssa-worker
-    external_links:
-      - redis
-    env_file:
-      - .env
-    command:
-      [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "--workers",
-        "1",
-        "-b",
-        ":5000",
-        "api.api:app",
-      ]
-    volumes:
-      - user_upload:/tmp/ssa-reports
-      - $SE_DATA_DIR:/home/app/data
-      - $SSA_CODE_DIR/api:/home/app/api # main API
-      - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-      - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
-    logging:
-      driver: journald
-    networks:
-      - shared
+    ssa-api:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+            - ssa-worker
+        external_links:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/usr/local/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "--workers",
+                "1",
+                "-b",
+                ":5000",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/ssa-reports
+            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SSA_CODE_DIR/api:/home/app/api # main API
+            - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+        logging:
+            driver: journald
+        networks:
+            - shared
 
 networks:
-  shared:
-    driver: bridge
-    name: shared
+    shared:
+        driver: bridge
+        name: shared
 
 volumes:
-  caddy_certs:
-  caddy_config:
-  user_upload:
+    caddy_certs:
+    caddy_config:
+    user_upload:

@@ -1,9 +1,7 @@
-version: "3.7"
-
 services:
     blueprint-api:
         build:
             context: .
             dockerfile: ./Dockerfile
-        image: ${DOCKER_REGISTRY}/blueprint-api:latest
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
         platform: linux/arm64

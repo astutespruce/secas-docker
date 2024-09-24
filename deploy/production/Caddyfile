@@ -1,13 +1,12 @@
-:80 {
+ifwaz-sebp-prod.fws.doi.net {
   log {
     level ERROR
   }
 
-  # redirect site root to southeast
-  redir / /southeast/
+  tls /certificates/internal-tls.pem /certificates/internal-tls.key
 
-  # redirect south atlantic to southeast
-  redir /southatlantic/ /southeast/
+  # redirect site root to southeast
+  redir / /southeastblueprint/
 
   # everything must be in a route to get proper matching order
   route {
@@ -19,24 +18,25 @@
     header Referrer-Policy "strict-origin-when-cross-origin"
 
     # Set CORS
-    header Access-Control-Allow-Origin "https://blueprint.geoplatform.gov"
+    header Access-Control-Allow-Origin "https://apps.fws.gov"
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /services* {
-        header Cache-Control "public, max-age=3600, must-revalidate"
-        reverse_proxy mbtileserver:8000
+    route /southeastblueprint/services* {
+      uri strip_prefix /southeastblueprint
+      header Cache-Control "public, max-age=3600, must-revalidate"
+      reverse_proxy mbtileserver:8000
     }
 
     encode zstd gzip
 
-    route /southeast/api/* {
-      uri strip_prefix /southeast
+    route /southeastblueprint/api/* {
+      uri strip_prefix /southeastblueprint
       reverse_proxy se-api:5000
     }
 
-    route /ssa/api/* {
-      uri strip_prefix /ssa
+    route /southeastssa/api/* {
+      uri strip_prefix /southeastssa
       reverse_proxy ssa-api:5000
     }
 
@@ -55,27 +55,27 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/* /southeast/ /ssa/ */custom_report/
+      path *.html *.webmanifest */page-data/* /southeastblueprint/ /southeastssa/ */custom_report/ */report/ */datasets/ */help/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
-    file_server /southeast*
-    file_server /ssa*
+    file_server /southeastblueprint*
+    file_server /southeastssa*
 
     # redirect favicon.ico to southeast
     handle {
-      redir /favicon.ico /southeast/favicon.ico
+      redir /favicon.ico /southeastblueprint/favicon.ico
     }
 
     # redirect robots.txt to southeast
     handle {
-      redir /robots.txt /southeast/robots.txt
+      redir /robots.txt /southeastblueprint/robots.txt
     }
 
     # redirect everything else to a 404 page
     handle {
-      redir * /southeast/404.html
+      redir * /southeastblueprint/404.html
     }
   }
 
@@ -86,6 +86,6 @@
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * /southeast/404.html
+      redir * /southeastblueprint/404.html
   }
 }
