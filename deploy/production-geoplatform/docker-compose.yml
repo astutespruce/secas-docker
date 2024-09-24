@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: ${DOCKER_REGISTRY}/$CADDY
+        image: caddy:2.8.4-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -8,7 +8,6 @@ services:
         volumes:
             - caddy_config:/config
             - ./Caddyfile:/etc/caddy/Caddyfile
-            - ./certificates:/certificates
         logging:
             driver: journald
         networks:
