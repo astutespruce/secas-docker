@@ -15,7 +15,7 @@ ifwaz-sebp-prod.fws.doi.net {
     header X-Frame-Options "DENY"
     header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *;  child-src 'self' blob:;"
     header X-Content-Type-Options nosniff
-    header Referrer-Policy "strict-origin-when-cross-origin"
+    header Referrer-Policy "strict-origin"
 
     # Set CORS
     header Access-Control-Allow-Origin "https://apps.fws.gov"
