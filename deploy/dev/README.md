@@ -25,9 +25,25 @@ Source this file in your shell `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
 The UI static assets are built using by running the following `gatsby clean` and
-`gatsby build` in the `ui` folder of each application repository, and copying the
-outputs in the `public` directory to `var/www/southeastblueprint` and
-`/var/www/southeastssa`.
+`gatsby build --prefix-paths` in the `ui` folder of each application repository,
+and copying the outputs in the `public` directory to `var/www/southeastblueprint`
+and `/var/www/southeastssa`.
+
+Note: these must be built with
+
+```
+SITE_URL=https://localhost:8080/southeastblueprint
+SITE_ROOT_PATH=southeastblueprint
+```
+
+and
+
+```
+SITE_URL=https://localhost:8080/southeastssa
+SITE_ROOT_PATH=southeastssa
+```
+
+in their `.env.production` files.
 
 After those have been built, pull the other images and run:
 

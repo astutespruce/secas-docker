@@ -4,35 +4,39 @@
   }
 
   # redirect site root to southeast
-  redir / /southeast/
+  redir / /southeastblueprint/
 
   # everything must be in a route to get proper matching order
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "default-src 'self' *.googletagmanager.com *.mapbox.com *.sentry.io; connect-src *; img-src 'unsafe-inline' * data: blob:; media-src 'unsafe-inline' *; worker-src * blob:; style-src 'unsafe-inline' *; script-src 'unsafe-inline' * blob:; child-src 'self' blob:;"
+    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin"
+    header Cross-Origin-Resource-Policy "cross-origin"
+    header Cross-Origin-Embedder-Policy "require-corp"
+
 
     # Set CORS: allow all origins for testing
     header Access-Control-Allow-Origin *
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /services* {
+    route /southeastblueprint/services* {
+        uri strip_prefix /southeastblueprint
         header Cache-Control "public, max-age=3600, must-revalidate"
         reverse_proxy mbtileserver:8000
     }
 
     encode zstd gzip
 
-    route /southeast/api/* {
-      uri strip_prefix /southeast
+    route /southeastblueprint/api/* {
+      uri strip_prefix /southeastblueprint
       reverse_proxy se-api:5000
     }
 
-    route /ssa/api/* {
-      uri strip_prefix /ssa
+    route /southeastssa/api/* {
+      uri strip_prefix /southeastssa
       reverse_proxy ssa-api:5000
     }
 
@@ -61,17 +65,17 @@
 
     # redirect favicon.ico to southeast
     handle {
-      redir /favicon.ico /southeast/favicon.ico
+      redir /favicon.ico /southeastblueprint/favicon.ico
     }
 
     # redirect robots.txt to southeast
     handle {
-      redir /robots.txt /southeast/robots.txt
+      redir /robots.txt /southeastblueprint/robots.txt
     }
 
     # redirect everything else to a 404 page
     handle {
-      redir * /southeast/404.html
+      redir * /southeastblueprint/404.html
     }
   }
 
@@ -82,6 +86,6 @@
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir * /southeast/404.html
+      redir * /southeastblueprint/404.html
   }
 }
