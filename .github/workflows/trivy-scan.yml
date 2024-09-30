@@ -43,11 +43,12 @@ jobs:
     strategy:
       matrix:
         image:
-          - "${{ github.repository }}/blueprint-api:latest"
-          - "${{ github.repository }}/ui-build-base:latest"
+          - "ghcr.io/${{ github.repository }}/blueprint-api:latest"
+          - "ghcr.io/${{ github.repository }}/ui-build-base:latest"
           - "caddy:2.8.4-alpine"
           - "redis:7.4.0-alpine"
           - "ghcr.io/consbio/mbtileserver:0.10.0"
+      fail-fast: false
 
     steps:
       - name: Run scanner
