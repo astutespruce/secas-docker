@@ -1,0 +1,58 @@
+name: Trivy scan Docker images
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/trivy-scan-images.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/trivy-scan-images.yml"
+
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+
+jobs:
+  scan-images:
+    name: Scan Docker images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      matrix:
+        image-name:
+          - "blueprint-api"
+          - "ui-build-base"
+          - "caddy"
+          - "redis"
+          - "mbtileserver"
+        include:
+          - image-name: "blueprint-api"
+            image: "ghcr.io/${{ github.repository }}/blueprint-api:latest"
+          - image-name: "ui-build-base"
+            image: "ghcr.io/${{ github.repository }}/ui-build-base:latest"
+          - image-name: "caddy"
+            image: "caddy:2.8.4-alpine"
+          - image-name: "redis"
+            image: "redis:7.4.0-alpine"
+          - image-name: "mbtileserver"
+            image: "ghcr.io/consbio/mbtileserver:0.10.0"
+      fail-fast: false
+
+    steps:
+      - name: Scan ${{ matrix.image-name }}
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: "image"
+          image-ref: ${{ matrix.image }}
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-${{ matrix.image-name }}.sarif"
+          severity: "HIGH,CRITICAL"
+
+      - name: Upload scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-${{ matrix.image-name }}.sarif"
