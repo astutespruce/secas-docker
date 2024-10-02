@@ -51,8 +51,10 @@ COPY ./secas-blueprint-requirements.txt /tmp/
 COPY ./secas-ssa-requirements.txt /tmp/
 
 # make sure to build pyogrio and rasterio against GDAL in this container
-RUN uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio && \
-    uv pip install -v -r /tmp/secas-ssa-requirements.txt
+RUN uv pip install setuptools cython versioneer && \
+    uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
+    uv pip install -v -r /tmp/secas-ssa-requirements.txt && \
+    uv pip uninstall setuptools cython versioneer
 
 # Fix location for hardcoded certs file in different location on manylinux image for pymgl
 RUN mkdir -p /etc/pki/tls/certs && \
