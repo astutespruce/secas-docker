@@ -48,7 +48,7 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/se-reports
             - $BLUEPRINT_DATA_DIR:/home/app/data
@@ -74,7 +74,7 @@ services:
             - .env
         command:
             [
-                "/usr/local/bin/gunicorn",
+                "/home/app/.venv/bin/gunicorn",
                 "-k",
                 "uvicorn.workers.UvicornWorker",
                 "--name",
@@ -106,7 +106,7 @@ services:
             - redis
         env_file:
             - .env
-        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
             - $BLUEPRINT_DATA_DIR:/home/app/data
@@ -131,7 +131,7 @@ services:
             - .env
         command:
             [
-                "/usr/local/bin/gunicorn",
+                "/home/app/.venv/bin/gunicorn",
                 "-k",
                 "uvicorn.workers.UvicornWorker",
                 "--name",

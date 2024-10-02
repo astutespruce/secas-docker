@@ -1,10 +1,10 @@
 # Custom NodeJS image for project-specific UI build images
 
-FROM debian:bookworm-slim
+FROM debian:bookworm-20240926-slim
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
-ENV NODE_VERSION 20.11.1
+ENV NODE_VERSION 20.17.0
 ENV NODE_ENV production
 
 # 1010 corresponds to uid for app user on staging / production
@@ -13,7 +13,9 @@ RUN groupadd --gid 1010 app \
 
 WORKDIR /home/app/ui
 
-RUN set -ex && \
+RUN \
+    export GNUPGHOME="$(mktemp -d)" && \
+    set -ex && \
     apt-get update && \
     # install libs required for node
     apt-get install -y --no-install-recommends ca-certificates curl dirmngr gnupg xz-utils \
@@ -34,13 +36,17 @@ RUN set -ex && \
     C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     108F52B48DB57BB0CC439B2997B01419BD92F80A \
     A363A499291CBBC940DD62E41F10027AF002F8B0 \
+    CC68F5A3106FF448322E48ED27F5E38D5B0A215F \
     ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done && \
+    cd /tmp && \
     curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-arm64.tar.xz" && \
-    curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" && \
+    curl -fsSLO --compressed -o SHASUMS256.txt.asc "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" && \
     gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc && \
+    gpgconf --kill all && \
+    rm -rf "$GNUPGHOME" && \
     grep " node-v$NODE_VERSION-linux-arm64.tar.xz\$" SHASUMS256.txt | sha256sum -c - && \
     tar -xJf "node-v$NODE_VERSION-linux-arm64.tar.xz" -C /usr/local --strip-components=1 --no-same-owner && \
     rm "node-v$NODE_VERSION-linux-arm64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt && \

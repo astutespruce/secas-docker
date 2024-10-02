@@ -37,7 +37,7 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/se-reports
             - $BLUEPRINT_DATA_DIR:/home/app/data
@@ -58,7 +58,7 @@ services:
             - .env
         command:
             [
-                "/usr/local/bin/gunicorn",
+                "/home/app/.venv/bin/gunicorn",
                 "-k",
                 "uvicorn.workers.UvicornWorker",
                 "--name",
@@ -87,10 +87,11 @@ services:
         env_file:
             - .env
         # entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
             - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $HOST_SSA_DATA_DIR:$SSA_DATA_DIR
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
@@ -106,7 +107,7 @@ services:
             - .env
         command:
             [
-                "/usr/local/bin/gunicorn",
+                "/home/app/.venv/bin/gunicorn",
                 "-k",
                 "uvicorn.workers.UvicornWorker",
                 "--name",
