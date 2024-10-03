@@ -10,7 +10,7 @@
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
+    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self'; manifest-src 'self';"
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin"
     header Cross-Origin-Resource-Policy "cross-origin"
