@@ -19,7 +19,7 @@ services:
 
     mbtileserver:
         # IMPORTANT: update trivy-scan.yml with this version on change
-        image: ghcr.io/consbio/mbtileserver:0.10.0
+        image: ghcr.io/consbio/mbtileserver:0.11.0
         platform: linux/arm64
         restart: always
         command: "--tiles-only"

@@ -38,7 +38,7 @@ jobs:
           - image-name: "redis"
             image: "redis:7.4.0-alpine"
           - image-name: "mbtileserver"
-            image: "ghcr.io/consbio/mbtileserver:0.10.0"
+            image: "ghcr.io/consbio/mbtileserver:0.11.0"
       fail-fast: false
 
     steps:

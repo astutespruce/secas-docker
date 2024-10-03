@@ -13,7 +13,7 @@ services:
             - $SSA_STATIC_DIR:/var/www/southeastssa
 
     mbtileserver:
-        image: ghcr.io/consbio/mbtileserver:0.10.0
+        image: ghcr.io/consbio/mbtileserver:0.11.0
         platform: linux/arm64
         restart: always
         volumes:
