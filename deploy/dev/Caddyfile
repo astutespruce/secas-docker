@@ -55,7 +55,7 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/*  /southeast/ /ssa/ */custom_report/ */report/ */datasets/ */help/
+      path *.html *.webmanifest */page-data/*  /southeastblueprint/ /southeastssa/ */custom_report/ */report/ */datasets/ */help/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
