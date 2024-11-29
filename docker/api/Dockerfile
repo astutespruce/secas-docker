@@ -1,6 +1,6 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.9.2
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.10.0
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DISPLAY :99
 ENV LIBGL_ALWAYS_SOFTWARE 1
 ENV VIRTUAL_ENV "/home/app/.venv"
-ENV PATH "/home/app/.venv/bin:/root/.cargo/bin:${PATH}"
+ENV PATH "/home/app/.venv/bin:/root/.local/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y \
     # git \
