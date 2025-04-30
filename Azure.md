@@ -1,8 +1,23 @@
 # USFWS Azure cloud-based environment setup
 
 The USFWS Azure environment is setup under the control of USFWS IRTM. Developer
-access requires a PIV credential and sign-in to VDI CloudDesktop (Admin PAW)
-in order to use SSH to connect to the instances.
+access requires a PIV credential and sign-in to VDI CloudDesktop in order to use
+SSH to connect to the instances.
+
+On that instance, enter the following into `.ssh/config`:
+
+```
+GSSAPIAuthentication yes
+GSSAPIDelegateCredentials yes
+```
+
+Then connect to the server via SSH in PowerShell:
+
+```bash
+ssh -k ifwaz-sebp-<instance>
+```
+
+NOTE: this uses only the hostname, not the fully qualified domain name.
 
 ## File transfer
 

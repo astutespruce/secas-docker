@@ -1,6 +1,6 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.10.0
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.10.3
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
