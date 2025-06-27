@@ -12,8 +12,8 @@ ifwaz-sebp-test.fws.doi.net {
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self'; manifest-src 'self';"
-    header X-Content-Type-Options nosniff
+    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self' data:; manifest-src 'self';"
+
     header Referrer-Policy "strict-origin"
     header Cross-Origin-Resource-Policy "cross-origin"
     header Cross-Origin-Embedder-Policy "require-corp"
@@ -29,6 +29,9 @@ ifwaz-sebp-test.fws.doi.net {
       reverse_proxy mbtileserver:8000
     }
 
+    # this header is already handled by mbtileserver
+    header X-Content-Type-Options nosniff
+
     encode zstd gzip
 
     route /test-southeastblueprint/api/* {
@@ -40,6 +43,8 @@ ifwaz-sebp-test.fws.doi.net {
       uri strip_prefix /test-southeastssa
       reverse_proxy ssa-api:5000
     }
+
+
 
     # most files can be cached indefinitely, they are rebuilt with new names each time
     @cached_files {

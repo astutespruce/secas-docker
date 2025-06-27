@@ -32,8 +32,13 @@ and `/var/www/southeastssa`.
 Note: these must be built with
 
 ```
-SITE_URL=https://localhost:8080/southeastblueprint
-SITE_ROOT_PATH=southeastblueprint
+PUBLIC_MAPBOX_TOKEN=<token>
+PUBLIC_API_TOKEN=<token>
+PUBLIC_SENTRY_DSN=<DSN>
+PUBLIC_GOOGLE_ANALYTICS_ID=<id>
+PUBLIC_API_HOST=<API host>
+PUBLIC_TILE_HOST=<tile host>
+PUBLIC_CONTACT_EMAIL=<contact email>
 ```
 
 and

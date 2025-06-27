@@ -149,19 +149,19 @@ source ~/secas-docker/deploy/staging/.env
 Create `~/secas-blueprint/ui/.env.production` with the following:
 
 ```bash
-GATSBY_MAPBOX_API_TOKEN=<mapbox token>
-GATSBY_SENTRY_DSN=<dsn>
-GATSBY_GOOGLE_ANALYTICS_ID=<id>
-GATSBY_API_TOKEN=<api token>
-
-SITE_ROOT_PATH=test-southeastblueprint
-# specific to domain where this is deployed
-SITE_URL=<root URL>/test-southeastblueprint
-GATSBY_API_HOST=<root URL>/test-southeastblueprint
-GATSBY_TILE_HOST=<root URL>/test-southeastblueprint
+PUBLIC_MAPBOX_TOKEN=<token>
+PUBLIC_API_TOKEN=<token>
+PUBLIC_SENTRY_DSN=<DSN>
+PUBLIC_GOOGLE_ANALYTICS_ID=<id>
+PUBLIC_CONTACT_EMAIL=<contact email>
 
 # show warning in UI when on staging server
-GATSBY_ENV="staging
+PUBLIC_DEPLOY_ENV="staging"
+
+# specific to domain where this is deployed
+DEPLOY_PATH=/test-southeastblueprint
+PUBLIC_API_HOST=<API host>/test-southeastblueprint
+PUBLIC_TILE_HOST=<tile host>/test-southeastblueprint
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
