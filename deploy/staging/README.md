@@ -1,7 +1,8 @@
 # Deployment to staging environment
 
-The Azure instance can only be accessed via SSH within the DOI network. Login to VDI
-CloudDesktop Privileged Access Workstation and then open PowerShell.
+The Azure instance can only be accessed via SSH within the DOI network. All
+access to the DOI network now requires a government furnished computer (GFE, below)
+that is on the GlobalProtect VPN. SSH is accessed via PowerShell.
 
 Use `ssh <hostname> -l <username without domain>`
 
@@ -253,11 +254,12 @@ Then copy the contents of the CSR (select and right click):
 cat internal-tls.csr
 ```
 
-In CloudDesktop, follow the [instructions](https://doimspp.sharepoint.com/sites/ocio-ecm-csr)
-to open the DOI certificate request page in Internet Explorer mode (first load
-the page, then use the ... menu in upper right and reload in Internet Explorer mode).
+On a GFE, follow the [instructions](https://doimspp.sharepoint.com/sites/ocio-ecm-csr)
+in Microsoft Edge. Then open the DOI certificate request page in Internet
+Explorer mode (first load the page, then use the ... menu in upper right and
+reload in Internet Explorer mode).
 
-Then choose to submit a request using a base-64-encded CMC, and paste in the contents
+Then choose to submit a request using a base-64-encoded CMC, and paste in the contents
 of the CSR copied above.
 
 Add the following to additional attributes
@@ -269,24 +271,31 @@ san:dns="<full hostname>"
 
 Once the certificate has been granted (typically a few minutes), in Internet Explorer
 follow the link to the status of a pending certificate request. Choose Base64
-encoding and download the file.
+encoding and download the certificate as `certnew.cer` and download the CA
+certificate chain as `certnew.p7b`..
 
-Open a new PowerShell window on CloudDesktop and copy the contents of that
-certificate:
+Open a new PowerShell window on the GFE, navigate to the `Downloads` folder,
+and copy the contents of `certnew.cer`:
 
 ```bash
 cat certnew.cer | clip
 ```
 
-In the SSH window (as `app`) on the instance, create a file and paste the contents
-of the certificate into `internal-tls-leaf.pem` (in the `deploy/staging/certificates` folder).
+In the SSH window (as `app`) on the instance, create `internal-tls-leaf.pem`
+(in the `deploy/staging/certificates` folder) and paste the contents of the
+certificate into it .
 
-Then in Internet Explorer follow the link to download the
-CA certificate, choose Base 64, and download CA certificate chain. Copy the
-contents of that file and save it to `ca.p7b` on the instance in the `certificates`
-folder.
+Copy the contents of `certnew.p7b`:
 
-Then convert the CA certificate chain:
+```bash
+cat certnew.p7b | clip
+```
+
+In the SSH window (as `app`) on the instance, create a file `ca.p7b`
+(in the `deploy/staging/certificates` folder) and paste the contents of the
+certificate chain into it.
+
+Then convert the CA certificate chain (on the instance):
 
 ```bash
 openssl pkcs7 -print_certs -in ca.p7b -out ca.pem
