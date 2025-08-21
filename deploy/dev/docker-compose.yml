@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.8.4-alpine
+        image: caddy:2.10.0-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -22,7 +22,7 @@ services:
             - "8001:8000"
 
     redis:
-        image: redis:7.4.0-alpine
+        image: redis:8.2.1-alpine
         platform: linux/arm64
         restart: always
 

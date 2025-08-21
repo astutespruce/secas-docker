@@ -1,5 +1,7 @@
 # Provides: Southeast and SSA API and Background Worker image
 
+# IMPORTANT: GDAL 3.11 does not appear to work properly with warp in rasterio 1.4.3
+# https://github.com/rasterio/rasterio/issues/3376
 FROM ghcr.io/osgeo/gdal:ubuntu-small-3.10.3
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
