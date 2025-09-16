@@ -22,7 +22,7 @@ certifi==2025.8.3
     #   pyproj
     #   rasterio
     #   sentry-sdk
-cffi==1.17.1
+cffi==2.0.0
     # via weasyprint
 click==8.2.1
     # via
@@ -39,7 +39,7 @@ cssselect2==0.8.0
     # via weasyprint
 fastapi==0.116.1
     # via secas-blueprint (pyproject.toml)
-fonttools==4.59.1
+fonttools==4.59.2
     # via weasyprint
 geopandas==1.1.1
     # via secas-blueprint (pyproject.toml)
@@ -53,12 +53,17 @@ idna==3.10
     # via anyio
 jinja2==3.1.6
     # via secas-blueprint (pyproject.toml)
+llvmlite==0.44.0
+    # via numba
 markupsafe==3.0.2
     # via jinja2
-numpy==2.3.2
+numba==0.61.2
+    # via secas-blueprint (pyproject.toml)
+numpy==2.2.6
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
+    #   numba
     #   pandas
     #   pyogrio
     #   rasterio
@@ -69,7 +74,6 @@ packaging==25.0
     #   gunicorn
     #   pymgl
     #   pyogrio
-    #   python-calamine
 pandas==2.3.2
     # via
     #   secas-blueprint (pyproject.toml)
@@ -82,9 +86,9 @@ progress==1.6.1
     # via secas-blueprint (pyproject.toml)
 pyarrow==21.0.0
     # via secas-blueprint (pyproject.toml)
-pycparser==2.22
+pycparser==2.23
     # via cffi
-pydantic==2.11.7
+pydantic==2.11.9
     # via fastapi
 pydantic-core==2.33.2
     # via pydantic
@@ -96,13 +100,13 @@ pyogrio==0.11.1
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
-pyparsing==3.2.3
+pyparsing==3.2.4
     # via rasterio
 pyphen==0.17.2
     # via weasyprint
 pyproj==3.7.2
     # via geopandas
-python-calamine==0.4.0
+python-calamine==0.5.3
     # via secas-blueprint (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
@@ -118,7 +122,7 @@ redis==5.0.0
     # via
     #   secas-blueprint (pyproject.toml)
     #   arq
-sentry-sdk==2.35.0
+sentry-sdk==2.38.0
     # via secas-blueprint (pyproject.toml)
 shapely==2.1.1
     # via
@@ -128,7 +132,7 @@ six==1.17.0
     # via python-dateutil
 sniffio==1.3.1
     # via anyio
-starlette==0.47.2
+starlette==0.47.3
     # via fastapi
 tinycss2==1.4.0
     # via
@@ -136,7 +140,7 @@ tinycss2==1.4.0
     #   weasyprint
 tinyhtml5==2.0.0
     # via weasyprint
-typing-extensions==4.14.1
+typing-extensions==4.15.0
     # via
     #   anyio
     #   fastapi

@@ -184,7 +184,7 @@ GATSBY_ENV="staging
 
 Use 7zip to zip the following directories in the `secas-blueprint` project:
 
--   `data/inputs`
+-   `data/inputs` (may need to be broken into multiple files due to size)
 -   `data/results`
 -   `tiles`
 

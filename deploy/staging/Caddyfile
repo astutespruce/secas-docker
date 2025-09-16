@@ -12,7 +12,7 @@ ifwaz-sebp-test.fws.doi.net {
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self' data:; manifest-src 'self';"
+    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com *.googletagmanager.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self' data:; manifest-src 'self';"
 
     header Referrer-Policy "strict-origin"
     header Cross-Origin-Resource-Policy "cross-origin"
@@ -36,11 +36,13 @@ ifwaz-sebp-test.fws.doi.net {
 
     route /test-southeastblueprint/api/* {
       uri strip_prefix /test-southeastblueprint
+      header Cache-Control "no-cache, no-store, max-age=0"
       reverse_proxy se-api:5000
     }
 
     route /test-southeastssa/api/* {
       uri strip_prefix /test-southeastssa
+      header Cache-Control "no-cache, no-store, max-age=0"
       reverse_proxy ssa-api:5000
     }
 
@@ -63,7 +65,7 @@ ifwaz-sebp-test.fws.doi.net {
     @no_cache {
       path *.html *.webmanifest */page-data/* /test-southeastblueprint/ /test-southeastssa/ */custom_report/ */report/ */datasets/ */help/
     }
-    header @no_cache Cache-Control "public, max-age:0, must-revalidate"
+    header @no_cache Cache-Control "public, max-age=0, must-revalidate"
 
     root * /var/www
     file_server /test-southeastblueprint*
