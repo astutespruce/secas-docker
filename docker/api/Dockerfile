@@ -53,7 +53,8 @@ COPY ./secas-blueprint-requirements.txt /tmp/
 COPY ./secas-ssa-requirements.txt /tmp/
 
 # make sure to build pyogrio and rasterio against GDAL in this container
-RUN uv pip install cython numpy setuptools versioneer  && \
+# NOTE: the version of numpy hardcoded here must match secas-blueprint-requirements.txt
+RUN uv pip install cython numpy==2.2.6 setuptools versioneer  && \
     uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
     uv pip install -v -r /tmp/secas-ssa-requirements.txt && \
     uv pip uninstall setuptools cython versioneer
