@@ -24,31 +24,12 @@ SSA_STATIC_DIR=/var/www/southeastssa
 Source this file in your shell `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
-The UI static assets are built using by running the following `gatsby clean` and
-`gatsby build --prefix-paths` in the `ui` folder of each application repository,
-and copying the outputs in the `public` directory to `var/www/southeastblueprint`
+The UI static assets are built using by running `npm run build` in the `ui`
+folder of each application repository,and copying the outputs in the `public`
+directory to `var/www/southeastblueprint`
 and `/var/www/southeastssa`.
 
-Note: these must be built with
-
-```
-PUBLIC_MAPBOX_TOKEN=<token>
-PUBLIC_API_TOKEN=<token>
-PUBLIC_SENTRY_DSN=<DSN>
-PUBLIC_GOOGLE_ANALYTICS_ID=<id>
-PUBLIC_API_HOST=<API host>
-PUBLIC_TILE_HOST=<tile host>
-PUBLIC_CONTACT_EMAIL=<contact email>
-```
-
-and
-
-```
-SITE_URL=https://localhost:8080/southeastssa
-SITE_ROOT_PATH=southeastssa
-```
-
-in their `.env.production` files.
+See [staging README](../staging/README.md) for `.env.production` file settings.
 
 After those have been built, pull the other images and run:
 

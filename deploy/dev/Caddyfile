@@ -80,8 +80,7 @@
   }
 
   # send any errors to Southeast 404 page
-  # note this is redir instead of rewrite, because gatsby doesn't properly handle
-  # URLs rewritten to its error page
+
   handle_errors {
       @404 {
           expression {http.error.status_code} == 404

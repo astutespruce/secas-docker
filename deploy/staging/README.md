@@ -168,16 +168,15 @@ PUBLIC_TILE_HOST=<tile host>/test-southeastblueprint
 Create `~/secas-ssa/ui/.env.production` with the following:
 
 ```bash
-GATSBY_SENTRY_DSN=<dsn>
-GATSBY_GOOGLE_ANALYTICS_ID=<id>
-GATSBY_API_TOKEN=<api token>
+PUBLIC_SENTRY_DSN=<dsn>
+PUBLIC_GOOGLE_ANALYTICS_ID=<id>
+PUBLIC_API_TOKEN=<api token>
+PUBLIC_API_HOST=<root URL>/test-southeastssa
+PUBLIC_DEPLOY_ENV="staging"
+PUBLIC_CONTACT_EMAIL=<contact email>
 
-SITE_ROOT_PATH=test-southeastssa
+DEPLOY_PATH=/test-southeastssa
 SITE_URL=<root URL>/test-southeastssa
-GATSBY_API_HOST=<root URL>/test-southeastssa
-
-# show warning in UI when on staging server
-GATSBY_ENV="staging
 ```
 
 ## Upload data
