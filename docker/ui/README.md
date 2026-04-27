@@ -11,8 +11,11 @@ each application has a separate Dockerfile.
 
 The images are built using `scripts/build_custom_images.sh`.
 
-The UI build steps are run using the `build-se-ui.sh` and `build-ssa-ui.sh`
-scripts in the `ui` folder of the applicable environment.
+The UI build steps are run using
+
+- `scripts/build-se-ui.sh`
+- `scripts/build-ssa-ui.sh`
+- `scripts/build-midwest-ui.sh`
 
 The UI build automatically fetches the dependencies defined in the `package.lock`
 files for each application using `npm ci`.

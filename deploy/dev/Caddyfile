@@ -10,7 +10,7 @@
   route {
     # common headers
     header X-Frame-Options "DENY"
-    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com *.googletagmanager.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self'; manifest-src 'self';"
+    header Content-Security-Policy "connect-src 'self' *.googletagmanager.com *.google-analytics.com *.mapbox.com *.sentry.io; img-src 'self' *.mapbox.com *.googletagmanager.com data: blob:; media-src 'self' *.mapbox.com; worker-src 'self' blob:; style-src 'unsafe-inline' 'self' *.mapbox.com; script-src 'unsafe-inline' 'self' *.googletagmanager.com *.mapbox.com *.sentry.io blob:; child-src 'self' blob:;frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';font-src 'self' data:; manifest-src 'self';"
     header X-Content-Type-Options nosniff
     header Referrer-Policy "strict-origin"
     header Cross-Origin-Resource-Policy "cross-origin"
@@ -28,6 +28,12 @@
         reverse_proxy mbtileserver:8000
     }
 
+    route /midwestblueprint/services* {
+        uri strip_prefix /midwestblueprint
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        reverse_proxy mbtileserver:8000
+    }
+
     encode zstd gzip
 
     route /southeastblueprint/api/* {
@@ -38,6 +44,11 @@
     route /southeastssa/api/* {
       uri strip_prefix /southeastssa
       reverse_proxy ssa-api:5000
+    }
+
+    route /midwestblueprint/api/* {
+      uri strip_prefix /midwestblueprint
+      reverse_proxy midwest-api:5000
     }
 
     # most files can be cached indefinitely, they are rebuilt with new names each time
@@ -55,13 +66,14 @@
 
     # page-data must be fetched each time
     @no_cache {
-      path *.html *.webmanifest */page-data/*  /southeastblueprint/ /southeastssa/ */custom_report/ */report/ */datasets/ */help/
+      path *.html *.webmanifest */page-data/*  /southeastblueprint/ /southeastssa/ /midwestblueprint/ */custom_report/ */report/ */datasets/ */help/
     }
     header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
     root * /var/www
     file_server /southeastblueprint*
     file_server /southeastssa*
+    file_server /midwestblueprint*
 
     # redirect favicon.ico to southeast
     handle {
@@ -73,6 +85,16 @@
       redir /robots.txt /southeastblueprint/robots.txt
     }
 
+    # redirect anything else under SSA tool to a 404 page
+    handle {
+      redir /southeastssa/* /southeastssa/404.html
+    }
+
+    # redirect anything else under midwest blueprint to a 404 page
+    handle {
+      redir /midwestblueprint/* /midwestblueprint/404.html
+    }
+
     # redirect everything else to a 404 page
     handle {
       redir * /southeastblueprint/404.html
@@ -80,11 +102,14 @@
   }
 
   # send any errors to Southeast 404 page
-
   handle_errors {
       @404 {
           expression {http.error.status_code} == 404
       }
+      redir /southeastssa/* /southeastssa/404.html
+      redir /midwestblueprint/* /midwestblueprint/404.html
+
+      # fall back to Southeast Blueprint 404 page
       redir * /southeastblueprint/404.html
   }
 }

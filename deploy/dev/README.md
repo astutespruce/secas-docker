@@ -7,8 +7,20 @@ An `.env` file in this folder contains the following variables:
 
 ```
 COMPOSE_PROJECT_NAME=secas
-BLUEPRINT_CODE_DIR=<location of secas-blueprint repo>
+SOUTHEAST_BLUEPRINT_CODE_DIR=<location of secas-blueprint repo>
+SOUTHEAST_BLUEPRINT_DATA_DIR=<location of data folder in secas-blueprint local directory>
+SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
+
 SSA_CODE_DIR=<location of secas-ssa repo>
+SSA_DATA_DIR=<location of data folder in secas-ssa local directory>
+SSA_STATIC_DIR=/var/www/southeastssa
+
+MIDWEST_BLUEPRINT_CODE_DIR=<location of mli-blueprint repo>
+MIDWEST_BLUEPRINT_DATA_DIR=<location of data folder in mli-blueprint local directory>
+MIDWEST_SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/midwestblueprint
+
+HOST_TILE_DIR=<location of tiles on host>
+
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
 API_SECRET=<secret>
@@ -16,18 +28,14 @@ LOGGING_LEVEL=DEBUG
 REDIS_HOST=redis
 SENTRY_ENV="development"
 ROOT_URL=<host URL>
-HOST_TILE_DIR=<location of tiles on host>
-BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
-SSA_STATIC_DIR=/var/www/southeastssa
 ```
 
 Source this file in your shell `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
 The UI static assets are built using by running `npm run build` in the `ui`
-folder of each application repository,and copying the outputs in the `public`
-directory to `var/www/southeastblueprint`
-and `/var/www/southeastssa`.
+folder of each application repository, and copying the outputs in the `public`
+directory to `var/www/southeastblueprint`, `/var/www/southeastssa`, and `/var/www/midwestblueprint`.
 
 See [staging README](../staging/README.md) for `.env.production` file settings.
 

@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.10.0-alpine
+        image: caddy:2.11.2-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -9,8 +9,9 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy_certs:/root/.caddy
             - caddy_config:/config
-            - $BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
+            - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
             - $SSA_STATIC_DIR:/var/www/southeastssa
+            - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/midwestblueprint
 
     mbtileserver:
         image: ghcr.io/consbio/mbtileserver:0.11.0
@@ -18,11 +19,11 @@ services:
         restart: always
         volumes:
             - $HOST_TILE_DIR:/tilesets # use $TILE_DIR for staging / production
-        ports:
-            - "8001:8000"
+        # ports:
+        #     - "8001:8000"
 
     redis:
-        image: redis:8.2.1-alpine
+        image: redis:8.6.2-alpine
         platform: linux/arm64
         restart: always
 
@@ -37,15 +38,15 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
-            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
-            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
-            - $BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
             - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
 
     se-api:
@@ -72,10 +73,10 @@ services:
             ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
-            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
-            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         ports:
             - "5000:5000"
 
@@ -87,10 +88,10 @@ services:
         env_file:
             - .env
         # entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
             - $HOST_SSA_DATA_DIR:$SSA_DATA_DIR
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
@@ -121,10 +122,62 @@ services:
             ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+    midwest-worker:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        cap_add:
+            - SYS_PTRACE
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        entrypoint: "/home/app/run_xvfb.sh"
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
+        volumes:
+            - user_upload:/tmp/midwest-reports
+            - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $MIDWEST_BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
+            - $MIDWEST_BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
+            - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
+
+    midwest-api:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/home/app/.venv/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "-b",
+                ":5000",
+                "--capture-output",
+                "--log-level",
+                "DEBUG",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/midwest-reports
+            - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+        # ports:
+        #     - "5000:5000"
 
 volumes:
     caddy_certs:

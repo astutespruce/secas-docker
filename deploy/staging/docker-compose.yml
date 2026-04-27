@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.10.0-alpine
+        image: caddy:2.11.2-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -9,7 +9,7 @@ services:
             - caddy_config:/config
             - ./Caddyfile:/etc/caddy/Caddyfile
             - ./certificates:/certificates
-            - $BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
+            - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
             - $SSA_STATIC_DIR:/var/www/test-southeastssa
         logging:
             driver: journald
@@ -29,7 +29,7 @@ services:
             - shared
 
     redis:
-        image: redis:8.2.1-alpine
+        image: redis:8.6.2-alpine
         platform: linux/arm64
         restart: always
         logging:
@@ -48,13 +48,13 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
-            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
-            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
             - $TILE_DIR:/data/tiles
         logging:
             driver: journald
@@ -87,10 +87,10 @@ services:
             ]
         volumes:
             - user_upload:/tmp/se-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
-            - $BLUEPRINT_CODE_DIR/api:/home/app/api # main API
-            - $BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         logging:
             driver: journald
         networks:
@@ -106,10 +106,10 @@ services:
             - redis
         env_file:
             - .env
-        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
@@ -144,10 +144,69 @@ services:
             ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
+        logging:
+            driver: journald
+        networks:
+            - shared
+
+    midwest-worker:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+        external_links:
+            - redis
+        env_file:
+            - .env
+        entrypoint: "/home/app/run_xvfb.sh"
+        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
+        volumes:
+            - user_upload:/tmp/midwest-reports
+            - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $MIDWEST_BLUEPRINT_DATA_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_DATA_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_DATA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $TILE_DIR:/data/tiles
+        logging:
+            driver: journald
+        networks:
+            - shared
+
+    midwest-api:
+        image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
+        platform: linux/arm64
+        restart: always
+        depends_on:
+            - redis
+            - se-worker
+        external_links:
+            - redis
+        env_file:
+            - .env
+        command:
+            [
+                "/home/app/.venv/bin/gunicorn",
+                "-k",
+                "uvicorn.workers.UvicornWorker",
+                "--name",
+                "uvicorn",
+                "--workers",
+                "1",
+                "-b",
+                ":5000",
+                "api.api:app",
+            ]
+        volumes:
+            - user_upload:/tmp/midwest-reports
+            - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $MIDWEST_BLUEPRINT_DATA_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_DATA_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_DATA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         logging:
             driver: journald
         networks:
