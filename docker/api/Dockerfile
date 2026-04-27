@@ -1,8 +1,6 @@
 # Provides: Southeast and SSA API and Background Worker image
 
-# IMPORTANT: GDAL 3.11 does not appear to work properly with warp in rasterio 1.4.3
-# https://github.com/rasterio/rasterio/issues/3376
-FROM ghcr.io/osgeo/gdal:ubuntu-small-3.10.3
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.12.4
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
@@ -54,6 +52,7 @@ COPY ./secas-ssa-requirements.txt /tmp/
 
 # make sure to build pyogrio and rasterio against GDAL in this container
 # NOTE: the version of numpy hardcoded here must match secas-blueprint-requirements.txt
+# NOTE: midwest-blueprint does not introduce additional dependencies
 RUN uv pip install cython numpy==2.2.6 setuptools versioneer  && \
     uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
     uv pip install -v -r /tmp/secas-ssa-requirements.txt && \
