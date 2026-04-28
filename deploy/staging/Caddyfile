@@ -95,12 +95,12 @@ ifwaz-sebp-test.fws.doi.net {
 
     # redirect anything else under SSA tool to a 404 page
     handle {
-      redir /southeastssa/* /southeastssa/404.html
+      redir /test-southeastssa/* /test-southeastssa/404.html
     }
 
     # redirect anything else under midwest blueprint to a 404 page
     handle {
-      redir /midwestblueprint/* /midwestblueprint/404.html
+      redir /test-midwestblueprint/* /test-midwestblueprint/404.html
     }
 
     # redirect everything else to a 404 page
@@ -114,10 +114,10 @@ ifwaz-sebp-test.fws.doi.net {
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir /southeastssa/* /southeastssa/404.html
-      redir /midwestblueprint/* /midwestblueprint/404.html
+      redir /test-southeastssa/* /test-southeastssa/404.html
+      redir /test-midwestblueprint/* /test-midwestblueprint/404.html
 
       # fall back to Southeast Blueprint 404 page
-      redir * /southeastblueprint/404.html
+      redir * /test-southeastblueprint/404.html
   }
 }
