@@ -168,9 +168,9 @@ services:
         volumes:
             - user_upload:/tmp/midwest-reports
             - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
-            - $MIDWEST_BLUEPRINT_DATA_DIR/api:/home/app/api # main API
-            - $MIDWEST_BLUEPRINT_DATA_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $MIDWEST_BLUEPRINT_DATA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
             - $TILE_DIR:/data/tiles
         logging:
             driver: journald
@@ -204,9 +204,9 @@ services:
         volumes:
             - user_upload:/tmp/midwest-reports
             - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data
-            - $MIDWEST_BLUEPRINT_DATA_DIR/api:/home/app/api # main API
-            - $MIDWEST_BLUEPRINT_DATA_DIR/analysis:/home/app/analysis # needed for analysis utils
-            - $MIDWEST_BLUEPRINT_DATA_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
+            - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
+            - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
+            - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
         logging:
             driver: journald
         networks:

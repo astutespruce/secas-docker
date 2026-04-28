@@ -111,7 +111,7 @@ mkdir /data/midwest
 mkdir /data/se
 mkdir /data/tiles
 cd ~
-git clone https://github.com/astutespruce/midwest-blueprint.git
+git clone https://github.com/astutespruce/mli-blueprint.git
 git clone https://github.com/astutespruce/secas-docker.git
 git clone https://github.com/astutespruce/secas-blueprint.git
 git clone https://github.com/astutespruce/secas-ssa.git
@@ -146,8 +146,8 @@ SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
 SSA_CODE_DIR=/home/app/secas-ssa
 SSA_STATIC_DIR=/var/www/southeastssa
 
-MIDWEST_BLUEPRINT_CODE_DIR=/home/app/midwest-blueprint
-MIDWEST_BLUEPRINT_DATA_DIR=/data/se
+MIDWEST_BLUEPRINT_CODE_DIR=/home/app/mli-blueprint
+MIDWEST_BLUEPRINT_DATA_DIR=/data/midwest
 MIDWEST_BLUEPRINT_STATIC_DIR=/var/www/midwestblueprint
 ```
 
@@ -192,7 +192,7 @@ DEPLOY_PATH=/test-southeastssa
 SITE_URL=<root URL>/test-southeastssa
 ```
 
-Create `~/midwest-blueprint/ui/.env.production` with the following:
+Create `~/mli-blueprint/ui/.env.production` with the following:
 
 ```bash
 PUBLIC_MAPBOX_TOKEN=<token>
@@ -462,7 +462,7 @@ scripts/build_ssa_ui.sh
 To rebuild the frontend for the Midwest Blueprint Explorer:
 
 ```bash
-cd ~/midwest-blueprint
+cd ~/mli-blueprint
 git pull origin
 cd ~/secas-docker
 set -a
@@ -517,7 +517,7 @@ docker compose logs --tail ssa-api
 To update API / backend code for the Midwest Blueprint Explorer:
 
 ```bash
-cd ~/midwest-blueprint
+cd ~/mli-blueprint
 git pull origin
 cd ~/secas-docker/deploy/staging
 set -a
