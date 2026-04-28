@@ -11,6 +11,7 @@ services:
             - ./certificates:/certificates
             - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
             - $SSA_STATIC_DIR:/var/www/test-southeastssa
+            - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/test-midwestblueprint
         logging:
             driver: journald
         networks:

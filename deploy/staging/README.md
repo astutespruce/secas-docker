@@ -538,7 +538,8 @@ On the instance:
 
 ```bash
 curl -k -v https://ifwaz-sebp-test.fws.doi.net/test-southeastblueprint
-curl -k -b https://ifwaz-sebp-test.fws.doi.net/test-southeastblueprint
+curl -k -v https://ifwaz-sebp-test.fws.doi.net/test-southeastssa
+curl -k -v https://ifwaz-sebp-test.fws.doi.net/test-midwestblueprint
 ```
 
 ## Notify IRTM to setup Azure App Gateway
