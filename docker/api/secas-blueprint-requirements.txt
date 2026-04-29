@@ -10,15 +10,15 @@ annotated-doc==0.0.4
     # via fastapi
 annotated-types==0.7.0
     # via pydantic
-anyio==4.12.1
+anyio==4.13.0
     # via starlette
-arq==0.27.0
+arq==0.28.0
     # via secas-blueprint (pyproject.toml)
-attrs==25.4.0
+attrs==26.1.0
     # via rasterio
 brotli==1.2.0
     # via fonttools
-certifi==2026.1.4
+certifi==2026.4.22
     # via
     #   pyogrio
     #   pyproj
@@ -26,7 +26,7 @@ certifi==2026.1.4
     #   sentry-sdk
 cffi==2.0.0
     # via weasyprint
-click==8.3.1
+click==8.3.3
     # via
     #   arq
     #   cligj
@@ -34,31 +34,31 @@ click==8.3.1
     #   uvicorn
 cligj==0.7.2
     # via rasterio
-cssselect2==0.8.0
+cssselect2==0.9.0
     # via weasyprint
-fastapi==0.128.0
+fastapi==0.136.1
     # via secas-blueprint (pyproject.toml)
-fonttools==4.61.1
+fonttools==4.62.1
     # via weasyprint
-geopandas==1.1.2
+geopandas==1.1.3
     # via secas-blueprint (pyproject.toml)
-gunicorn==25.0.1
+gunicorn==25.3.0
     # via secas-blueprint (pyproject.toml)
 h11==0.16.0
     # via uvicorn
-hiredis==3.3.0
+hiredis==3.3.1
     # via redis
-idna==3.11
+idna==3.13
     # via anyio
 jinja2==3.1.6
     # via secas-blueprint (pyproject.toml)
-llvmlite==0.46.0
+llvmlite==0.47.0
     # via numba
 markupsafe==3.0.3
     # via jinja2
-numba==0.63.1
+numba==0.65.1
     # via secas-blueprint (pyproject.toml)
-numpy==2.3.5
+numpy==2.4.4
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
@@ -67,32 +67,34 @@ numpy==2.3.5
     #   pyogrio
     #   rasterio
     #   shapely
-packaging==26.0
+packaging==26.2
     # via
     #   geopandas
     #   gunicorn
     #   pymgl
     #   pyogrio
-pandas==3.0.0
+pandas==3.0.2
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
-pillow==12.1.0
+pillow==12.2.0
     # via
     #   secas-blueprint (pyproject.toml)
     #   weasyprint
 progress==1.6.1
     # via secas-blueprint (pyproject.toml)
-pyarrow==23.0.0
+pyarrow==24.0.0
     # via secas-blueprint (pyproject.toml)
 pycparser==3.0
     # via cffi
-pydantic==2.12.5
+pydantic==2.13.3
     # via fastapi
-pydantic-core==2.41.5
+pydantic-core==2.46.3
     # via pydantic
 pydyf==0.12.1
     # via weasyprint
+pyjwt==2.12.1
+    # via redis
 pymgl==0.5.0
     # via secas-blueprint (pyproject.toml)
 pyogrio==0.12.1
@@ -105,21 +107,19 @@ pyphen==0.17.2
     # via weasyprint
 pyproj==3.7.2
     # via geopandas
-python-calamine==0.6.1
+python-calamine==0.6.2
     # via secas-blueprint (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via secas-blueprint (pyproject.toml)
-python-multipart==0.0.22
+python-multipart==0.0.27
     # via secas-blueprint (pyproject.toml)
 rasterio==1.5.0
     # via secas-blueprint (pyproject.toml)
-redis==5.0.0
-    # via
-    #   secas-blueprint (pyproject.toml)
-    #   arq
-sentry-sdk==2.51.0
+redis==5.3.1
+    # via arq
+sentry-sdk==2.58.0
     # via secas-blueprint (pyproject.toml)
 shapely==2.1.2
     # via
@@ -127,13 +127,13 @@ shapely==2.1.2
     #   geopandas
 six==1.17.0
     # via python-dateutil
-starlette==0.50.0
+starlette==1.0.0
     # via fastapi
 tinycss2==1.5.1
     # via
     #   cssselect2
     #   weasyprint
-tinyhtml5==2.0.0
+tinyhtml5==2.1.0
     # via weasyprint
 typing-extensions==4.15.0
     # via
@@ -144,17 +144,19 @@ typing-extensions==4.15.0
     #   starlette
     #   typing-inspection
 typing-inspection==0.4.2
-    # via pydantic
+    # via
+    #   fastapi
+    #   pydantic
 urllib3==2.6.3
     # via sentry-sdk
-uvicorn==0.40.0
+uvicorn==0.46.0
     # via secas-blueprint (pyproject.toml)
-weasyprint==68.0
+weasyprint==68.1
     # via secas-blueprint (pyproject.toml)
 webencodings==0.5.1
     # via
     #   cssselect2
     #   tinycss2
     #   tinyhtml5
-zopfli==0.4.0
+zopfli==0.4.1
     # via fonttools
