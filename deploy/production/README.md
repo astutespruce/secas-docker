@@ -5,7 +5,8 @@ See instructions for the staging environment at [README.md](../staging/README.md
 Nearly all instructions are identical except that the applications are deployed
 to:
 
--   https://apps.fws.gov/southeastblueprint
--   https://apps.fws.gov/southeastssa
+- https://apps.fws.gov/southeastblueprint
+- https://apps.fws.gov/southeastssa
+- https://apps.fws.gov/midwestblueprint
 
 and the internal instance hostname is different.
