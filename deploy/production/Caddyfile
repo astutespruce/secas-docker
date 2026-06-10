@@ -28,7 +28,7 @@ ifwaz-sebp-prod.fws.doi.net {
       reverse_proxy mbtileserver:8000
     }
 
-    route /test-midwestblueprint/services* {
+    route /midwestblueprint/services* {
       uri strip_prefix /test-midwestblueprint
       header Cache-Control "public, max-age=3600, must-revalidate"
       reverse_proxy mbtileserver:8000
