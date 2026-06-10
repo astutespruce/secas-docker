@@ -29,7 +29,7 @@ ifwaz-sebp-prod.fws.doi.net {
     }
 
     route /midwestblueprint/services* {
-      uri strip_prefix /test-midwestblueprint
+      uri strip_prefix /midwestblueprint
       header Cache-Control "public, max-age=3600, must-revalidate"
       reverse_proxy mbtileserver:8000
     }
@@ -112,8 +112,8 @@ ifwaz-sebp-prod.fws.doi.net {
       @404 {
           expression {http.error.status_code} == 404
       }
-      redir /test-southeastssa/* /test-southeastssa/404.html
-      redir /test-midwestblueprint/* /test-midwestblueprint/404.html
+      redir /southeastssa/* /southeastssa/404.html
+      redir /midwestblueprint/* /midwestblueprint/404.html
 
       # fall back to Southeast Blueprint 404 page
       redir * /southeastblueprint/404.html
