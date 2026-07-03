@@ -300,7 +300,12 @@ cd certificates
 openssl req -nodes -newkey rsa:2048 -keyout internal-tls.key -out internal-tls.csr
 ```
 
-Then fill out as follows:
+NOTE: if doing this on an instance that already has certificates, do this work in
+a new folder `certificates-<year>`, copy `internal-tls.csr` and `internal-tls.key`
+to that folder, then switch those folders once everything is set below. At that
+point move the existing `certificates` folder to `certificates-<prior year>`.
+
+Fill out the CRS as follows:
 
 - Country Name: US
 - State or Province Name: North Carolina
@@ -327,8 +332,8 @@ of the CSR copied above.
 Add the following to additional attributes
 
 ```
-san:dns="<full hostname>"
-&dns=<full hostname>
+san:dns="<full internal hostname>"
+&dns=<full internal hostname>
 ```
 
 Once the certificate has been granted (typically a few minutes), in Internet Explorer
@@ -363,7 +368,7 @@ Then convert the CA certificate chain (on the instance):
 openssl pkcs7 -print_certs -in ca.p7b -out ca.pem
 ```
 
-And merge together to create certificate chain:
+And merge together to create the full certificate chain:
 
 ```bash
 cat internal-tls-leaf.pem ca.pem > internal-tls.pem
@@ -384,6 +389,23 @@ openssl verify -verbose -CAfile ca.pem internal-tls.pem
 
 That should print out `OK` on success. These will be automatically used once
 the Caddy Docker service starts below.
+
+NOTE: If deploying to an instance with existing certificates, rename the existing
+`certificates` folder to `certificates-<prior year>`, rename the `certificates-<year>`
+folder to `certificates`, and then restart Caddy.
+
+IMPORTANT: these certificates need to be updated annually. To check the expiration
+date on the instance in the `certificates` folder:
+
+```bash
+openssl x509 -startdate -enddate -noout -in internal-tls.pem
+```
+
+Then check that it is registered that way on internal network:
+
+```
+openssl s_client -connect <host>.fws.dow.net:443 -servername <host>.fws.dow.net 2>/dev/null | openssl x509 -startdate -enddate -noout
+```
 
 ## Update Docker images on the server
 

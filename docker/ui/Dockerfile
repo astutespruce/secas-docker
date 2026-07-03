@@ -1,10 +1,10 @@
 # Custom NodeJS image for project-specific UI build images
 
-FROM debian:bookworm-20260421-slim
+FROM debian:bookworm-20260623-slim
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
-ENV NODE_VERSION=22.18.0
+ENV NODE_VERSION=24.18.0
 ENV NODE_ENV=production
 
 # 1010 corresponds to uid for app user on staging / production
