@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.11.2-alpine
+        image: caddy:2.11.4-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -30,7 +30,7 @@ services:
             - shared
 
     redis:
-        image: redis:8.6.2-alpine
+        image: redis:8.10.1-alpine
         platform: linux/arm64
         restart: always
         logging:
@@ -49,7 +49,7 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/se-reports
             - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
@@ -107,7 +107,7 @@ services:
             - redis
         env_file:
             - .env
-        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
             - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
@@ -165,7 +165,7 @@ services:
         env_file:
             - .env
         entrypoint: "/home/app/run_xvfb.sh"
-        command: [ "/home/app/.venv/bin/arq", "api.worker.WorkerSettings" ]
+        command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/midwest-reports
             - $MIDWEST_BLUEPRINT_DATA_DIR:/home/app/data

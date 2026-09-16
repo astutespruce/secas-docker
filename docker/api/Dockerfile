@@ -53,9 +53,11 @@ COPY ./secas-ssa-requirements.txt /tmp/
 # make sure to build pyogrio and rasterio against GDAL in this container
 # NOTE: the version of numpy hardcoded here must match secas-blueprint-requirements.txt
 # NOTE: midwest-blueprint does not introduce additional dependencies
-RUN uv pip install cython numpy==2.2.6 setuptools versioneer  && \
-    uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
-    uv pip install -v -r /tmp/secas-ssa-requirements.txt && \
+# NOTE: we install SSA requirements first since those change less frequently, and we
+# want to use versions pinned in the Blueprint Explorer (though really they need to be kept in sync)
+RUN uv pip install cython numpy==2.5.3 setuptools versioneer  && \
+    uv pip install -v -r /tmp/secas-ssa-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
+    uv pip install -v -r /tmp/secas-blueprint-requirements.txt && \
     uv pip uninstall setuptools cython versioneer
 
 # Fix location for hardcoded certs file in different location on manylinux image for pymgl

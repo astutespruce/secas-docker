@@ -1,6 +1,6 @@
 # Custom NodeJS image for project-specific UI build images
 
-FROM debian:bookworm-20260623-slim
+FROM debian:bookworm-20260824-slim
 
 LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-docker"
 
