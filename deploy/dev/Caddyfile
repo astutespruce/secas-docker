@@ -1,6 +1,10 @@
+{
+  debug
+}
+
 :80 {
   log {
-    level ERROR
+    level INFO
   }
 
   # redirect site root to southeast
@@ -16,17 +20,10 @@
     header Cross-Origin-Resource-Policy "cross-origin"
     header Cross-Origin-Embedder-Policy "require-corp"
 
-
     # Set CORS: allow all origins for testing
     header Access-Control-Allow-Origin *
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
-
-    route /southeastblueprint/services* {
-        uri strip_prefix /southeastblueprint
-        header Cache-Control "public, max-age=3600, must-revalidate"
-        reverse_proxy mbtileserver:8000
-    }
 
     route /midwestblueprint/services* {
         uri strip_prefix /midwestblueprint
@@ -36,6 +33,13 @@
 
     encode zstd gzip
 
+    # when running FastAPI directly on host
+    # route /southeastblueprint/api/* {
+    #   uri strip_prefix /southeastblueprint
+    #   reverse_proxy host.docker.internal:5000
+    # }
+
+    # when running via Docker
     route /southeastblueprint/api/* {
       uri strip_prefix /southeastblueprint
       reverse_proxy se-api:5000
@@ -58,11 +62,10 @@
     }
     header @cached_files Cache-Control "public, max-age=31536000, immutable"
 
-    # make sure favicons are not cached too long
     @short_cached_files {
-      path /favicon*
+      path /favicon* */tiles/*
     }
-    header @short_cached_files Cache-Control "public, max-age=3600"
+    header @short_cached_files Cache-Control "public, max-age=3600, must-revalidate"
 
     # page-data must be fetched each time
     @no_cache {

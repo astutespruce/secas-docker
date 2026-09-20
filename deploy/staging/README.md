@@ -51,7 +51,7 @@ Add this to `/etc/fstab`: `/swapfile none swap sw 0 0`
 The instance has a 128 GB volume provided by IRTM staff during setup. This needs
 to be initialized and mounted:
 
-se `lsblk` to list volumes; it may be listed as `sdb`
+Use `lsblk` to list volumes; it may be listed as `sdb`
 
 ```bash
 sudo mkfs -t ext4 /dev/sdb
@@ -142,6 +142,7 @@ TILE_DIR=/data/tiles
 SOUTHEAST_BLUEPRINT_CODE_DIR=/home/app/secas-blueprint
 SOUTHEAST_BLUEPRINT_DATA_DIR=/data/se
 SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
+SOUTHEAST_BLUEPRINT_TILES_DIR=/data/se/tiles
 
 SSA_CODE_DIR=/home/app/secas-ssa
 SSA_STATIC_DIR=/var/www/southeastssa
@@ -171,11 +172,7 @@ PUBLIC_CONTACT_EMAIL=<contact email>
 
 # show warning in UI when on staging server
 PUBLIC_DEPLOY_ENV="staging"
-
-# specific to domain where this is deployed
-DEPLOY_PATH=/test-southeastblueprint
-PUBLIC_API_HOST=<API host>/test-southeastblueprint
-PUBLIC_TILE_HOST=<tile host>/test-southeastblueprint
+PUBLIC_DEPLOY_PATH=/test-southeastblueprint
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
@@ -217,6 +214,7 @@ Use 7zip to zip the following directories in the `secas-blueprint` project:
 
 - `data/inputs` (may need to be broken into multiple files due to size)
 - `data/results`
+- `tiles`
 
 Upload these to the USFWS FileShare in the Southeast Blueprint directory for
 that year's data release, and then download from there to the instance as the
@@ -228,6 +226,8 @@ curl -L -o inputs.7z <URL on fileshare>
 7z e -spf inputs.7z
 curl -L -o results.7z <URL on fileshare>
 7z e -spf results.7z
+curl -L -o tiles.7z <URL on fileshare>
+7z e -spf tiles.7z
 
 ```
 
@@ -260,13 +260,11 @@ curl -L -o results.7z <URL on fileshare>
 ```
 
 Follow a similar process for the tiles located in `secas-docker/tiles`. Upload
-The Southeast Blueprint and Midwest Blueprint tiles to their respective folders
-on FileShare, then extract both to the `/data/tiles` directory:
+the Midwest Blueprint tiles to its respective folder on FileShare, then extract
+to the `/data/tiles` directory:
 
 ```
 cd /data/tiles
-curl -L -o southeast_tiles.7z <URL on fileshare>
-7z e -spf southeast_tiles.7z
 curl -L -o midwest_tiles.7z <URL on fileshare>
 7z e -spf midwest_tiles.7z
 ```

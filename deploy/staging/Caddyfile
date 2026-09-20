@@ -23,12 +23,6 @@ ifwaz-sebp-test.fws.doi.net {
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /test-southeastblueprint/services* {
-      uri strip_prefix /test-southeastblueprint
-      header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy mbtileserver:8000
-    }
-
     route /test-midwestblueprint/services* {
       uri strip_prefix /test-midwestblueprint
       header Cache-Control "public, max-age=3600, must-revalidate"
@@ -66,11 +60,10 @@ ifwaz-sebp-test.fws.doi.net {
     }
     header @cached_files Cache-Control "public, max-age=31536000, immutable"
 
-    # make sure favicons are not cached too long
     @short_cached_files {
-      path /favicon*
+      path /favicon* */tiles/*
     }
-    header @short_cached_files Cache-Control "public, max-age=3600"
+    header @short_cached_files Cache-Control "public, max-age=3600, must-revalidate"
 
     # page-data must be fetched each time
     @no_cache {
