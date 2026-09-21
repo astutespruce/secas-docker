@@ -10,6 +10,7 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - ./certificates:/certificates
             - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/var/www/test-southeastblueprint/tiles
             - $SSA_STATIC_DIR:/var/www/test-southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/test-midwestblueprint
         logging:
