@@ -57,7 +57,7 @@ services:
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $TILE_DIR:/data/tiles
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/data/tiles
         logging:
             driver: journald
         networks:

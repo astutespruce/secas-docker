@@ -48,7 +48,7 @@ services:
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
-            - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/data/tiles
 
     se-api:
         image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest
