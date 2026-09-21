@@ -20,6 +20,7 @@ MIDWEST_BLUEPRINT_CODE_DIR=<location of mli-blueprint repo>
 MIDWEST_BLUEPRINT_DATA_DIR=<location of data folder in mli-blueprint local directory>
 MIDWEST_SOUTHEAST_BLUEPRINT_STATIC_DIR=<location of mli-blueprint repo followed by /ui/public>
 
+# NOTE: only used for midwest until migrated to PMTiles
 HOST_TILE_DIR=<location of tiles on host>
 
 MAPBOX_ACCESS_TOKEN=<token>
@@ -34,11 +35,6 @@ ROOT_URL=<host URL>
 Source this file in your shell `source .env`.
 (in Fish shell: `export (grep "^[^#]" .env |xargs -L 1)`)
 
-The UI static assets are built using by running `npm run build` in the `ui`
-folder of each application repository. NOTE: you need to stop caddy before
-running the build step because it prevents NodeJS from removing the `public`
-directory in each application.
-
 See [staging README](../staging/README.md) for `.env.production` file settings.
 
 After those have been built, pull the other images and run:
@@ -47,3 +43,12 @@ After those have been built, pull the other images and run:
 docker-compose pull
 docker-compose up -d
 ```
+
+### UI Build
+
+Caddy is mounted directly to the build output directory (`ui/public`) created by
+Vite from running `npm run build` in the `ui` folder of each application repository.
+
+WARNING: running `npm run build` deletes and recreates that directory, which
+breaks the connection from Docker. You have to run
+`docker compose down caddy && docker compose up -d caddy` to remount it.

@@ -40,6 +40,13 @@ ifwaz-sebp-test.fws.doi.net {
       reverse_proxy se-api:5000
     }
 
+    route /test-southeastblueprint/tiles* {
+        uri strip_prefix /test-southeastblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/southeast
+        file_server
+    }
+
     route /test-southeastssa/api/* {
       uri strip_prefix /test-southeastssa
       header Cache-Control "no-cache, no-store, max-age=0"
@@ -61,7 +68,7 @@ ifwaz-sebp-test.fws.doi.net {
     header @cached_files Cache-Control "public, max-age=31536000, immutable"
 
     @short_cached_files {
-      path /favicon* */tiles/*
+      path /favicon*
     }
     header @short_cached_files Cache-Control "public, max-age=3600, must-revalidate"
 

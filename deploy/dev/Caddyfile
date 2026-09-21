@@ -45,6 +45,13 @@
       reverse_proxy se-api:5000
     }
 
+    route /southeastblueprint/tiles* {
+        uri strip_prefix /southeastblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/southeast
+        file_server
+    }
+
     route /southeastssa/api/* {
       uri strip_prefix /southeastssa
       reverse_proxy ssa-api:5000
@@ -63,7 +70,7 @@
     header @cached_files Cache-Control "public, max-age=31536000, immutable"
 
     @short_cached_files {
-      path /favicon* */tiles/*
+      path /favicon*
     }
     header @short_cached_files Cache-Control "public, max-age=3600, must-revalidate"
 

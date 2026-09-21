@@ -10,7 +10,7 @@ services:
             - caddy_certs:/root/.caddy
             - caddy_config:/config
             - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/southeastblueprint
-            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/var/www/southeastblueprint/tiles
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/tiles/southeast
             - $SSA_STATIC_DIR:/var/www/southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/midwestblueprint
 
@@ -19,6 +19,7 @@ services:
         platform: linux/arm64
         restart: always
         volumes:
+            # NOTE: only used for midwest until migrated to PMTiles
             - $HOST_TILE_DIR:/tilesets # use $TILE_DIR for staging / production
         # ports:
         #     - "8001:8000"

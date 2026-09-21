@@ -22,12 +22,6 @@ ifwaz-sebp-prod.fws.doi.net {
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /southeastblueprint/services* {
-      uri strip_prefix /southeastblueprint
-      header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy mbtileserver:8000
-    }
-
     route /midwestblueprint/services* {
       uri strip_prefix /midwestblueprint
       header Cache-Control "public, max-age=3600, must-revalidate"
@@ -43,6 +37,13 @@ ifwaz-sebp-prod.fws.doi.net {
       uri strip_prefix /southeastblueprint
       header Cache-Control "no-cache, no-store, max-age=0"
       reverse_proxy se-api:5000
+    }
+
+    route /southeastblueprint/tiles* {
+        uri strip_prefix /southeastblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/southeast
+        file_server
     }
 
     route /southeastssa/api/* {

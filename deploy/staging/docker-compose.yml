@@ -10,7 +10,7 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - ./certificates:/certificates
             - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
-            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/var/www/test-southeastblueprint/tiles
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/tiles/southeast
             - $SSA_STATIC_DIR:/var/www/test-southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/test-midwestblueprint
         logging:
@@ -24,6 +24,7 @@ services:
         restart: always
         command: "--tiles-only"
         volumes:
+            # NOTE: only used for midwest until migrated to PMTiles
             - $TILE_DIR:/tilesets
         logging:
             driver: journald

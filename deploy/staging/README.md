@@ -137,6 +137,7 @@ MAP_RENDER_THREADS=4
 MAX_JOBS=4
 MAX_ACRES=50000000
 
+# NOTE: only used for midwest until migrated to PMTiles
 TILE_DIR=/data/tiles
 
 SOUTHEAST_BLUEPRINT_CODE_DIR=/home/app/secas-blueprint
