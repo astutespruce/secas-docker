@@ -49,7 +49,7 @@ h11==0.16.0
     # via uvicorn
 hiredis==3.4.1
     # via redis
-idna==3.19
+idna==3.20
     # via anyio
 jinja2==3.1.6
     # via secas-blueprint (pyproject.toml)
@@ -75,7 +75,7 @@ packaging==26.3
     #   geopandas
     #   pymgl
     #   pyogrio
-pandas==3.0.5
+pandas==3.0.6
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
@@ -97,13 +97,13 @@ pydyf==0.12.1
     # via weasyprint
 pyjwt==2.14.0
     # via redis
-pymgl==0.5.0
+pymgl==0.6.0
     # via secas-blueprint (pyproject.toml)
 pyogrio==0.13.0
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
-pyparsing==3.3.2
+pyparsing==3.3.3
     # via rasterio
 pyphen==0.18.1
     # via weasyprint
