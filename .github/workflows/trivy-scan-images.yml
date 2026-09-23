@@ -27,7 +27,6 @@ jobs:
           - "ui-build-base"
           - "caddy"
           - "redis"
-          - "mbtileserver"
         include:
           - image-name: "blueprint-api"
             image: "ghcr.io/${{ github.repository }}/blueprint-api:latest"
@@ -37,8 +36,6 @@ jobs:
             image: caddy:2.11.4-alpine
           - image-name: "redis"
             image: redis:8.10.1-alpine
-          - image-name: "mbtileserver"
-            image: "ghcr.io/consbio/mbtileserver:0.11.0"
       fail-fast: false
 
     steps:

@@ -13,16 +13,7 @@ services:
             - $SOUTHEAST_BLUEPRINT_TILES_DIR:/tiles/southeast
             - $SSA_STATIC_DIR:/var/www/southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/midwestblueprint
-
-    mbtileserver:
-        image: ghcr.io/consbio/mbtileserver:0.11.0
-        platform: linux/arm64
-        restart: always
-        volumes:
-            # NOTE: only used for midwest until migrated to PMTiles
-            - $HOST_TILE_DIR:/tilesets # use $TILE_DIR for staging / production
-        # ports:
-        #     - "8001:8000"
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/tiles/midwest
 
     redis:
         image: redis:8.6.2-alpine
@@ -148,7 +139,7 @@ services:
             - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
             - $MIDWEST_BLUEPRINT_CODE_DIR/examples:/home/app/examples # DEBUG ONLY
             - $MIDWEST_BLUEPRINT_CODE_DIR/tests:/home/app/tests # DEBUG ONLY
-            - $HOST_TILE_DIR:/data/tiles # DEBUG ONLY
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/data/tiles
 
     midwest-api:
         image: ghcr.io/astutespruce/secas-docker/blueprint-api:latest

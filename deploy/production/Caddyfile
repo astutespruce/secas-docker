@@ -22,13 +22,6 @@ ifwaz-sebp-prod.fws.doi.net {
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /midwestblueprint/services* {
-      uri strip_prefix /midwestblueprint
-      header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy mbtileserver:8000
-    }
-
-    # this header is already handled by mbtileserver
     header X-Content-Type-Options nosniff
 
     encode zstd gzip
@@ -39,7 +32,7 @@ ifwaz-sebp-prod.fws.doi.net {
       reverse_proxy se-api:5000
     }
 
-    route /southeastblueprint/tiles* {
+    route /southeastblueprint/tiles/* {
         uri strip_prefix /southeastblueprint/tiles
         header Cache-Control "public, max-age=3600, must-revalidate"
         root /tiles/southeast
@@ -56,6 +49,13 @@ ifwaz-sebp-prod.fws.doi.net {
       uri strip_prefix /midwestblueprint
       header Cache-Control "no-cache, no-store, max-age=0"
       reverse_proxy midwest-api:5000
+    }
+
+    route /midwestblueprint/tiles/* {
+        uri strip_prefix /midwestblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/midwest
+        file_server
     }
 
     # most files can be cached indefinitely, they are rebuilt with new names each time

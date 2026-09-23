@@ -14,20 +14,7 @@ services:
             - $SOUTHEAST_BLUEPRINT_TILES_DIR:/tiles/southeast
             - $SSA_STATIC_DIR:/var/www/southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/midwestblueprint
-        logging:
-            driver: journald
-        networks:
-            - shared
-
-    mbtileserver:
-        # IMPORTANT: update trivy-scan-images.yml with this version on change
-        image: ghcr.io/consbio/mbtileserver:0.11.0
-        platform: linux/arm64
-        restart: always
-        command: "--tiles-only"
-        volumes:
-            # NOTE: only used for midwest until migrated to PMTiles
-            - $TILE_DIR:/tilesets
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/tiles/midwest
         logging:
             driver: journald
         networks:
@@ -177,7 +164,7 @@ services:
             - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
             - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $TILE_DIR:/data/tiles
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/data/tiles
         logging:
             driver: journald
         networks:

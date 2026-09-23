@@ -25,12 +25,6 @@
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /midwestblueprint/services* {
-        uri strip_prefix /midwestblueprint
-        header Cache-Control "public, max-age=3600, must-revalidate"
-        reverse_proxy mbtileserver:8000
-    }
-
     encode zstd gzip
 
     # when running FastAPI directly on host
@@ -45,7 +39,7 @@
       reverse_proxy se-api:5000
     }
 
-    route /southeastblueprint/tiles* {
+    route /southeastblueprint/tiles/* {
         uri strip_prefix /southeastblueprint/tiles
         header Cache-Control "public, max-age=3600, must-revalidate"
         root /tiles/southeast
@@ -57,9 +51,23 @@
       reverse_proxy ssa-api:5000
     }
 
+    # when running FastAPI directly on host
+    # route /midwestblueprint/api/* {
+    #   uri strip_prefix /midwestblueprint
+    #   reverse_proxy host.docker.internal:5000
+    # }
+
+    # when running via Docker
     route /midwestblueprint/api/* {
       uri strip_prefix /midwestblueprint
       reverse_proxy midwest-api:5000
+    }
+
+    route /midwestblueprint/tiles/* {
+        uri strip_prefix /midwestblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/midwest
+        file_server
     }
 
     # most files can be cached indefinitely, they are rebuilt with new names each time
