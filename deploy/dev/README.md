@@ -19,9 +19,7 @@ SSA_STATIC_DIR=<location of secas-ssa repo followed by /ui/public>
 MIDWEST_BLUEPRINT_CODE_DIR=<location of mli-blueprint repo>
 MIDWEST_BLUEPRINT_DATA_DIR=<location of data folder in mli-blueprint local directory>
 MIDWEST_SOUTHEAST_BLUEPRINT_STATIC_DIR=<location of mli-blueprint repo followed by /ui/public>
-
-# NOTE: only used for midwest until migrated to PMTiles
-HOST_TILE_DIR=<location of tiles on host>
+MIDWEST_BLUEPRINT_TILES_DIR=<location of directory containing pmtiles files>
 
 MAPBOX_ACCESS_TOKEN=<token>
 API_TOKEN=<token>
