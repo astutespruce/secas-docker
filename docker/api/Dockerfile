@@ -6,12 +6,12 @@ LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-doc
 
 WORKDIR /home/app
 
-ENV PYTHONPATH "${PYTHONPATH}:/home/app"
-ENV PYTHONUNBUFFERED 1
-ENV DISPLAY :99
-ENV LIBGL_ALWAYS_SOFTWARE 1
-ENV VIRTUAL_ENV "/home/app/.venv"
-ENV PATH "/home/app/.venv/bin:/root/.local/bin:${PATH}"
+ENV PYTHONPATH="/home/app"
+ENV PYTHONUNBUFFERED=1
+ENV DISPLAY=:99
+ENV LIBGL_ALWAYS_SOFTWARE=1
+ENV VIRTUAL_ENV="/home/app/.venv"
+ENV PATH="/home/app/.venv/bin:/root/.local/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y \
     # git \

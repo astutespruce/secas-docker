@@ -16,7 +16,7 @@ on:
 jobs:
   scan-images:
     name: Scan Docker images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
       security-events: write
@@ -33,9 +33,9 @@ jobs:
           - image-name: "ui-build-base"
             image: "ghcr.io/${{ github.repository }}/ui-build-base:latest"
           - image-name: "caddy"
-            image: caddy:2.11.4-alpine
+            image: caddy:2.11.7-alpine
           - image-name: "redis"
-            image: redis:8.10.1-alpine
+            image: redis:8.10.2-alpine
       fail-fast: false
 
     steps:

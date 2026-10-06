@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.11.2-alpine
+        image: caddy:2.11.7-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -16,7 +16,7 @@ services:
             - $MIDWEST_BLUEPRINT_TILES_DIR:/tiles/midwest
 
     redis:
-        image: redis:8.6.2-alpine
+        image: redis:8.10.2-alpine
         platform: linux/arm64
         restart: always
 
