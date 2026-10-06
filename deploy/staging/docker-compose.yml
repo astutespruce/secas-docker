@@ -1,6 +1,6 @@
 services:
     caddy:
-        image: caddy:2.11.4-alpine
+        image: caddy:2.11.7-alpine
         platform: linux/arm64
         restart: always
         ports:
@@ -10,27 +10,17 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - ./certificates:/certificates
             - $SOUTHEAST_BLUEPRINT_STATIC_DIR:/var/www/test-southeastblueprint
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/tiles/southeast
             - $SSA_STATIC_DIR:/var/www/test-southeastssa
             - $MIDWEST_BLUEPRINT_STATIC_DIR:/var/www/test-midwestblueprint
-        logging:
-            driver: journald
-        networks:
-            - shared
-
-    mbtileserver:
-        image: ghcr.io/consbio/mbtileserver:0.11.0
-        platform: linux/arm64
-        restart: always
-        command: "--tiles-only"
-        volumes:
-            - $TILE_DIR:/tilesets
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/tiles/midwest
         logging:
             driver: journald
         networks:
             - shared
 
     redis:
-        image: redis:8.10.1-alpine
+        image: redis:8.10.2-alpine
         platform: linux/arm64
         restart: always
         logging:
@@ -56,7 +46,7 @@ services:
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SOUTHEAST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $TILE_DIR:/data/tiles
+            - $SOUTHEAST_BLUEPRINT_TILES_DIR:/data/tiles
         logging:
             driver: journald
         networks:
@@ -172,7 +162,7 @@ services:
             - $MIDWEST_BLUEPRINT_CODE_DIR/api:/home/app/api # main API
             - $MIDWEST_BLUEPRINT_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $MIDWEST_BLUEPRINT_CODE_DIR/constants:/home/app/constants # needed for JSON files for blueprint, indicators
-            - $TILE_DIR:/data/tiles
+            - $MIDWEST_BLUEPRINT_TILES_DIR:/data/tiles
         logging:
             driver: journald
         networks:

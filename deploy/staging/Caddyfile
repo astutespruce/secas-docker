@@ -23,19 +23,6 @@ ifwaz-sebp-test.fws.doi.net {
     header Access-Control-Request-Method *
     header Access-Control-Request-Headers *
 
-    route /test-southeastblueprint/services* {
-      uri strip_prefix /test-southeastblueprint
-      header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy mbtileserver:8000
-    }
-
-    route /test-midwestblueprint/services* {
-      uri strip_prefix /test-midwestblueprint
-      header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy mbtileserver:8000
-    }
-
-    # this header is already handled by mbtileserver
     header X-Content-Type-Options nosniff
 
     encode zstd gzip
@@ -44,6 +31,13 @@ ifwaz-sebp-test.fws.doi.net {
       uri strip_prefix /test-southeastblueprint
       header Cache-Control "no-cache, no-store, max-age=0"
       reverse_proxy se-api:5000
+    }
+
+    route /test-southeastblueprint/tiles/* {
+        uri strip_prefix /test-southeastblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/southeast
+        file_server
     }
 
     route /test-southeastssa/api/* {
@@ -58,6 +52,12 @@ ifwaz-sebp-test.fws.doi.net {
       reverse_proxy midwest-api:5000
     }
 
+    route /test-midwestblueprint/tiles/* {
+        uri strip_prefix /test-midwestblueprint/tiles
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        root /tiles/midwest
+        file_server
+    }
 
     # most files can be cached indefinitely, they are rebuilt with new names each time
     @cached_files {
@@ -66,11 +66,10 @@ ifwaz-sebp-test.fws.doi.net {
     }
     header @cached_files Cache-Control "public, max-age=31536000, immutable"
 
-    # make sure favicons are not cached too long
     @short_cached_files {
       path /favicon*
     }
-    header @short_cached_files Cache-Control "public, max-age=3600"
+    header @short_cached_files Cache-Control "public, max-age=3600, must-revalidate"
 
     # page-data must be fetched each time
     @no_cache {

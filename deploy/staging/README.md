@@ -51,7 +51,7 @@ Add this to `/etc/fstab`: `/swapfile none swap sw 0 0`
 The instance has a 128 GB volume provided by IRTM staff during setup. This needs
 to be initialized and mounted:
 
-se `lsblk` to list volumes; it may be listed as `sdb`
+Use `lsblk` to list volumes; it may be listed as `sdb`
 
 ```bash
 sudo mkfs -t ext4 /dev/sdb
@@ -109,7 +109,6 @@ mkdir /var/www/test-southeastblueprint
 mkdir /var/www/test-southeastssa
 mkdir /data/midwest
 mkdir /data/se
-mkdir /data/tiles
 cd ~
 git clone https://github.com/astutespruce/mli-blueprint.git
 git clone https://github.com/astutespruce/secas-docker.git
@@ -137,11 +136,10 @@ MAP_RENDER_THREADS=4
 MAX_JOBS=4
 MAX_ACRES=50000000
 
-TILE_DIR=/data/tiles
-
 SOUTHEAST_BLUEPRINT_CODE_DIR=/home/app/secas-blueprint
 SOUTHEAST_BLUEPRINT_DATA_DIR=/data/se
 SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
+SOUTHEAST_BLUEPRINT_TILES_DIR=/data/se/tiles
 
 SSA_CODE_DIR=/home/app/secas-ssa
 SSA_STATIC_DIR=/var/www/southeastssa
@@ -149,6 +147,7 @@ SSA_STATIC_DIR=/var/www/southeastssa
 MIDWEST_BLUEPRINT_CODE_DIR=/home/app/mli-blueprint
 MIDWEST_BLUEPRINT_DATA_DIR=/data/midwest
 MIDWEST_BLUEPRINT_STATIC_DIR=/var/www/midwestblueprint
+MIDWEST_BLUEPRINT_TILES_DIR=/data/midwest/tiles
 ```
 
 IMPORTANT: This file must be sourced to perform any Docker operations.
@@ -171,11 +170,7 @@ PUBLIC_CONTACT_EMAIL=<contact email>
 
 # show warning in UI when on staging server
 PUBLIC_DEPLOY_ENV="staging"
-
-# specific to domain where this is deployed
-DEPLOY_PATH=/test-southeastblueprint
-PUBLIC_API_HOST=<API host>/test-southeastblueprint
-PUBLIC_TILE_HOST=<tile host>/test-southeastblueprint
+PUBLIC_DEPLOY_PATH=/test-southeastblueprint
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
@@ -204,11 +199,7 @@ PUBLIC_BLUEPRINT_URL=<Blueprint page URL>
 
 # show warning in UI when on staging server
 PUBLIC_DEPLOY_ENV="staging"
-
-# specific to domain where this is deployed
-DEPLOY_PATH=/test-midwestblueprint
-PUBLIC_API_HOST=<API host>/test-midwestblueprint
-PUBLIC_TILE_HOST=<tile host>/test-midwestblueprint
+PUBLIC_DEPLOY_PATH=/test-midwestblueprint
 ```
 
 ## Upload data
@@ -217,6 +208,7 @@ Use 7zip to zip the following directories in the `secas-blueprint` project:
 
 - `data/inputs` (may need to be broken into multiple files due to size)
 - `data/results`
+- `tiles`
 
 Upload these to the USFWS FileShare in the Southeast Blueprint directory for
 that year's data release, and then download from there to the instance as the
@@ -228,7 +220,8 @@ curl -L -o inputs.7z <URL on fileshare>
 7z e -spf inputs.7z
 curl -L -o results.7z <URL on fileshare>
 7z e -spf results.7z
-
+curl -L -o tiles.7z <URL on fileshare>
+7z e -spf tiles.7z
 ```
 
 Repeat this process for the input data for the `secas-ssa` project:
@@ -253,22 +246,12 @@ Extract these to the `/data/midwest` folder:
 
 ```bash
 cd /data/midwest
-curl -L -o midwest_inputs.7z <URL on fileshare>
-7z e -spf midwest_inputs.7z
+curl -L -o inputs.7z <URL on fileshare>
+7z e -spf inputs.7z
 curl -L -o results.7z <URL on fileshare>
 7z e -spf results.7z
-```
-
-Follow a similar process for the tiles located in `secas-docker/tiles`. Upload
-The Southeast Blueprint and Midwest Blueprint tiles to their respective folders
-on FileShare, then extract both to the `/data/tiles` directory:
-
-```
-cd /data/tiles
-curl -L -o southeast_tiles.7z <URL on fileshare>
-7z e -spf southeast_tiles.7z
-curl -L -o midwest_tiles.7z <URL on fileshare>
-7z e -spf midwest_tiles.7z
+curl -L -o tiles.7z <URL on fileshare>
+7z e -spf tiles.7z
 ```
 
 IMPORTANT: in FileShare, go into Link Settings when creating the download URL
