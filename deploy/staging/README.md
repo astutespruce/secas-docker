@@ -162,26 +162,26 @@ source ~/secas-docker/deploy/staging/.env
 Create `~/secas-blueprint/ui/.env.production` with the following:
 
 ```bash
-PUBLIC_MAPBOX_TOKEN=<token>
-PUBLIC_API_TOKEN=<token>
-PUBLIC_SENTRY_DSN=<DSN>
-PUBLIC_GOOGLE_ANALYTICS_ID=<id>
-PUBLIC_CONTACT_EMAIL=<contact email>
+MAPBOX_TOKEN=<token>
+API_TOKEN=<token>
+SENTRY_DSN=<DSN>
+GOOGLE_ANALYTICS_ID=<id>
+CONTACT_EMAIL=<contact email>
 
 # show warning in UI when on staging server
-PUBLIC_DEPLOY_ENV="staging"
-PUBLIC_DEPLOY_PATH=/test-southeastblueprint
+DEPLOY_ENV="staging"
+DEPLOY_PATH=/test-southeastblueprint
 ```
 
 Create `~/secas-ssa/ui/.env.production` with the following:
 
 ```bash
-PUBLIC_SENTRY_DSN=<dsn>
-PUBLIC_GOOGLE_ANALYTICS_ID=<id>
-PUBLIC_API_TOKEN=<api token>
-PUBLIC_API_HOST=<root URL>/test-southeastssa
-PUBLIC_DEPLOY_ENV="staging"
-PUBLIC_CONTACT_EMAIL=<contact email>
+SENTRY_DSN=<dsn>
+GOOGLE_ANALYTICS_ID=<id>
+API_TOKEN=<api token>
+API_HOST=<root URL>/test-southeastssa
+DEPLOY_ENV="staging"
+CONTACT_EMAIL=<contact email>
 
 DEPLOY_PATH=/test-southeastssa
 SITE_URL=<root URL>/test-southeastssa
@@ -190,16 +190,16 @@ SITE_URL=<root URL>/test-southeastssa
 Create `~/mli-blueprint/ui/.env.production` with the following:
 
 ```bash
-PUBLIC_MAPBOX_TOKEN=<token>
-PUBLIC_API_TOKEN=<token>
-PUBLIC_SENTRY_DSN=<DSN>
-PUBLIC_GOOGLE_ANALYTICS_ID=<id>
-PUBLIC_CONTACT_URL=<staff page URL>
-PUBLIC_BLUEPRINT_URL=<Blueprint page URL>
+MAPBOX_TOKEN=<token>
+API_TOKEN=<token>
+SENTRY_DSN=<DSN>
+GOOGLE_ANALYTICS_ID=<id>
+CONTACT_URL=<staff page URL>
+BLUEPRINT_URL=<Blueprint page URL>
 
 # show warning in UI when on staging server
-PUBLIC_DEPLOY_ENV="staging"
-PUBLIC_DEPLOY_PATH=/test-midwestblueprint
+DEPLOY_ENV="staging"
+DEPLOY_PATH=/test-midwestblueprint
 ```
 
 ## Upload data

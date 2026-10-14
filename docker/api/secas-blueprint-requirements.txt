@@ -37,27 +37,27 @@ cssselect2==0.10.1
     # via weasyprint
 et-xmlfile==2.0.0
     # via openpyxl
-fastapi==0.141.1
+fastapi==0.142.2
     # via secas-blueprint (pyproject.toml)
-fonttools==4.65.0
+fonttools==4.66.1
     # via weasyprint
-geopandas==1.1.4
+geopandas==1.2.0
     # via secas-blueprint (pyproject.toml)
 gunicorn==26.2.0
     # via secas-blueprint (pyproject.toml)
 h11==0.16.0
     # via uvicorn
-hiredis==3.4.1
+hiredis==3.4.2
     # via redis
-idna==3.19
+idna==3.20
     # via anyio
 jinja2==3.1.6
     # via secas-blueprint (pyproject.toml)
-llvmlite==0.49.0
+llvmlite==0.50.0
     # via numba
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via jinja2
-numba==0.67.0
+numba==0.68.0
     # via secas-blueprint (pyproject.toml)
 numpy==2.5.3
     # via
@@ -70,12 +70,14 @@ numpy==2.5.3
     #   shapely
 openpyxl==3.1.5
     # via secas-blueprint (pyproject.toml)
+opentelemetry-api==1.45.1
+    # via fastapi
 packaging==26.3
     # via
     #   geopandas
     #   pymgl
     #   pyogrio
-pandas==3.0.5
+pandas==3.0.6
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
@@ -95,15 +97,15 @@ pydantic-core==2.46.5
     # via pydantic
 pydyf==0.12.1
     # via weasyprint
-pyjwt==2.14.0
+pyjwt==2.15.1
     # via redis
-pymgl==0.5.0
+pymgl==0.6.0
     # via secas-blueprint (pyproject.toml)
 pyogrio==0.13.0
     # via
     #   secas-blueprint (pyproject.toml)
     #   geopandas
-pyparsing==3.3.2
+pyparsing==3.3.3
     # via rasterio
 pyphen==0.18.1
     # via weasyprint
@@ -113,15 +115,15 @@ python-calamine==0.8.2
     # via secas-blueprint (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
-python-dotenv==1.2.3
+python-dotenv==1.2.4
     # via secas-blueprint (pyproject.toml)
 python-multipart==0.0.32
     # via secas-blueprint (pyproject.toml)
-rasterio==1.5.1
+rasterio==1.5.2
     # via secas-blueprint (pyproject.toml)
 redis==5.3.1
     # via arq
-sentry-sdk==2.69.2
+sentry-sdk==2.71.0
     # via secas-blueprint (pyproject.toml)
 shapely==2.1.2
     # via
@@ -129,7 +131,7 @@ shapely==2.1.2
     #   geopandas
 six==1.17.0
     # via python-dateutil
-starlette==1.6.0
+starlette==1.7.0
     # via fastapi
 tinycss2==1.5.1
     # via
@@ -141,6 +143,7 @@ typing-extensions==4.16.0
     # via
     #   anyio
     #   fastapi
+    #   opentelemetry-api
     #   pydantic
     #   pydantic-core
     #   starlette
@@ -151,7 +154,7 @@ typing-inspection==0.4.4
     #   pydantic
 urllib3==2.8.0
     # via sentry-sdk
-uvicorn==0.53.0
+uvicorn==0.54.0
     # via secas-blueprint (pyproject.toml)
 weasyprint==70.0
     # via secas-blueprint (pyproject.toml)
