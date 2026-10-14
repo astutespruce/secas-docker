@@ -6,12 +6,12 @@ LABEL org.opencontainers.image.source="https://github.com/astutespruce/secas-doc
 
 WORKDIR /home/app
 
-ENV PYTHONPATH "${PYTHONPATH}:/home/app"
-ENV PYTHONUNBUFFERED 1
-ENV DISPLAY :99
-ENV LIBGL_ALWAYS_SOFTWARE 1
-ENV VIRTUAL_ENV "/home/app/.venv"
-ENV PATH "/home/app/.venv/bin:/root/.local/bin:${PATH}"
+ENV PYTHONPATH="/home/app"
+ENV PYTHONUNBUFFERED=1
+ENV DISPLAY=:99
+ENV LIBGL_ALWAYS_SOFTWARE=1
+ENV VIRTUAL_ENV="/home/app/.venv"
+ENV PATH="/home/app/.venv/bin:/root/.local/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y \
     # git \
@@ -48,16 +48,12 @@ RUN  fc-cache -fv
 
 # setup python dependencies
 COPY ./secas-blueprint-requirements.txt /tmp/
-COPY ./secas-ssa-requirements.txt /tmp/
 
 # make sure to build pyogrio and rasterio against GDAL in this container
 # NOTE: the version of numpy hardcoded here must match secas-blueprint-requirements.txt
-# NOTE: midwest-blueprint does not introduce additional dependencies
-# NOTE: we install SSA requirements first since those change less frequently, and we
-# want to use versions pinned in the Blueprint Explorer (though really they need to be kept in sync)
+# NOTE: midwest-blueprint and secas-ssa do not introduce additional dependencies
 RUN uv pip install cython numpy==2.5.3 setuptools versioneer  && \
-    uv pip install -v -r /tmp/secas-ssa-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
-    uv pip install -v -r /tmp/secas-blueprint-requirements.txt && \
+    uv pip install -v -r /tmp/secas-blueprint-requirements.txt --no-binary pyogrio rasterio --no-build-isolation && \
     uv pip uninstall setuptools cython versioneer
 
 # Fix location for hardcoded certs file in different location on manylinux image for pymgl
