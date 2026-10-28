@@ -387,7 +387,7 @@ openssl x509 -startdate -enddate -noout -in internal-tls.pem
 Then check that it is registered that way on internal network:
 
 ```
-openssl s_client -connect <host>.fws.dow.net:443 -servername <host>.fws.dow.net 2>/dev/null | openssl x509 -startdate -enddate -noout
+openssl s_client -connect <host>.fws.doi.net:443 -servername <host>.fws.doi.net 2>/dev/null | openssl x509 -startdate -enddate -noout
 ```
 
 ## Update Docker images on the server
