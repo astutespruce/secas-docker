@@ -102,7 +102,8 @@ services:
         command: ["/home/app/.venv/bin/arq", "api.worker.WorkerSettings"]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:$SOUTHEAST_BLUEPRINT_DATA_DIR
+            - $SSA_DATA_DIR:$SSA_DATA_DIR
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file
@@ -137,7 +138,8 @@ services:
             ]
         volumes:
             - user_upload:/tmp/ssa-reports
-            - $SOUTHEAST_BLUEPRINT_DATA_DIR:/home/app/data
+            - $SOUTHEAST_BLUEPRINT_DATA_DIR:$SOUTHEAST_BLUEPRINT_DATA_DIR
+            - $SSA_DATA_DIR:$SSA_DATA_DIR
             - $SSA_CODE_DIR/api:/home/app/api # main API
             - $SSA_CODE_DIR/analysis:/home/app/analysis # needed for analysis utils
             - $SSA_CODE_DIR/constants:/home/app/constants # needed for datasets JSON file

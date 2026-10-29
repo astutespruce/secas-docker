@@ -109,6 +109,8 @@ mkdir /var/www/test-southeastblueprint
 mkdir /var/www/test-southeastssa
 mkdir /data/midwest
 mkdir /data/se
+mkdir /data/ssa
+mkdir /data/ssa/inputs
 cd ~
 git clone https://github.com/astutespruce/mli-blueprint.git
 git clone https://github.com/astutespruce/secas-docker.git
@@ -142,6 +144,7 @@ SOUTHEAST_BLUEPRINT_STATIC_DIR=/var/www/southeastblueprint
 SOUTHEAST_BLUEPRINT_TILES_DIR=/data/se/tiles
 
 SSA_CODE_DIR=/home/app/secas-ssa
+SSA_DATA_DIR=/data/ssa
 SSA_STATIC_DIR=/var/www/southeastssa
 
 MIDWEST_BLUEPRINT_CODE_DIR=/home/app/mli-blueprint
@@ -228,12 +231,20 @@ Repeat this process for the input data for the `secas-ssa` project:
 
 - `data/inputs`
 
-These are also placed in the `/data/se` folder:
+These are placed in the `/data/ssa/inputs` folder:
 
 ```bash
-cd /data/se
-curl -L -o inputs-ssa.7z <URL on fileshare>
-7z e -spf inputs-ssa.7z
+cd /data/ssa/inputs
+curl -L -o nlcd_annual.7z <URL on fileshare>
+7z e -spf nlcd_annual.7z
+curl -L -o landfire.7z <URL on fileshare>
+7z e -spf landfire.7z
+curl -L -o inundation_frequency.7z <URL on fileshare>
+7z e -spf inundation_frequency.7z
+curl -L -o boundaries.7z <URL on fileshare>
+7z e -spf boundaries.7z
+curl -L -o urban.7z <URL on fileshare>
+7z e -spf urban.7z
 ```
 
 Repeat this process for the `mli-blueprint` project and place these in the
